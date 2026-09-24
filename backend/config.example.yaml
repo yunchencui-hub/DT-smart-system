@@ -1,0 +1,57 @@
+# Copy to config.yaml and edit. Every value here has a default in robin/config.py.
+
+device_id: robin-01            # must match SECRET_DEVICE_ID in the Arduino sketch
+
+mqtt:
+  host: localhost              # the laptop runs Mosquitto, so the backend talks to "localhost"
+  port: 1883
+  username: ""
+  password: ""
+
+database: data/robin.db        # SQLite file, created automatically
+
+location:                      # used for the weather API (default: Eindhoven)
+  latitude: 51.44
+  longitude: 5.48
+
+caregiver:
+  ntfy_topic: ""               # e.g. "robin-mijn-oma-8f3k2q" (long + secret). "" = print alerts only
+  ntfy_server: https://ntfy.sh
+
+audio:
+  durations_file: ../audio/en/durations.json   # how long each track talks (for the talking face)
+  volume: 20
+
+# The caregiver's daily schedule (what Tessa's app does). Times are local time.
+#   track: number from audio/tracks.yaml
+#   ask: true = wait for a green/red answer
+#   alert_on_no: true = a "no" (or no answer) alerts the caregiver
+#   window_min: how long Robin waits for someone to walk by before calling it "missed"
+reminders:
+  - {name: good_morning, time: "08:00", track: 2,  ask: false, window_min: 90}
+  - {name: medicine,     time: "08:30", track: 3,  ask: true,  alert_on_no: true,  window_min: 60}
+  - {name: lunch,        time: "12:30", track: 6,  ask: false, window_min: 45}
+  - {name: water,        time: "15:00", track: 4,  ask: true,  alert_on_no: false, window_min: 60}
+  - {name: good_night,   time: "21:30", track: 12, ask: false, window_min: 60}
+
+presence:
+  recent_motion_s: 120         # "someone is here" = PIR fired in the last 2 minutes
+
+answers:
+  timeout_s: 60                # wait this long for a button press
+  repeats: 1                   # ask again this many times before giving up
+
+anomaly:
+  model_path: models/anomaly.joblib
+  window_min: 10               # feature window for training AND live scoring
+  check_every_s: 60
+  cooldown_min: 60             # at most one check-in per hour (no nagging)
+  night_start: "23:00"
+  night_end: "06:30"
+
+weather:
+  poll_every_min: 30
+  hot_day_c: 25                # max temperature that triggers an extra water reminder
+  hot_day_reminder_time: "14:00"
+
+offline_alert_min: 5           # tell the caregiver when Robin is silent this long
