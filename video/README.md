@@ -30,6 +30,15 @@ When an orange **⏸ pill** with a countdown appears in the caption bar, it is a
 
 The MP4 is not in git because it is too big for GitHub. Build it yourself (below), or use the copy that was shared with you. Most players pick up `robin_build_guide.srt` automatically when it sits next to the MP4.
 
+The full build is 1080p and about 126 MB. For an upload with a size limit (Canvas, Teams, email), make a 720p copy of about 28 MB. The scenes are designed at 1280×720, so everything stays readable, and the chapters are kept:
+
+```bash
+cd video
+ffmpeg -i robin_build_guide.mp4 -map 0:v -map 0:a -map_chapters 0 -vf scale=1280:720:flags=lanczos \
+  -c:v libx264 -preset slow -tune animation -crf 28 -pix_fmt yuv420p -g 240 \
+  -c:a aac -b:a 32k -ac 1 -ar 24000 -movflags +faststart robin_build_guide_720p.mp4
+```
+
 ## Rebuild it
 
 Requirements:
