@@ -30,7 +30,7 @@ When an orange **⏸ pill** with a countdown appears in the caption bar, it is a
 
 The MP4 is not in git because it is too big for GitHub. Build it yourself (below), or use the copy that was shared with you. Most players pick up `robin_build_guide.srt` automatically when it sits next to the MP4.
 
-The full build is 1080p and about 126 MB. For an upload with a size limit (Canvas, Teams, email), make a 720p copy of about 28 MB. The scenes are designed at 1280×720, so everything stays readable, and the chapters are kept:
+The full build is 1080p and about 126 MB. For an upload with a size limit (Canvas, Teams, email), make a 720p copy of about 26 MB. The scenes are designed at 1280×720, so everything stays readable, and the chapters are kept:
 
 ```bash
 cd video
