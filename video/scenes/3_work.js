@@ -517,11 +517,12 @@ defineScene({
     const els = items.map(([n, ti, tx], i) => V.card(root, { x: 40 + (i % 4) * 305, y: 70 + Math.floor(i / 4) * 220, w: 290, h: 180, icon: '✅', title: `${n} · ${ti}`, text: tx, color: ['#0f8a8f', '#0f8a8f', '#0f8a8f', '#0f8a8f', '#7e57c2', '#7e57c2', '#f57c00'][i], size: 18 }));
     const svg = V.svg(root);
     const bot = V.robot(1100, 382, 0.72);
-    svg.appendChild(bot.g);
+    const botWrap = V.s('g', {}, bot.g); // spop sets the transform, so pop a wrapper, not the robot itself
+    svg.appendChild(botWrap);
     return (t) => {
-      const st = [T.s(1), T.s(1) + 2.6, T.s(1) + 5.2, T.s(2), T.s(2) + 2.4, T.s(3), T.s(3) + 3.5];
+      const st = [T.c(1, 0), T.c(1, 1), T.c(1, 2), T.c(2, 0), T.c(2, 1), T.c(3, 0), T.c(3, 1)];
       els.forEach((e, i) => V.pop(e, V.p(t, st[i], 0.45)));
-      V.spop(bot.g, V.p(t, st[6] + 0.8, 0.5), 1100, 382);
+      V.spop(botWrap, V.p(t, st[6] + 0.8, 0.5), 1100, 382);
       bot.matrix.set(t > st[6] + 1.5 && t < st[6] + 3 ? 'yes' : V.blinkFace(t));
     };
   },

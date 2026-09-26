@@ -733,6 +733,7 @@ function buildTimelineAPI(sc) {
     s: (i) => lines[idx(i)].start - sc.start,
     e: (i) => lines[idx(i)].end - sc.start,
     cap: (i) => lines[idx(i)].cap,
+    c: (i, k) => lines[idx(i)].chunks[k].start - sc.start, // start of sentence k inside line i
     n: lines.length,
   };
 }
