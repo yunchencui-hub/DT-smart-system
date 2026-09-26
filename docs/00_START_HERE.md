@@ -15,6 +15,7 @@ Hi partner 👋 This folder is our project manual. Read the files in number orde
 | [08_demo_script](08_demo_script.md) | the 10-minute knock-out demo + proof video | final weeks |
 | [09_learning_guide](09_learning_guide.md) | glossary, self-quizzes, oral-exam practice, challenges | every phase |
 | [templates/](templates/) | Design Notes prompts, test plan table, learning journal | when needed |
+| [../video/](../video/README.md) | 32-min animated build guide (idea → 8 build steps → Robin at work), with chapters | before you wire, then per step |
 
 ## The plan (adjust the weeks to your course calendar)
 

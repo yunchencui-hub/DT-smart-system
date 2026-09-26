@@ -39,6 +39,8 @@ python -m robin --device sim-01 run --fake-time 03:00 --window-min 2 --check-eve
 ```
 Full guide: [docs/05_software_setup.md](docs/05_software_setup.md). **Start with [docs/00_START_HERE.md](docs/00_START_HERE.md).**
 
+**Prefer watching?** [video/](video/README.md) is a 32-minute animated walkthrough: the idea, all 8 build steps with a test after each, and a day with the finished robot.
+
 ## Repository layout
 ```
 docs/                 roadmap, design, shopping list, assembly, setup, ML, test plan, demo, learning guide
@@ -47,10 +49,12 @@ backend/robin/        Python: ingest, db, weather, processing, model, train, bra
 backend/tests/        pytest suite (ingestion, processing, model, brain, weather)
 audio/                sentences (tracks.yaml), generator (Piper TTS), ready-made MP3s (en, nl)
 broker/               Mosquitto config
+video/                animated build-guide video, generated from code (see video/README.md)
 CLAUDE.md             project memory for AI-assisted sessions
 ```
 
 ## Credits
 - DFR0534 serial protocol: reference implementation [codingABI/DFR0534](https://github.com/codingABI/DFR0534) (BSD-2-Clause); our `voice.h` is a minimal re-implementation.
 - Voices generated with [Piper](https://github.com/OHF-Voice/piper1-gpl): `en_GB-cori-high` (trained on public-domain LibriVox recordings) and `nl_NL-ronnie-medium` (CC0 dataset, fine-tuned from the Lessac voice, whose dataset is licensed for non-commercial research). Fine for this course project; check before any commercial use.
+- Video: fonts Nunito + JetBrains Mono (SIL OFL 1.1), narrator Piper `en_US-norman-medium`. See [video/README.md](video/README.md).
 - Concept inspiration: Tinybots' Tessa. This is an independent student prototype, not affiliated with Tinybots.
