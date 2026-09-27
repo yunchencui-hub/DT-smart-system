@@ -29,7 +29,7 @@ Details: [docs/01_requirements_map.md](docs/01_requirements_map.md)
 ```bash
 cd backend
 python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
-pip install -r requirements.txt && cp config.example.yaml config.yaml
+pip install -r requirements.txt && cp -n config.example.yaml config.yaml   # -n: never overwrite your config
 python -m pytest -q                                     # all tests pass
 python check_setup.py                                   # checks this computer against docs/05
 mosquitto -c ../broker/mosquitto.conf -v &              # the MQTT broker
