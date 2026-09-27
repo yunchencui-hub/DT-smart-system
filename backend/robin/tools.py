@@ -13,7 +13,7 @@ import time
 import uuid
 
 from . import db
-from .config import resolve, topic
+from .config import report_dir, resolve, topic
 from .mqtt_link import connect, make_client
 from .processing import load_telemetry, quality_report
 
@@ -57,7 +57,7 @@ def latency(cfg: dict, count: int = 50, interval: float = 0.5, timeout: float = 
             "rtt_max_ms": round(values_sorted[-1], 1),
             "one_way_estimate_ms": round(statistics.median(values) / 2, 1),
         })
-    out_dir = resolve(cfg, "reports")
+    out_dir = report_dir(cfg)   # simulator runs go to reports/<device>/, never between your robot's evidence
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / f"latency_{time.strftime('%Y%m%d_%H%M%S')}.csv"
     with path.open("w", newline="") as f:
@@ -68,6 +68,9 @@ def latency(cfg: dict, count: int = 50, interval: float = 0.5, timeout: float = 
     result["csv"] = str(path)
     for k, v in result.items():
         print(f"{k:>22}: {v}")
+    if not values:
+        print(f"No answers from '{cfg['device_id']}'. Is that robot switched on and online? For the simulator, "
+              "put the device before the command: python -m robin --device sim-01 latency")
     return result
 
 

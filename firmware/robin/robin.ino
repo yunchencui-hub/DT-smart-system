@@ -336,7 +336,10 @@ void publishTelemetry() {
            "\"high_ms\":%lu,\"light\":%lu,\"rssi\":%ld}",
            bootId, seq, millis(), samples, lastPir ? 1 : 0, pirEdges,
            (unsigned long)pirHighSamples * SAMPLE_MS, (unsigned long)(lightSum / samples),
-           (long)WiFi.RSSI());
+           // Only ask the WiFi chip when connected. In offline test mode nothing ever starts the chip
+           // (modem.begin()), and WiFi.RSSI() does not start it itself, so it would wait its full 10 s
+           // timeout on every call, freezing loop() (buttons, faces, Serial).
+           online ? (long)WiFi.RSSI() : 0L);
   seq++;  // counts up even when sending fails, so the backend can measure message loss
   bool sent = publish(topicTelemetry, json, false, 0);
   Serial.print(sent ? F("[tx] ") : F("[tx-failed] "));

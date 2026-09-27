@@ -3,7 +3,8 @@
 device_id: robin-01            # must match SECRET_DEVICE_ID in the Arduino sketch
 
 mqtt:
-  host: localhost              # the laptop runs Mosquitto, so the backend talks to "localhost"
+  host: 127.0.0.1              # this laptop runs Mosquitto. (Not "localhost": on Windows that tries IPv6 first
+                               # and every connection waits ~2 s, because the broker listens on IPv4 only.)
   port: 1883
   username: ""
   password: ""
@@ -23,6 +24,7 @@ audio:
   volume: 20
 
 # The caregiver's daily schedule (what Tessa's app does). Times are local time.
+# ALWAYS keep times in quotes ("08:30"): unquoted, YAML reads 23:00 as the number 1380.
 #   track: number from audio/tracks.yaml
 #   ask: true = wait for a green/red answer
 #   alert_on_no: true = a "no" (or no answer) alerts the caregiver
@@ -42,7 +44,7 @@ answers:
   repeats: 1                   # ask again this many times before giving up
 
 anomaly:
-  model_path: models/anomaly.joblib
+  model_path: models/anomaly-{device}.joblib   # {device} = device_id, so simulator and robot models never mix
   window_min: 10               # feature window for training AND live scoring
   check_every_s: 60
   cooldown_min: 60             # at most one check-in per hour (no nagging)

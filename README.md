@@ -29,8 +29,8 @@ Details: [docs/01_requirements_map.md](docs/01_requirements_map.md)
 ```bash
 cd backend
 python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
-pip install -r requirements.txt && cp config.example.yaml config.yaml
-python -m pytest -q                                     # 36 tests
+pip install -r requirements.txt && cp -n config.example.yaml config.yaml   # -n: never overwrite your config
+python -m pytest -q                                     # all tests should pass
 mosquitto -c ../broker/mosquitto.conf -v &              # the MQTT broker
 python -m robin --device sim-01 simulate --backfill-days 7
 python -m robin --device sim-01 train --allow-synthetic

@@ -27,7 +27,7 @@ import numpy as np
 import pandas as pd
 
 from . import db
-from .config import resolve
+from .config import model_file, report_dir, resolve
 from .model import AnomalyModel, HourlyBaseline
 from .processing import clean, load_telemetry, make_windows
 
@@ -151,6 +151,21 @@ def save_plots(windows: pd.DataFrame, model: AnomalyModel, test: pd.DataFrame, o
     return files
 
 
+def ensure_own_model_file(path, device: str) -> None:
+    """Stops before training when `path` holds ANOTHER device's model (an old config with one shared model_path)."""
+    if not path.exists():
+        return
+    try:
+        owner = AnomalyModel.load(path).meta.get("device")
+    except Exception:
+        return   # unreadable old file: overwriting it loses nothing usable
+    if owner and owner != device:
+        raise SystemExit(
+            f"{path} holds the model of '{owner}'. Training '{device}' would overwrite it. Give every device its "
+            "own file: in config.yaml set anomaly.model_path to models/anomaly-{device}.joblib"
+        )
+
+
 def run(cfg: dict, window_min: float | None = None, algorithm: str = "iforest", contamination: float = 0.02,
         test_days: int = 1, allow_synthetic: bool = False) -> dict:
     device = cfg["device_id"]
@@ -159,6 +174,8 @@ def run(cfg: dict, window_min: float | None = None, algorithm: str = "iforest", 
             f"device_id '{device}' is the SIMULATOR. The assignment requires training on data from YOUR OWN "
             "sensor. Set device_id to your robot, or pass --allow-synthetic for a dry run only."
         )
+    model_path = model_file(cfg)
+    ensure_own_model_file(model_path, device)
     window_min = window_min or cfg["anomaly"]["window_min"]
     conn = db.connect(resolve(cfg, cfg["database"]))
     raw = load_telemetry(conn, device)
@@ -181,23 +198,24 @@ def run(cfg: dict, window_min: float | None = None, algorithm: str = "iforest", 
 
     span = f"{time.strftime('%Y-%m-%d %H:%M', time.localtime(raw['ts'].min()))} .. " \
            f"{time.strftime('%Y-%m-%d %H:%M', time.localtime(raw['ts'].max()))}"
+    synthetic = device.startswith("sim")
     final = AnomalyModel(algorithm, contamination).fit(
-        normal, device=device, window_min=window_min, data_span=span, synthetic=device.startswith("sim"))
-    model_path = resolve(cfg, cfg["anomaly"]["model_path"])
+        normal, device=device, window_min=window_min, data_span=span, synthetic=synthetic)
     final.save(model_path)
 
-    report_dir = resolve(cfg, "reports")
-    report_dir.mkdir(parents=True, exist_ok=True)
-    plots = save_plots(normal, final, test, report_dir)
+    out_dir = report_dir(cfg)   # simulator: reports/<device>/, so dry runs never overwrite your robot's evidence
+    out_dir.mkdir(parents=True, exist_ok=True)
+    plots = save_plots(normal, final, test, out_dir)
     metrics = {
-        "device": device, "data_span": span, "raw_rows": int(len(raw)), "windows": int(len(windows)),
+        "device": device, "synthetic": synthetic, "data_span": span,
+        "raw_rows": int(len(raw)), "windows": int(len(windows)),
         "train_windows": int(len(train)), "test_windows": int(len(test)), "staged_windows": int(len(staged)),
         "window_min": window_min, "deployed_algorithm": algorithm, "contamination": contamination,
         "injected_counts": {k: int(len(v)) for k, v in injected.items()},
         "inactivity_limits_min": {int(h): round(float(v), 1) for h, v in final.baseline.quiet_limit.items()},
-        "comparison": comparison, "model_path": str(model_path), "plots": plots,
+        "comparison": comparison, "model_path": str(model_path), "report_dir": str(out_dir), "plots": plots,
     }
-    (report_dir / "metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
+    (out_dir / "metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
     _print_summary(metrics)
     return metrics
 
@@ -211,4 +229,4 @@ def _print_summary(m: dict) -> None:
         print(f"{name:<26}" + "".join(f"{str(r[k]):>24}" for k in keys))
     print(f"(injected windows: {m['injected_counts']})")
     print("\nfalse_alarm_rate: lower is better. detect_*: higher is better.")
-    print(f"Saved {m['deployed_algorithm']} model -> {m['model_path']}, report -> reports/metrics.json + plots")
+    print(f"Saved {m['deployed_algorithm']} model -> {m['model_path']}, report -> {m['report_dir']} (metrics.json + plots)")

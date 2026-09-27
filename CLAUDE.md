@@ -34,7 +34,7 @@ Read this file first in every session. Keep it short. Update **Status** and **De
 
 ## How to verify
 - `cd backend && python -m pytest -q`
-- Compile firmware: `arduino-cli compile -b arduino:renesas_uno:unor4wifi firmware/robin`
+- Compile firmware: `arduino-cli compile -b arduino:renesas_uno:unor4wifi firmware/robin` (user's Windows laptop: the CLI bundled with Arduino IDE 2, `%LOCALAPPDATA%\Programs\arduino-ide\resources\app\lib\backend\resources\arduino-cli.exe`)
 - E2E without hardware: `mosquitto -c broker/mosquitto.conf` + `python -m robin simulate` + `python -m robin run`
 
 ## Lessons learned (don't re-learn these)
@@ -44,10 +44,14 @@ Read this file first in every session. Keep it short. Update **Status** and **De
 - The demo clock starts when the brain starts: start the brain at minute 5:30 of the demo (docs/08).
 - `pkill -f "robin ..."` kills your own shell. Use `pgrep -f "^[^ ]*python[^ ]* -m robin"`.
 - Video: SVG `stroke-dasharray` drawing makes dashed lines solid, so fade them in instead. Inline styles beat the `.night` CSS, so set header colours in `seek`.
+- Firmware: WiFiS3 `RSSI()/SSID()/BSSID()/softAPIP()/softAPSSID()/setHostname()` skip `modem.begin()`, so in offline mode each call waited the 10 s modem timeout (loop froze). Call them only when `online`.
+- Models are per device (`models/anomaly-{device}.joblib`). The brain refuses a model whose `meta.device` differs, and `train` refuses to overwrite another device's model. Sim reports and latency CSVs go to `reports/<device>/`.
+- Windows: use `127.0.0.1`, not `localhost` (IPv6 first, ~2 s per MQTT connect). The firewall popup pre-ticks the CURRENT profile: on a Public WiFi it opened our password-less broker to Public.
 - Fontys order form (FOR 05-03, .xlsm): write the sheet XML directly. Re-saving with openpyxl or LibreOffice drops the macro buttons. tinytronics.nl blocks curl (Cloudflare), but the WebFetch tool gets through. The SKU is the 6-digit number, not the model code in the title (breadboard = 000070, not BB400P).
 
 ## Status (update me)
 - 2026-09-24: v1 done. BOM verified: **€39.00** (scenario A) / €30.95 (B) / €25.00 (C). Firmware compiles (R4 WiFi + UNO WiFi Rev2), 36 pytest pass, E2E with Mosquitto + simulator verified (night check-in, yes/no, offline alert, latency, report). Audio en+nl generated.
 - 2026-09-26: build-guide video added (`video/`, 51 scenes, 31.9 min, 1080p, SRT + chapters). The MP4 is git-ignored (too big) and was shared in the session.
 - 2026-09-27: Fontys order form FOR 05-03 filled: user buys everything (scenario A, 15 Tinytronics lines, €32.05 incl. VAT). All SKUs and prices re-checked on the product pages; docs/03 corrected. All required fields filled; the user already owns the micro-USB cable. Ready to e-mail to store-room@fontys.nl. The form adds no Tinytronics shipping (its own AND() quirk). The form is not committed (personal data).
-- **Next for user:** register concept #12, confirm board = UNO R4 WiFi, e-mail the completed order form to store-room@fontys.nl, run the simulator (docs/05 B).
+- 2026-09-27: user's Windows 11 laptop set up (repo `E:\DT-smart-system`): venv Py 3.13, Mosquitto 2.1.2 (service Manual, Private-only rule, user PATH), Arduino IDE 2.3.10 + renesas_uno 1.6.0 + ArduinoMqttClient. Firmware compiles, 44 pytest pass, simulator E2E (night check-in → alert) OK.
+- **Next for user:** set the 2 Public "mosquitto" firewall rules to Block (admin PowerShell), subscribe to the ntfy topic in config.yaml, register concept #12, confirm board = UNO R4 WiFi, e-mail the order form to store-room@fontys.nl, run the simulator (docs/05 B).

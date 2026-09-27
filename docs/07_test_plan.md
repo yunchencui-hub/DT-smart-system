@@ -55,7 +55,7 @@ Think about what could go wrong **for Mrs. Jansen** if each component misbehaves
 | `raw` (Serial Monitor) | live raw ADC values of PIR and LDR, button state | type `raw` |
 | `report` | messages, lost messages (seq gaps), loss %, interval median/p95/max, samples per message, reboots, rejects, RSSI | `python -m robin report --hours 1` |
 | `latency` | round-trip time robot ↔ laptop (min/median/p95/max) + lost pings, saved as CSV | `python -m robin latency --count 100` |
-| `mosquitto_sub` / MQTT Explorer | see every message live, incl. status and Last Will | `mosquitto_sub -h localhost -t "robin/#" -v` |
+| `mosquitto_sub` / MQTT Explorer | see every message live, incl. status and Last Will | `mosquitto_sub -h 127.0.0.1 -t "robin/#" -v` |
 | `mosquitto_pub` | inject a malformed message | `mosquitto_pub -t robin/robin-01/telemetry -m "garbage"` |
 | DB Browser for SQLite | inspect the tables | open `backend/data/robin.db` |
 | `pytest` | automated unit tests of ingestion/processing (show as supporting evidence) | `python -m pytest -q` |
