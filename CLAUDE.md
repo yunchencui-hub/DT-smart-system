@@ -44,10 +44,10 @@ Read this file first in every session. Keep it short. Update **Status** and **De
 - The demo clock starts when the brain starts: start the brain at minute 5:30 of the demo (docs/08).
 - `pkill -f "robin ..."` kills your own shell. Use `pgrep -f "^[^ ]*python[^ ]* -m robin"`.
 - Video: SVG `stroke-dasharray` drawing makes dashed lines solid, so fade them in instead. Inline styles beat the `.night` CSS, so set header colours in `seek`.
-- Fontys order form (FOR 05-03, .xlsm): write the sheet XML directly. Re-saving with openpyxl or LibreOffice drops the macro buttons. tinytronics.nl blocks curl (Cloudflare), so SKUs can't be checked from the sandbox.
+- Fontys order form (FOR 05-03, .xlsm): write the sheet XML directly. Re-saving with openpyxl or LibreOffice drops the macro buttons. tinytronics.nl blocks curl (Cloudflare), but the WebFetch tool gets through. The SKU is the 6-digit number, not the model code in the title (breadboard = 000070, not BB400P).
 
 ## Status (update me)
 - 2026-09-24: v1 done. BOM verified: **€39.00** (scenario A) / €30.95 (B) / €25.00 (C). Firmware compiles (R4 WiFi + UNO WiFi Rev2), 36 pytest pass, E2E with Mosquitto + simulator verified (night check-in, yes/no, offline alert, latency, report). Audio en+nl generated.
 - 2026-09-26: build-guide video added (`video/`, 51 scenes, 31.9 min, 1080p, SRT + chapters). The MP4 is git-ignored (too big) and was shared in the session.
-- 2026-09-27: Fontys order form FOR 05-03 filled (scenario A, 15 Tinytronics lines, €32.05 incl. VAT). The form adds no Tinytronics shipping (its own AND() quirk). Left for the user: name, PCN, e-mail, phone, tutor, 3 missing SKUs (white cap, 10k and 1k resistors). Not committed (it will hold personal data).
+- 2026-09-27: Fontys order form FOR 05-03 filled: user buys everything (scenario A, 15 Tinytronics lines, €32.05 incl. VAT). All SKUs and prices re-checked on the product pages; docs/03 corrected. PCN, e-mail and team name filled. Left for the user: initials, last name, tutor. The form adds no Tinytronics shipping (its own AND() quirk). The form is not committed (personal data).
 - **Next for user:** register concept #12, confirm board = UNO R4 WiFi, ask Pulsed for common parts, send purchase request (docs/03), run the simulator (docs/05 B).

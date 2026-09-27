@@ -1,6 +1,6 @@
 # 03 · Shopping list and purchase request
 
-> Prices were checked on **24 Sep 2026** at [Tinytronics](https://www.tinytronics.nl) (Eindhoven, on your approved-supplier list). They are **incl. 21% VAT**. Prices and stock change, so re-check every link on the day you order.
+> Prices were checked on **24 Sep 2026**, and every SKU and price was re-checked on the product pages on **27 Sep 2026** at [Tinytronics](https://www.tinytronics.nl) (Eindhoven, on your approved-supplier list). They are **incl. 21% VAT**. Prices and stock change, so re-check every link on the day you order.
 
 ## Why one supplier?
 Every part is available at Tinytronics, which is on the approved list. One order means one shipping cost and one invoice for the lecturer. Most Dutch hobby shops (Kiwi Electronics, Conrad, bol.com) sell the same modules, but usually at a higher price or with extra shipping.
@@ -25,13 +25,13 @@ Every part is available at Tinytronics, which is on the approved list. One order
 | 3 | [HC-SR501 PIR motion sensor](https://www.tinytronics.nl/en/sensors/motion/ir-pyroelectric-infrared-pir-motion-sensing-detector-module) | 000090 | 1 | 3.50 | 3.50 | maybe, ask |
 | 4 | [GL5528 LDR light sensor](https://www.tinytronics.nl/en/sensors/optical/light-and-color/gl5528-ldr-light-sensitive-resistor) | 000759 | 2 | 0.30 | 0.60 | likely, ask |
 | 5 | [Tactile push button 12x12x7.3 mm](https://www.tinytronics.nl/en/switches/manual-switches/pcb-switches/tactile-pushbutton-switch-momentary-4pin-12*12*7.3mm) | 001204 | 3 | 0.25 | 0.75 | likely, ask |
-| 6 | Button caps 12x12 mm: [green](https://www.tinytronics.nl/shop/en/components/knobs,-caps-and-covers/button-cap-for-tactile-pushbutton-switch-momentary-12x12x7.3mm-green), [red](https://www.tinytronics.nl/shop/en/components/knobs,-caps-and-covers/button-cap-for-tactile-pushbutton-switch-momentary-12x12x7.3mm-red), [white](https://www.tinytronics.nl/shop/en/components/knobs,-caps-and-covers/button-cap-for-tactile-pushbutton-switch-momentary-12x12x7.3mm-white) | 003060 (green), 003062 (red) | 3 | 0.15 | 0.45 | maybe |
-| 7 | [Breadboard 400 points](https://www.tinytronics.nl/en/tools-and-mounting/prototyping-supplies/breadboards/breadboard-400-points) | BB400P | 1 | 2.25 | 2.25 | likely, ask |
+| 6 | Button caps 12x12 mm: [green](https://www.tinytronics.nl/shop/en/components/knobs,-caps-and-covers/button-cap-for-tactile-pushbutton-switch-momentary-12x12x7.3mm-green), [red](https://www.tinytronics.nl/shop/en/components/knobs,-caps-and-covers/button-cap-for-tactile-pushbutton-switch-momentary-12x12x7.3mm-red), [white](https://www.tinytronics.nl/shop/en/components/knobs,-caps-and-covers/button-cap-for-tactile-pushbutton-switch-momentary-12x12x7.3mm-white) | 003060 (green), 003062 (red), 003058 (white) | 3 | 0.15 | 0.45 | maybe |
+| 7 | [Breadboard 400 points](https://www.tinytronics.nl/en/tools-and-mounting/prototyping-supplies/breadboards/breadboard-400-points) | 000070 | 1 | 2.25 | 2.25 | likely, ask |
 | 8 | [Jumper wires male-male 20 cm (10 pcs)](https://www.tinytronics.nl/en/cables-and-connectors/cables-and-adapters/prototyping-wires/dupont-compatible-and-jumper/dupont-jumper-wire-male-male-20cm-10-wires) | 000164 | 2 | 0.75 | 1.50 | likely, ask |
 | 9 | [Jumper wires male-female 20 cm (10 pcs)](https://www.tinytronics.nl/en/cables-and-connectors/cables-and-adapters/prototyping-wires/dupont-compatible-and-jumper/dupont-jumper-wire-male-female-20cm-10-wires) | 000088 | 1 | 0.75 | 0.75 | likely, ask |
 | 10 | [Jumper wires female-female 20 cm (10 pcs)](https://www.tinytronics.nl/en/cables/cables/dupont-jumper-wire-female-female-20cm-10-wires) | 000089 | 1 | 0.75 | 0.75 | likely, ask |
-| 11 | [Resistor 10 kΩ 1/4 W (10 pcs)](https://www.tinytronics.nl/nl/componenten/weerstanden/weerstanden) | - | 1 | 0.50 | 0.50 | yes, ask |
-| 12 | [Resistor 1 kΩ 1/4 W (10 pcs)](https://www.tinytronics.nl/nl/componenten/weerstanden/weerstanden) | - | 1 | 0.50 | 0.50 | yes, ask |
+| 11 | [Resistor 10 kΩ 1/4 W (10 pcs)](https://www.tinytronics.nl/en/components/resistors/resistors/resistor-10kω-1-4w-10-pieces) | 007625 | 1 | 0.50 | 0.50 | yes, ask |
+| 12 | [Resistor 1 kΩ 1/4 W (10 pcs)](https://www.tinytronics.nl/en/components/resistors/resistors/resistor-1kω-1-4w-10-pieces) | 007621 | 1 | 0.50 | 0.50 | yes, ask |
 | 13 | [Kradex enclosure 176x126x57 mm, transparent lid (Z74JPH TM)](https://www.tinytronics.nl/en/tools-and-mounting/enclosures/universal/kradex-enclosure-176x126x57mm-ip65-grey-transparent-z74jph-tm-abs) | 003260 | 1 | 10.00 | 10.00 | no |
 | | **Parts subtotal** | | | | **32.05** | |
 | | Shipping: PostNL parcel (the 57 mm box is too thick for mailbox post) | | | | 6.95 | |
@@ -90,12 +90,12 @@ Every part is available at Tinytronics, which is on the approved list. One order
 > | HC-SR501 PIR motion sensor | 000090 | 1 | €3.50 |
 > | GL5528 LDR | 000759 | 2 | €0.60 |
 > | Tactile pushbutton 12x12x7.3 mm | 001204 | 3 | €0.75 |
-> | Button caps 12x12 green / red / white | | 3 | €0.45 |
-> | Breadboard 400 points | BB400P | 1 | €2.25 |
+> | Button caps 12x12 green / red / white | 003060 / 003062 / 003058 | 3 | €0.45 |
+> | Breadboard 400 points | 000070 | 1 | €2.25 |
 > | Jumper wires M-M 20 cm (10) | 000164 | 2 | €1.50 |
 > | Jumper wires M-F 20 cm (10) | 000088 | 1 | €0.75 |
 > | Jumper wires F-F 20 cm (10) | 000089 | 1 | €0.75 |
-> | Resistor 10 kΩ (10) / 1 kΩ (10) | | 1 + 1 | €1.00 |
+> | Resistor 10 kΩ (10) / 1 kΩ (10) | 007625 / 007621 | 1 + 1 | €1.00 |
 > | Kradex enclosure 176x126x57 transparent | 003260 | 1 | €10.00 |
 > | Shipping (parcel) | | | €6.95 |
 >
