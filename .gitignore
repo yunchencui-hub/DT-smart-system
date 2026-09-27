@@ -1,0 +1,23 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local config and secrets
+backend/config.yaml
+firmware/robin/arduino_secrets.h
+
+# Generated at runtime (your data stays on your laptop)
+backend/data/
+backend/models/
+backend/reports/
+mosquitto.db
+
+# TTS voice models (100+ MB, downloaded by audio/make_audio.py)
+audio/voices/
+
+# Video build output (rebuild with: node video/build.mjs all)
+video/build/
+video/*.mp4
+video/*.srt

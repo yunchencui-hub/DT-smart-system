@@ -1,0 +1,33 @@
+# Everything Robin can say. The brain only uses the NUMBERS; the texts become audio files NN.mp3.
+# Design rule borrowed from Tessa: never give orders. Ask, suggest, and let the person decide.
+#
+# After editing: python audio/make_audio.py --lang en   (or --lang nl)
+# Then copy audio/<lang>/*.mp3 onto the DFR0534 (it shows up as a USB drive).
+
+tracks:
+  1:  {name: hello,        en: "Hello, I'm Robin. I'm here with you.",
+                           nl: "Hallo, ik ben Robin. Ik ben er voor je."}
+  2:  {name: good_morning, en: "Good morning! I hope you slept well.",
+                           nl: "Goedemorgen! Ik hoop dat je lekker hebt geslapen."}
+  3:  {name: medicine,     en: "It's time for your medicine. Have you taken it? Press green for yes, or red for no.",
+                           nl: "Het is tijd voor je medicijnen. Heb je ze ingenomen? Druk op groen voor ja, of op rood voor nee."}
+  4:  {name: water,        en: "Shall we drink a glass of water? Press green for yes, or red for no.",
+                           nl: "Zullen we een glas water drinken? Druk op groen voor ja, of op rood voor nee."}
+  5:  {name: hot_day,      en: "It is a warm day today. A little extra water would be good.",
+                           nl: "Het is warm vandaag. Een beetje extra water drinken is fijn."}
+  6:  {name: lunch,        en: "It's almost lunch time. Shall we make something to eat?",
+                           nl: "Het is bijna tijd voor de lunch. Zullen we iets te eten maken?"}
+  7:  {name: checkin_day,  en: "Today seems a bit different from usual. Are you feeling alright? Press green for yes, or red for no.",
+                           nl: "Vandaag lijkt een beetje anders dan normaal. Gaat het goed met je? Druk op groen voor ja, of op rood voor nee."}
+  8:  {name: checkin_night, en: "It's the middle of the night. Is everything alright? Press green for yes, or red for no.",
+                            nl: "Het is midden in de nacht. Is alles in orde? Druk op groen voor ja, of op rood voor nee."}
+  9:  {name: thanks,       en: "Thank you. I'm glad to hear that.",
+                           nl: "Dank je wel. Fijn om te horen."}
+  10: {name: calling_help, en: "Okay. I will let your family know, so someone can check on you.",
+                           nl: "Oké. Ik laat het je familie weten, zodat er iemand naar je kan kijken."}
+  11: {name: repeat,       en: "Sorry, I didn't catch that. Let me ask again.",
+                           nl: "Sorry, dat heb ik niet gezien. Ik vraag het nog een keer."}
+  12: {name: good_night,   en: "It's getting late. Sleep well, and see you tomorrow.",
+                           nl: "Het wordt laat. Slaap lekker, en tot morgen."}
+  13: {name: maybe_later,  en: "Alright, maybe a little later then.",
+                           nl: "Goed, misschien straks dan."}

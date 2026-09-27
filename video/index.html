@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Robin build guide</title>
+<style>
+  @font-face { font-family: Nunito; src: url(fonts/nunito-400.woff2) format('woff2'); font-weight: 400; }
+  @font-face { font-family: Nunito; src: url(fonts/nunito-600.woff2) format('woff2'); font-weight: 600; }
+  @font-face { font-family: Nunito; src: url(fonts/nunito-700.woff2) format('woff2'); font-weight: 700; }
+  @font-face { font-family: Nunito; src: url(fonts/nunito-800.woff2) format('woff2'); font-weight: 800; }
+  @font-face { font-family: Nunito; src: url(fonts/nunito-900.woff2) format('woff2'); font-weight: 900; }
+  @font-face { font-family: 'JetBrains Mono'; src: url(fonts/jetbrains-mono-400.woff2) format('woff2'); font-weight: 400; }
+  @font-face { font-family: 'JetBrains Mono'; src: url(fonts/jetbrains-mono-700.woff2) format('woff2'); font-weight: 700; }
+  html, body { margin: 0; padding: 0; background: #000; }
+  #frame { position: relative; width: 1280px; height: 720px; overflow: hidden; background: #fbf7f0;
+           font-family: Nunito, 'DejaVu Sans', sans-serif; color: #1d2b3a; }
+  #frame.night { background: #16202c; }
+  #header { position: absolute; left: 0; top: 0; width: 1280px; height: 60px; background: #fffdf9; box-shadow: 0 2px 8px rgba(0,0,0,0.06); z-index: 10; }
+  #frame.night #header { background: #1d2936; }
+  #frame.night #header div { color: #e6edf3; }
+  #stage { position: absolute; left: 0; top: 60px; width: 1280px; height: 564px; overflow: hidden; }
+  .scene { position: absolute; left: 0; top: 0; width: 1280px; height: 564px; display: none; background: #fbf7f0; }
+  .scene.dark { background: #16202c; color: #e6edf3; }
+  #caption { position: absolute; left: 0; top: 624px; width: 1280px; height: 96px; background: #fffdf9; z-index: 10;
+             box-shadow: 0 -2px 8px rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: center; gap: 14px; padding: 0 60px; box-sizing: border-box; }
+  #frame.night #caption { background: #1d2936; }
+  .captext { font-size: 25px; font-weight: 700; line-height: 1.28; text-align: center; color: #1d2b3a; max-width: 1080px; }
+  #frame.night .captext { color: #f1f5f9; }
+  .captext.robin { color: #0a5e62; font-style: italic; }
+  #frame.night .captext.robin { color: #7fe0e3; }
+  .capbadge { display: none; background: #0f8a8f; color: #fff; font-weight: 900; font-size: 14px; letter-spacing: 1.5px; border-radius: 14px; padding: 5px 12px; }
+  .cappause { display: none; align-items: center; gap: 10px; background: #f57c00; color: #fff; font-weight: 900; font-size: 22px; border-radius: 26px; padding: 10px 26px; }
+  svg text { font-family: Nunito, 'DejaVu Sans', sans-serif; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  b.hl { color: #ffd54f; font-weight: 700; }
+  b.ok { color: #8ee6a0; font-weight: 700; }
+  b.bad { color: #ff8a80; font-weight: 700; }
+  .k { font-family: 'JetBrains Mono', monospace; background: #e9eef2; border-radius: 6px; padding: 1px 7px; font-size: 0.9em; font-weight: 700; color: #0a5e62; }
+</style>
+</head>
+<body>
+<div id="frame">
+  <div id="header"></div>
+  <div id="stage"></div>
+  <div id="caption"></div>
+</div>
+<script src="build/faces.js"></script>
+<script src="build/timeline.js"></script>
+<script src="engine.js"></script>
+<script src="scenes/common.js"></script>
+<script src="scenes/1_idea.js"></script>
+<script src="scenes/2_build.js"></script>
+<script src="scenes/2b_build.js"></script>
+<script src="scenes/3_work.js"></script>
+<script>
+  document.fonts.load('900 20px Nunito').then(() => Promise.all([
+    document.fonts.load('400 20px Nunito'), document.fonts.load('600 20px Nunito'), document.fonts.load('700 20px Nunito'),
+    document.fonts.load('800 20px Nunito'), document.fonts.load('400 16px "JetBrains Mono"'), document.fonts.load('700 16px "JetBrains Mono"'),
+    document.fonts.load('20px "Noto Color Emoji"')])).then(() => {
+    window.__init();
+    const q = new URLSearchParams(location.search);
+    if (q.has('t')) window.__seek(parseFloat(q.get('t')));
+    if (q.has('play')) {  // real-time preview in a browser: index.html?play
+      const t0 = performance.now() - (parseFloat(q.get('t') || '0') * 1000);
+      const tick = () => { window.__seek((performance.now() - t0) / 1000); requestAnimationFrame(tick); };
+      tick();
+    }
+  });
+</script>
+</body>
+</html>
