@@ -1,5 +1,7 @@
 # Robin build-guide video
 
+> **Outdated voice wiring.** This video was made before the 30 Sep 2026 order update. It shows the voice module on female-male wires and a 1 W speaker with soldered tabs. The module actually connects through its Gravity cable with male-male wires, and the build now has a 2 W speaker set and a 680 µF capacitor. For building, follow [docs/04](../docs/04_assembly.md) and the new video in [video-remotion/](../video-remotion/README.md). The idea and "Robin at work" parts of this video are still correct.
+
 A 32-minute animated, narrated walkthrough in plain language. It covers the idea, the parts, all 8 build steps with a test after each one, and a day with the finished robot. The output is 1920×1080 at 24 fps, with burned-in captions, a separate `.srt` subtitle file and chapter markers.
 
 The video is **generated from code**: every picture is an SVG/HTML scene that is a pure function of time, and the narration is synthesised offline with Piper. So you can change a sentence or a wire colour and rebuild. You never need to touch a video editor.
