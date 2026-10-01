@@ -41,7 +41,7 @@ Read this file first in every session. Keep it short. Update **Status** and **De
 - Build video: `cd video-remotion && npm run netcheck && npm run review && npx tsc --noEmit` (all must pass before a render).
 
 ## Lessons learned (don't re-learn these)
-- Remotion here: `REMOTION_BROWSER=/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell`; a full 1080p render runs ~9 fps (~75 min), so check layouts with `scripts/stills.ts` first.
+- Remotion here: `REMOTION_BROWSER=/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell`; a full 1080p render runs ~9 fps (~75 min), so check layouts with `scripts/stills.ts` first. Files sent in the session max 30 MiB: send the 720p copy, and split the 1080p at chapter starts (`ffmpeg -ss <start> -i … -t <len> -c copy -map_chapters 0`).
 - IsolationForest missed "normal value at the wrong hour", so it now gets per-hour z-score context features (`model._matrix`).
 - Inactivity is a separate learned rule (quiet_min > P99×1.2 per hour); inside the forest it broke the night demo.
 - The brain must not score or talk while the robot is offline (`robot_online`). Found in the E2E test.
