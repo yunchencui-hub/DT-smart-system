@@ -106,7 +106,7 @@ export const Wires: SceneFC = ({ t, T, ui }) => {
       <Tag x={990} y={190} text={ui.female} o={prog(t, T.s(2) + 0.6, 0.4)} dy={40} color="#555" size={17} />
       {/* the Gravity cable of the voice module */}
       <g opacity={clamp(prog(t, T.s(3), 0.5))}>
-        <VoiceModule x={880} y={290} s={0.8} highlight="plug" />
+        <VoiceModule x={880} y={290} s={0.8} highlight="socket" />
         <GravityCable x={880} y={290} s={0.8} p={clamp(prog(t, T.s(3) + 0.5, 1.2))} />
         {[0, 1, 2, 3].map((i) => (
           <Wire key={i} pts={[[758 - 30, 314.8 + i * 11.2], [640, 300 + i * 26], [470, 290 + i * 34], [360, 300 + i * 30]]} color={['#1e63d6', '#00a3a3', '#212121', '#e53935'][i]} p={prog(t, T.s(3) + 3 + i * 0.4, 0.8)} w={3.4} />
@@ -147,13 +147,13 @@ export const Software: SceneFC = ({ t, T, ui }) => {
 export const Rules: SceneFC = ({ t, T, ui }) => {
   const cards: [number, string, string, string, string][] = [
     [T.s(0), '🔌', ui.goldenT, ui.goldenX, C.orange], [T.s(3), '🏷️', ui.labelT, ui.labelX, C.purple], [T.s(4), '±', ui.polT, ui.polX, C.red],
-    [T.s(5), '👀', ui.warmT, ui.warmX, C.blue], [T.s(6), '🥽', ui.glassesT, ui.glassesX, C.teal],
+    [T.s(5), '👀', ui.warmT, ui.warmX, C.blue], [T.s(6), '🪵', ui.surfaceT, ui.surfaceX, '#8d6e4f'], [T.s(7), '🥽', ui.glassesT, ui.glassesX, C.teal],
   ];
   const on = t > T.s(2) + 1.2;
   return (
     <>
       {cards.map(([ts, ic, ti, tx, c], i) => (
-        <Card key={i} x={30 + (i % 2) * 330} y={20 + Math.floor(i / 2) * 180} w={315} h={165} icon={ic} title={ti} text={tx} color={c} size={18.5} anim={popStyle(prog(t, ts, 0.45))} />
+        <Card key={i} x={30 + (i % 2) * 330} y={14 + Math.floor(i / 2) * 182} w={315} h={170} icon={ic} title={ti} text={tx} color={c} size={17} anim={popStyle(prog(t, ts, 0.45))} />
       ))}
       <Abs x={700} y={20} w={550} style={{ ...popStyle(prog(t, T.s(1), 0.45)) }}>
         <div style={{ display: 'flex', gap: 14 }}>

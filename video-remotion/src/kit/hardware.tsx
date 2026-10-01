@@ -2,7 +2,7 @@
 import React from 'react';
 import faces from '../gen/faces.json';
 import { BB_COLS, BB_MARGIN, bbSize, clamp, Pt, pulse, Row, rowY, UNO_BOT, UNO_H_MM, UNO_LABEL, UNO_TOP, UNO_W_MM } from '../data/geom';
-import { GRAVITY_CABLE_LEN, GRAVITY_PINS, gravityPinY, HEADER_PINS, VOICE_H, VOICE_W } from '../data/modules';
+import { BOTTOM_HOLES, GRAVITY_CABLE_LEN, GRAVITY_PINS, gravityPinY, HOLE_BOTTOM_Y, HOLE_TOP_Y, holeX, TOP_HOLES, VOICE_H, VOICE_W } from '../data/modules';
 
 export type FaceName = keyof typeof faces;
 const FACES = faces as Record<string, number[][]>;
@@ -200,12 +200,13 @@ export const Button: React.FC<{ tl: Pt; tr: Pt; bl: Pt; br: Pt; cap: string; pre
 // Electrolytic capacitor, top view on the bench: body lies just outside the board, legs up into the rails.
 // The light stripe with minus signs marks the MINUS leg (the shorter one).
 export const CapacitorTop: React.FC<{ plus: Pt; minus: Pt; body?: Pt; r?: number }> = ({ plus, minus, body, r = 15 }) => {
-  const b = body ?? { x: (plus.x + minus.x) / 2, y: Math.max(plus.y, minus.y) + 36 };
+  // body lies just above the rails, so the + leg (to the outer + row) is visibly the longer one, as on the real part
+  const b = body ?? { x: (plus.x + minus.x) / 2, y: Math.min(plus.y, minus.y) - 44 };
   const mSide = minus.x < plus.x ? -1 : 1;
   return (
     <g>
-      <Leg pts={`${plus.x},${plus.y} ${plus.x},${b.y - 6} ${b.x - 5 * mSide},${b.y}`} />
-      <Leg pts={`${minus.x},${minus.y} ${minus.x},${b.y - 10} ${b.x + 5 * mSide},${b.y}`} />
+      <Leg pts={`${plus.x},${plus.y} ${plus.x},${b.y + 8} ${b.x - 5 * mSide},${b.y}`} />
+      <Leg pts={`${minus.x},${minus.y} ${minus.x},${b.y + 8} ${b.x + 5 * mSide},${b.y}`} />
       <circle cx={b.x} cy={b.y} r={r} fill="#1f3f8f" stroke="#10245a" strokeWidth={1.5} />
       <path d={`M${b.x + mSide * r * 0.35},${b.y - r * 0.94} A${r},${r} 0 0 ${mSide > 0 ? 1 : 0} ${b.x + mSide * r * 0.35},${b.y + r * 0.94} Z`} fill="#cfd8e8" />
       {[-0.45, 0, 0.45].map((k, i) => <text key={i} x={b.x + mSide * r * 0.68} y={b.y + k * r + 3} fontSize={8} fontWeight={900} textAnchor="middle" fill="#1f3f8f">−</text>)}
@@ -268,36 +269,51 @@ export const PirBack: React.FC<{ x: number; y: number; s?: number; txDeg: number
   );
 };
 
-// ---------- DFR0534 voice module (drawn from the datasheet pin table; the video says: go by YOUR labels)
-export const VoiceModule: React.FC<{ x: number; y: number; s?: number; highlight?: 'plug' | 'header' | 'sp' | null; plugIn?: boolean }> = ({ x, y, s = 1, highlight = null, plugIn = false }) => (
-  <g transform={`translate(${x} ${y}) scale(${s})`}>
-    <rect x={0} y={0} width={VOICE_W} height={VOICE_H} rx={7} fill="#1f3b70" stroke="#10244a" strokeWidth={2} />
-    {/* micro-USB, top edge */}
-    <rect x={62} y={-7} width={28} height={13} rx={3} fill="#cfd6dc" stroke="#8a949c" />
-    <text x={76} y={18} textAnchor="middle" fontSize={7.5} fill="#cfe0ff" fontWeight={800}>micro-USB</text>
-    <rect x={60} y={34} width={30} height={24} fill="#111" />
-    <text x={96} y={50} fontSize={11} fill="#ffffff" fontWeight={900}>DFR0534</text>
-    <text x={96} y={62} fontSize={7.5} fill="#cfe0ff" fontWeight={700}>voice · 8 MB</text>
-    {/* Gravity plug (left edge): T R − + */}
-    {highlight === 'plug' && <rect x={-20} y={gravityPinY(0) - 12} width={50} height={gravityPinY(3) - gravityPinY(0) + 24} rx={6} fill="#ffd54f" opacity={0.55} />}
-    <rect x={-14} y={gravityPinY(0) - 9} width={16} height={gravityPinY(3) - gravityPinY(0) + 18} rx={2} fill={plugIn ? '#d9d9d9' : '#f4f4f4'} stroke="#9e9e9e" strokeWidth={1.2} />
-    {GRAVITY_PINS.map((n, i) => (
-      <g key={n}>
-        <rect x={-10} y={gravityPinY(i) - 2} width={8} height={4} fill="#c9a227" />
-        <text x={8} y={gravityPinY(i) + 4} fontSize={11} fill="#fff" fontWeight={900}>{n}</text>
-      </g>
-    ))}
-    {/* header (bottom edge) */}
-    {highlight === 'header' && <rect x={8} y={VOICE_H - 22} width={HEADER_PINS.length * 16 + 6} height={36} rx={6} fill="#ffd54f" opacity={0.5} />}
-    {highlight === 'sp' && <rect x={19 + 3 * 16 - 9} y={VOICE_H - 22} width={34} height={36} rx={6} fill="#ffd54f" opacity={0.6} />}
-    {HEADER_PINS.map((n, i) => (
-      <g key={n}>
-        <rect x={19 + i * 16 - 2.5} y={VOICE_H - 2} width={5} height={10} fill="#c9a227" />
-        <text x={19 + i * 16} y={VOICE_H - 8} fontSize={6.2} fill="#fff" fontWeight={900} textAnchor="middle" transform={`rotate(-90 ${19 + i * 16} ${VOICE_H - 8})`} dx={9}>{n}</text>
-      </g>
-    ))}
-  </g>
-);
+// ---------- DFR0534 voice module, drawn from the board photo in its datasheet (Voice Module V1.0):
+// Gravity socket left (T R − +), two rows of holes (VCC GND RX TX BUSY / ONE DACR DACL SP− SP+), SPK socket right.
+// The video always says: go by the labels printed on YOUR module.
+export type VoiceHighlight = 'socket' | 'holes' | 'sp' | 'spk' | null;
+export const VoiceModule: React.FC<{ x: number; y: number; s?: number; highlight?: VoiceHighlight; plugIn?: boolean }> = ({ x, y, s = 1, highlight = null, plugIn = false }) => {
+  const hl = (on: boolean, node: React.ReactNode) => (on ? node : null);
+  const hole = (hx: number, hy: number, square: boolean, key: string) => (
+    <g key={key}>
+      {square ? <rect x={hx - 5} y={hy - 5} width={10} height={10} rx={1.5} fill="#d4a62a" /> : <circle cx={hx} cy={hy} r={5.2} fill="#d4a62a" />}
+      <circle cx={hx} cy={hy} r={2.4} fill="#111" />
+    </g>
+  );
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s})`}>
+      <rect x={0} y={0} width={VOICE_W} height={VOICE_H} rx={9} fill="#1c1c1c" stroke="#000" strokeWidth={2} />
+      {/* mounting holes on the right */}
+      <circle cx={VOICE_W - 12} cy={22} r={8} fill="#d4a62a" /><circle cx={VOICE_W - 12} cy={22} r={4.5} fill="#f4f1ea" />
+      <circle cx={VOICE_W - 12} cy={VOICE_H - 22} r={8} fill="#d4a62a" /><circle cx={VOICE_W - 12} cy={VOICE_H - 22} r={4.5} fill="#f4f1ea" />
+      <text x={VOICE_W / 2} y={-7} fontSize={11} fill="#1d2b3a" fontWeight={900} textAnchor="middle">DFR0534 · voice 8 MB</text>
+      {/* Gravity socket (left edge) */}
+      {hl(highlight === 'socket', <rect x={-22} y={gravityPinY(0) - 13} width={56} height={gravityPinY(3) - gravityPinY(0) + 26} rx={6} fill="#ffd54f" opacity={0.55} />)}
+      <rect x={-16} y={gravityPinY(0) - 10} width={18} height={gravityPinY(3) - gravityPinY(0) + 20} rx={2} fill={plugIn ? '#d0d0d0' : '#f4f4f4'} stroke="#9e9e9e" strokeWidth={1.2} />
+      {GRAVITY_PINS.map((n, i) => (
+        <g key={n}>
+          <rect x={-11} y={gravityPinY(i) - 2} width={9} height={4} fill="#c9a227" />
+          <text x={10} y={gravityPinY(i) + 4} fontSize={11} fill="#ffd54f" fontWeight={900}>{n}</text>
+        </g>
+      ))}
+      {/* two rows of holes */}
+      {hl(highlight === 'holes', <rect x={holeX(0) - 11} y={2} width={holeX(4) - holeX(0) + 22} height={VOICE_H - 4} rx={6} fill="#ffd54f" opacity={0.35} />)}
+      {hl(highlight === 'sp', <rect x={holeX(3) - 11} y={HOLE_BOTTOM_Y - 34} width={holeX(4) - holeX(3) + 22} height={46} rx={6} fill="#ffd54f" opacity={0.6} />)}
+      {TOP_HOLES.map((n, i) => hole(holeX(i), HOLE_TOP_Y, n === 'BUSY', `t${n}`))}
+      {BOTTOM_HOLES.map((n, i) => hole(holeX(i), HOLE_BOTTOM_Y, n === 'SP+', `b${n}`))}
+      {TOP_HOLES.map((n, i) => <text key={`tl${n}`} x={holeX(i)} y={HOLE_TOP_Y + 9} fontSize={6.4} fill="#fff" fontWeight={900} textAnchor="end" transform={`rotate(-90 ${holeX(i)} ${HOLE_TOP_Y + 9})`} dx={-14} dy={2.2}>{n}</text>)}
+      {BOTTOM_HOLES.map((n, i) => <text key={`bl${n}`} x={holeX(i)} y={HOLE_BOTTOM_Y - 9} fontSize={6.4} fill="#fff" fontWeight={900} textAnchor="start" transform={`rotate(-90 ${holeX(i)} ${HOLE_BOTTOM_Y - 9})`} dy={2.2}>{n}</text>)}
+      {/* SPK socket (right edge): same speaker output, our speaker's plug does not fit */}
+      {hl(highlight === 'spk', <rect x={VOICE_W - 8} y={34} width={30} height={34} rx={6} fill="#ffd54f" opacity={0.6} />)}
+      <rect x={VOICE_W - 2} y={39} width={16} height={24} rx={2} fill="#f4f4f4" stroke="#9e9e9e" strokeWidth={1.2} />
+      <text x={VOICE_W + 17} y={55} fontSize={8} fill="#1d2b3a" fontWeight={900}>SPK</text>
+      {/* micro-USB (on the back, right edge) */}
+      <rect x={VOICE_W - 1} y={70} width={10} height={14} rx={2} fill="#cfd6dc" stroke="#8a949c" strokeDasharray="2 1.5" />
+      <text x={VOICE_W + 12} y={81} fontSize={6.5} fill="#5b6b7b" fontWeight={800}>micro-USB (back)</text>
+    </g>
+  );
+};
 
 // Its Gravity cable: plug on the module, 4 plain grey wires (colours are not documented: go by the letters),
 // 4 FEMALE housings at the far end. p = 0..1 draws it; flags = show tape flags with the letters.

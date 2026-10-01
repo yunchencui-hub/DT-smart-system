@@ -82,9 +82,9 @@ export const ITEMS: Item[] = [
   // ---- Step 5: voice module via its Gravity cable (female sockets -> 4 male-male wires), 1k in the R line, capacitor, speaker
   { id: 'voice', step: 5, kind: 'voice', desc: 'DFR0534 voice module, off the board, lying flat away from the Arduino' },
   { id: 'spk', step: 5, kind: 'speaker', desc: 'one speaker of the 2 W set (the other is a spare with taped wire ends)' },
-  { id: 'wSPp', step: 5, kind: 'wire', wire: 'speaker wire', color: 'red', from: { kind: 'spk', pin: '+' }, to: { kind: 'voice', pin: 'SP+' }, via: [[1190, 262], [1110, 250], [1080, 170]], desc: 'speaker + (red) → DFR0534 SP+ (soldered, step 5a)' },
-  { id: 'wSPm', step: 5, kind: 'wire', wire: 'speaker wire', color: 'black', from: { kind: 'spk', pin: '−' }, to: { kind: 'voice', pin: 'SP−' }, via: [[1236, 270], [1140, 240], [1098, 172]], desc: 'speaker − (black) → DFR0534 SP− (soldered, step 5a)' },
-  { id: 'grav', step: 5, kind: 'gravity', desc: 'Gravity cable: white plug into the module, 4 female sockets at the other end' },
+  { id: 'wSPp', step: 5, kind: 'wire', wire: 'speaker wire', color: 'red', from: { kind: 'spk', pin: '+' }, to: { kind: 'voice', pin: 'SP+' }, via: [[1236, 146], [1190, 132], [1140, 130]], desc: 'speaker + (red) → DFR0534 SP+ hole (bottom row, last; soldered in step 5a)' },
+  { id: 'wSPm', step: 5, kind: 'wire', wire: 'speaker wire', color: 'black', from: { kind: 'spk', pin: '−' }, to: { kind: 'voice', pin: 'SP−' }, via: [[1208, 152], [1160, 144], [1118, 136]], desc: 'speaker − (black) → DFR0534 SP− hole (bottom row, next to SP+; soldered in step 5a)' },
+  { id: 'grav', step: 5, kind: 'gravity', desc: "Gravity cable: its white plug into the module's white Gravity socket, 4 female sockets at the other end" },
   { id: 'wVp', step: 5, kind: 'wire', wire: 'M-M', color: 'red', from: { kind: 'grav', pin: '+' }, to: hole(27, '+b'), via: [[880, 132], [940, 250], [950, 430], [860, 440]], desc: 'cable socket "+" → + rail' },
   { id: 'wVm', step: 5, kind: 'wire', wire: 'M-M', color: 'black', from: { kind: 'grav', pin: '−' }, to: hole(26, '-b'), via: [[870, 110], [925, 250], [930, 420], [840, 424]], desc: 'cable socket "−" → − rail' },
   { id: 'wT', step: 5, kind: 'wire', wire: 'M-M', color: 'blue', from: { kind: 'grav', pin: 'T' }, to: uno('D0'), via: [[840, 40], [620, 38], [420, 70], [374, 150]], desc: 'cable socket "T" (module talks) → Arduino D0 (RX)' },
@@ -112,13 +112,13 @@ export const PINMAP_ROWS: [string, string, string][] = [
   ['PIR OUT', 'Arduino A1', 'F-M'],
   ['YES button (green), across the middle gap (columns 11 and 13)', "one leg's column to the − rail, the diagonally opposite leg's column to Arduino D2", '2× M-M'],
   ['NO button (red), across the middle gap (columns 17 and 19)', "one leg's column to the − rail, diagonal leg's column to Arduino D3", '2× M-M'],
-  ['DFR0534 white Gravity plug', 'the 4-wire cable that comes with the module; its other end has 4 female sockets', '(the cable)'],
-  ['cable wire from plug pin +', '+ rail', 'M-M'],
-  ['cable wire from plug pin −', '− rail', 'M-M'],
-  ['cable wire from plug pin T (module talks)', 'Arduino D0 (RX, Arduino listens)', 'M-M'],
-  ['cable wire from plug pin R (module listens)', 'column 22, top half; 1 kΩ from column 22 to column 26; column 26 → Arduino D1 (TX)', 'M-M + resistor + M-M'],
+  ['DFR0534 white Gravity socket (T, R, −, +)', 'the 4-wire cable that comes with the module: its white plug goes in here; its other end has 4 female sockets', '(the cable)'],
+  ['cable wire at socket pin +', '+ rail', 'M-M'],
+  ['cable wire at socket pin −', '− rail', 'M-M'],
+  ['cable wire at socket pin T (module talks)', 'Arduino D0 (RX, Arduino listens)', 'M-M'],
+  ['cable wire at socket pin R (module listens)', 'column 22, top half; 1 kΩ from column 22 to column 26; column 26 → Arduino D1 (TX)', 'M-M + resistor + M-M'],
   ['680 µF capacitor', 'long leg (+) in the + rail, striped leg (−) in the − rail, next to the module\'s + and − wires', 'its own legs'],
-  ['DFR0534 SP+ / SP−', 'the two wires of one speaker from the set', 'soldered (step 5a)'],
+  ['DFR0534 SP+ / SP− holes (bottom row, next to DACL)', 'the two wires of one speaker from the set (never the SPK socket)', 'soldered (step 5a)'],
 ];
 
 // Order quantities (see src/script/order.ts) of the wires the build consumes.

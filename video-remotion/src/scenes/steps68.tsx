@@ -88,12 +88,14 @@ export const Step8a: SceneFC = ({ t, T, ui }) => {
 export const Step8b: SceneFC = ({ t, T, ui }) => (
   <>
     <Stage>
-      <g opacity={clamp(prog(t, 0.3, 0.5))}><Robot cx={260} cy={290} s={1.9} face={blinkFace(t)} felt={t > T.s(3) + 1} /></g>
+      <g opacity={clamp(prog(t, 0.3, 0.5))}><Robot cx={260} cy={290} s={1.9} face={blinkFace(t)} felt={t > T.s(5) + 1} /></g>
     </Stage>
-    <Card x={560} y={20} w={690} icon="🔊" title={ui.glue} color={C.orange} size={18} anim={popStyle(prog(t, T.s(1), 0.4))} />
-    <Card x={560} y={130} w={690} icon="📌" title={ui.tape} color={C.teal} size={18} anim={popStyle(prog(t, T.s(2), 0.4))} />
-    <Card x={560} y={240} w={690} icon="🧶" title={ui.felt} color="#c9956a" size={18} anim={popStyle(prog(t, T.s(3), 0.4))} />
-    <Card x={560} y={350} w={690} icon="🏠" title={ui.home} color={C.green} size={18} anim={popStyle(prog(t, T.s(4), 0.4))} />
+    <Card x={560} y={12} w={700} icon="🔊" title={ui.glue} color={C.orange} size={16} anim={popStyle(prog(t, T.s(1), 0.4))} />
+    <Card x={560} y={102} w={700} icon="📌" title={ui.tape} color={C.teal} size={16} anim={popStyle(prog(t, T.s(2), 0.4))} />
+    <Card x={560} y={192} w={700} icon="🔁" title={ui.recheck} color={C.red} size={16} anim={popStyle(prog(t, T.s(3), 0.4))} />
+    <Card x={560} y={282} w={700} icon="🔗" title={ui.tie} color={C.purple} size={16} anim={popStyle(prog(t, T.s(4), 0.4))} />
+    <Card x={560} y={372} w={700} icon="🧶" title={ui.felt} color="#c9956a" size={16} anim={popStyle(prog(t, T.s(5), 0.4))} />
+    <Card x={560} y={462} w={700} icon="🏠" title={ui.home} color={C.green} size={15} anim={popStyle(prog(t, T.s(6), 0.4))} />
   </>
 );
 

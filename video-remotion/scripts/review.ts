@@ -58,6 +58,8 @@ for (const s of SCENES) {
     const badge = usb === 'out' ? '🔌 USB OUT' : usb === 'in' ? '⚡ USB IN' : '💽 MICRO';
     if (isSay(l)) {
       const cap = sayText(l);
+      // R1b: no hands-on fixing while the cable is in (a GND wire brushing the + rail is a short)
+      if (usb === 'in' && /\b(move|connect|rewire|swap|bend|push|turn the|put the|check the capacitor)\b/i.test(cap)) errors.push(`R1 ${s.id}: "${cap.slice(0, 60)}…" asks for hands-on work while USB IN`);
       if (/stripe/i.test(cap) && capPlacedAt >= 0) stripeCheckedAt = idx;
       w(`${i + 1}. [${badge}] ${cap}`);
       const spoken = sentences(typeof l === 'string' ? l : l.speak ?? l.say).map(speakify).join(' ');
@@ -112,7 +114,7 @@ w('| id | step | what | where exactly |');
 w('|---|---|---|---|');
 for (const it of ITEMS) w(`| ${it.id} | ${it.step} | ${it.desc} | ${legsText(it.id)} |`);
 w();
-w('Drawing notes: the breadboard is drawn with the rail pair next to the Arduino as − inside, + outside, as printed on the drawn board; the video says to follow the red/blue lines printed on the real board. The top rail pair is unused. Modules (PIR, DFR0534, speaker) lie off the board; their pin order is drawn from the datasheets, and the video says to go by the printed labels.');
+w('Drawing notes: the breadboard is drawn with the rail pair next to the Arduino as − inside, + outside, as printed on the drawn board; the video says to follow the red/blue lines printed on the real board. The top rail pair is unused. Modules (PIR, DFR0534, speaker) lie off the board. The DFR0534 is drawn after the board photo in its datasheet (page 2, Voice Module V1.0): Gravity socket T R − + on the left, top holes VCC GND RX TX BUSY, bottom holes ONE DACR DACL SP− SP+, SPK socket on the right. The video says to go by the printed labels.');
 w();
 
 // ---------- automatic checks
@@ -126,7 +128,7 @@ try {
   errors.push('netcheck failed (see above)');
 }
 w();
-w(errors.length ? `**Cable-rule check: ${errors.length} problem(s):**\n\n${errors.map((e) => `- ❌ ${e}`).join('\n')}` : '**Cable-rule check: all passed** (R1 nothing wired while plugged in · R2 every test ends unplugged · R3 micro-USB only with the Gravity cable off · R4 capacitor stripe checked before plug-in · R5 every item added once, in its own step).');
+w(errors.length ? `**Cable-rule check: ${errors.length} problem(s):**\n\n${errors.map((e) => `- ❌ ${e}`).join('\n')}` : '**Cable-rule check: all passed** (R1 nothing wired or moved while plugged in · R2 every test ends unplugged · R3 micro-USB only with the Gravity cable off · R4 capacitor stripe checked before plug-in · R5 every item added once, in its own step).');
 
 fs.mkdirSync(path.join(ROOT, 'review'), { recursive: true });
 fs.writeFileSync(path.join(ROOT, 'review/script.md'), out.join('\n') + '\n');

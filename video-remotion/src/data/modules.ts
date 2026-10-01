@@ -9,19 +9,26 @@ export const pirPin = (name: string, at = BENCH.pir): Pt => {
   return { x: at.x + (44 + i * 20) * at.s, y: at.y + 104 * at.s };
 };
 
-// DFR0534 voice module, drawn from its datasheet pin table:
-//   white Gravity plug (left edge): T, R, -, +      (1 T = TX, 2 R = RX, 3 - = GND, 4 + = 3.3-5 V)
-//   header (bottom edge):           VCC GND BUSY SP+ SP- DACL DACR ONE
-//   micro-USB on the top edge (file update).
+// DFR0534 voice module, drawn from the board photo in its datasheet (page 2, Voice Module V1.0):
+//   white Gravity socket (left edge): T, R, -, +      (T = TX, R = RX, - = GND, + = 3.3-5 V)
+//   top row of holes:    VCC GND RX TX BUSY
+//   bottom row of holes: ONE DACR DACL SP- SP+       (we solder the speaker to SP- / SP+ only)
+//   white 2-pin SPK socket (right edge) = the same speaker output; our speaker's plug does not fit it
+//   micro-USB on the back, right edge (file update only)
 export const VOICE_W = 150, VOICE_H = 104;
 export const GRAVITY_PINS = ['T', 'R', '−', '+'] as const;
-export const HEADER_PINS = ['VCC', 'GND', 'BUSY', 'SP+', 'SP−', 'DACL', 'DACR', 'ONE'] as const;
+export const TOP_HOLES = ['VCC', 'GND', 'RX', 'TX', 'BUSY'] as const;
+export const BOTTOM_HOLES = ['ONE', 'DACR', 'DACL', 'SP−', 'SP+'] as const;
+export const HOLE_TOP_Y = 12, HOLE_BOTTOM_Y = 92;
+export const holeX = (i: number) => 42 + i * 19;
 export const gravityPinY = (i: number) => 31 + i * 14;
 export const voicePin = (name: string, at = BENCH.voice): Pt => {
   const g = (GRAVITY_PINS as readonly string[]).indexOf(name);
   if (g >= 0) return { x: at.x - 14 * at.s, y: at.y + gravityPinY(g) * at.s };
-  const h = (HEADER_PINS as readonly string[]).indexOf(name);
-  if (h >= 0) return { x: at.x + (19 + h * 16) * at.s, y: at.y + (VOICE_H + 8) * at.s };
+  const tp = (TOP_HOLES as readonly string[]).indexOf(name);
+  if (tp >= 0) return { x: at.x + holeX(tp) * at.s, y: at.y + HOLE_TOP_Y * at.s };
+  const bt = (BOTTOM_HOLES as readonly string[]).indexOf(name);
+  if (bt >= 0) return { x: at.x + holeX(bt) * at.s, y: at.y + HOLE_BOTTOM_Y * at.s };
   throw new Error(`DFR0534 has no pin ${name}`);
 };
 
@@ -34,6 +41,6 @@ export const gravityEnd = (name: string, at = BENCH.voice): Pt => {
   return { x: at.x - (14 + GRAVITY_CABLE_LEN + 18) * at.s, y: at.y + gravityPinY(g) * at.s };
 };
 
-// One speaker from the 2 W speaker set, placed right of the voice module.
-export const SPEAKER = { cx: 1222, cy: 196, r: 36 };
-export const speakerTab = (which: '+' | '−'): Pt => ({ x: SPEAKER.cx + (which === '+' ? -12 : 12), y: SPEAKER.cy + SPEAKER.r + 6 });
+// One speaker from the 2 W speaker set, below-right of the voice module; its two wires leave from the top.
+export const SPEAKER = { cx: 1222, cy: 206, r: 34 };
+export const speakerTab = (which: '+' | '−'): Pt => ({ x: SPEAKER.cx + (which === '+' ? 12 : -12), y: SPEAKER.cy - SPEAKER.r - 6 });

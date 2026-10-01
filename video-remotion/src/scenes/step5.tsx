@@ -10,17 +10,17 @@ const STEP5_EARLY = ['voice', 'spk', 'wSPp', 'wSPm']; // soldered in 5c, before 
 
 // ---------------------------------------------------------------------------------------------
 export const Step5a: SceneFC = ({ t, T, ui }) => {
-  const hl = t > T.s(3) ? null : t > T.s(2) ? 'header' : t > T.s(1) ? 'plug' : null;
+  const hl = t > T.s(4) ? null : t > T.s(3) ? 'spk' : t > T.s(2) ? 'holes' : t > T.s(1) ? 'socket' : null;
   return (
     <>
       <Stage>
-        <g opacity={clamp(prog(t, 0.3, 0.5))}><VoiceModule x={420} y={70} s={2.6} highlight={hl} /></g>
+        <g opacity={clamp(prog(t, 0.3, 0.5))}><VoiceModule x={455} y={110} s={2.4} highlight={hl} /></g>
       </Stage>
       <Abs x={30} y={20} w={1220} style={{ ...riseStyle(prog(t, T.s(0) + 2, 0.5)), fontSize: 20, fontWeight: 900, color: '#fff', background: C.teal, borderRadius: 16, padding: '8px 16px', textAlign: 'center' }}>{ui.parts}</Abs>
-      <Card x={30} y={150} w={330} icon="🔌" title={ui.plug} text="power + talking" color={C.orange} size={17} anim={popStyle(prog(t, T.s(1) + 1, 0.4))} />
-      <Card x={30} y={330} w={330} icon="🔊" title={ui.header} text="speaker outputs (we use SP+ and SP− only)" color={C.purple} size={17} anim={popStyle(prog(t, T.s(2) + 1, 0.4))} />
-      <Card x={930} y={150} w={320} icon="💾" title={ui.usb} color={C.blue} size={17} anim={popStyle(prog(t, T.s(0) + 4, 0.4))} />
-      <Card x={930} y={330} w={320} icon="🏷️" title={ui.yours} color={C.red} size={18} anim={popStyle(prog(t, T.s(3), 0.4))} />
+      <Card x={20} y={150} w={340} icon="🔌" title={ui.plug} text={ui.plugX} color={C.orange} size={16} anim={popStyle(prog(t, T.s(1) + 1, 0.4))} />
+      <Card x={20} y={330} w={340} icon="🔊" title={ui.header} text={ui.headerX} color={C.purple} size={16} anim={popStyle(prog(t, T.s(2) + 1, 0.4))} />
+      <Card x={930} y={150} w={330} icon="⛔" title={ui.spk} text={ui.spkX} color={C.red} size={16} anim={popStyle(prog(t, T.s(3) + 1, 0.4))} />
+      <Card x={930} y={330} w={330} icon="🏷️" title={ui.yours} text={ui.usb} color={C.blue} size={16} anim={popStyle(prog(t, T.s(4), 0.4))} />
     </>
   );
 };
@@ -75,6 +75,7 @@ export const Step5b: SceneFC = ({ t, T, ui }) => {
         </Panel>
       </Stage>
       <Card x={15} y={400} w={600} icon="🥽" title={ui.glasses} color={C.teal} size={19} anim={popStyle(prog(t, T.s(1), 0.4))} />
+      <Card x={645} y={400} w={600} icon="🚫" title={ui.plugT} text={ui.plugX} color={C.red} size={17} anim={popStyle(win(t, T.s(1) + 3, T.s(2) + 4, 0.4))} />
       <Card x={645} y={400} w={600} icon="⛔" title={ui.never} text="Together 4 Ω: too heavy for the module's amplifier." color={C.red} size={19} anim={popStyle(prog(t, T.s(2) + 4, 0.4))} />
     </>
   );
@@ -82,19 +83,20 @@ export const Step5b: SceneFC = ({ t, T, ui }) => {
 
 // ---------------------------------------------------------------------------------------------
 export const Step5c: SceneFC = ({ t, T, ui }) => {
-  const smoke = t > T.s(1) && t < T.s(4) + 2;
+  const smoke = t > T.s(1) && t < T.s(5) + 2;
   return (
     <>
       <Stage>
-        <g opacity={clamp(prog(t, 0.3, 0.5))}><VoiceModule x={470} y={40} s={2.0} highlight="sp" /></g>
+        <g opacity={clamp(prog(t, 0.3, 0.5))}><VoiceModule x={470} y={36} s={2.0} highlight="sp" /></g>
         <g opacity={smoke ? 0.4 + 0.5 * pulse(t, 1.4) : 0}>
-          <circle cx={640} cy={240} r={8} fill="#bdbdbd" /><circle cx={630} cy={222} r={10} fill="#bdbdbd" opacity={0.6} />
+          <circle cx={470 + 116 * 2} cy={36 + 92 * 2 + 30} r={8} fill="#bdbdbd" /><circle cx={470 + 112 * 2} cy={36 + 92 * 2 + 14} r={10} fill="#bdbdbd" opacity={0.6} />
         </g>
       </Stage>
-      <Card x={30} y={290} w={590} icon="📌" title={ui.pinsT} text={ui.pinsX} color={C.orange} size={18} anim={popStyle(prog(t, T.s(1), 0.4))} />
-      <Card x={660} y={290} w={590} icon="⭕" title={ui.holesT} text={ui.holesX} color={C.purple} size={18} anim={popStyle(prog(t, T.s(2), 0.4))} />
-      <Pill x={1040} y={60} text={ui.red} bg={C.red} anim={popStyle(prog(t, T.s(3), 0.4))} />
-      <Card x={30} y={420} w={1220} icon="🔥" title={ui.safeT} text={ui.safeX} color={C.red} size={19} anim={popStyle(prog(t, T.s(4), 0.4))} />
+      <Card x={30} y={290} w={590} icon="⭕" title={ui.holesT} text={ui.holesX} color={C.purple} size={17} anim={popStyle(prog(t, T.s(1), 0.4))} />
+      <Card x={660} y={290} w={590} icon="📌" title={ui.pinsT} text={ui.pinsX} color={C.orange} size={17} anim={popStyle(prog(t, T.s(2), 0.4))} />
+      <Pill x={900} y={40} text={ui.red} bg={C.red} anim={popStyle(prog(t, T.s(3), 0.4))} />
+      <Card x={30} y={420} w={1220} icon="🩹" title={ui.tapeT} text={ui.tapeX} color={C.teal} size={18} anim={popStyle(win(t, T.s(4), T.s(5), 0.4))} />
+      <Card x={30} y={420} w={1220} icon="🔥" title={ui.safeT} text={ui.safeX} color={C.red} size={17} anim={popStyle(prog(t, T.s(5), 0.4))} />
     </>
   );
 };
@@ -103,23 +105,25 @@ export const Step5c: SceneFC = ({ t, T, ui }) => {
 export const Step5d: SceneFC = ({ t, T, ui }) => {
   const files = Array.from({ length: 13 }, (_, i) => `${String(i + 1).padStart(2, '0')}.mp3`);
   const names = ['hello', 'good_morning', 'medicine', 'water', 'hot_day', 'lunch', 'checkin_day', 'checkin_night', 'thanks', 'calling_help', 'repeat', 'good_night', 'maybe_later'];
-  const plugOut = prog(t, T.s(1) + 1, 0.8);
+  const mx = 70, my = 200, ms = 1.4;
+  const cable = clamp(prog(t, T.s(2) + 0.5, 1)) * (1 - prog(t, T.s(5) + 0.8, 0.5));
+  const usbX = mx + 159 * ms, usbY = my + 77 * ms;
+  const sp = (i: number) => ({ x: mx + (46 + i * 20) * ms, y: my + 92 * ms });
   return (
     <>
       <Stage>
         <g opacity={clamp(prog(t, 0.2, 0.4))}>
-          <VoiceModule x={90} y={200} s={1.4} />
-          {/* the Gravity plug being pulled out */}
-          <g transform={`translate(${-plugOut * 70} 0)`} opacity={1 - prog(t, T.s(2), 0.5)}>
-            <rect x={90 - 34} y={200 + 20} width={16} height={70} rx={2} fill="#f4f4f4" stroke="#9e9e9e" />
-            {[0, 1, 2, 3].map((i) => <path key={i} d={`M${90 - 34},${200 + 31 + i * 17} C${20},${231 + i * 17} ${10},${300 + i * 12} ${-20},${330 + i * 12}`} fill="none" stroke="#8d949a" strokeWidth={3.4} />)}
-          </g>
+          {/* the module, with the speaker already soldered to SP- / SP+ (step 5a); the Gravity socket stays empty */}
+          <path d={`M${sp(3).x},${sp(3).y} C${sp(3).x},${sp(3).y + 60} ${170},${440} ${168},${470}`} fill="none" stroke="#212121" strokeWidth={3.5} />
+          <path d={`M${sp(4).x},${sp(4).y} C${sp(4).x},${sp(4).y + 60} ${200},${440} ${192},${470}`} fill="none" stroke="#e53935" strokeWidth={3.5} />
+          <Speaker cx={180} cy={500} r={30} />
+          <VoiceModule x={mx} y={my} s={ms} />
           {/* micro-USB cable to the laptop */}
-          <path d={`M${90 + 76 * 1.4},${200 - 7 * 1.4} C${200},${60} ${330},${50} ${420},${90}`} fill="none" stroke="#3d3d3d" strokeWidth={8} strokeLinecap="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1 - clamp(prog(t, T.s(2) + 0.5, 1))} />
+          <path d={`M${usbX},${usbY} C${usbX + 60},${usbY} ${430},${220} ${450},${130}`} fill="none" stroke="#3d3d3d" strokeWidth={8} strokeLinecap="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1 - cable} opacity={cable > 0 ? 1 : 0} />
         </g>
       </Stage>
-      <Card x={30} y={20} w={380} icon="🔌" title={ui.unplug} color={C.red} size={17} anim={popStyle(prog(t, T.s(1), 0.4))} />
-      <Abs x={440} y={20} w={810} h={400} style={{ ...fadeStyle(prog(t, T.s(2) + 2, 0.5)), background: '#fff', borderRadius: 14, boxShadow: '0 10px 26px rgba(0,0,0,0.18)', overflow: 'hidden' }}>
+      <Card x={20} y={20} w={400} icon="🔌" title={ui.unplug} color={C.red} size={16} anim={popStyle(prog(t, T.s(1), 0.4))} />
+      <Abs x={470} y={20} w={790} h={400} style={{ ...fadeStyle(prog(t, T.s(2) + 2, 0.5) * (1 - prog(t, T.s(5) + 0.5, 0.5))), background: '#fff', borderRadius: 14, boxShadow: '0 10px 26px rgba(0,0,0,0.18)', overflow: 'hidden' }}>
         <div style={{ background: '#e8eef3', padding: '10px 16px', fontSize: 17, fontWeight: 900 }}>{ui.drive}</div>
         <div style={{ padding: '8px 16px', display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 20, fontSize: 16, fontWeight: 700 }}>
           <div style={{ gridColumn: '1 / span 2', color: '#7b8794', opacity: 1 - prog(t, T.s(3) + 1.5, 0.4), textDecoration: t > T.s(3) + 0.8 ? 'line-through' : 'none' }}>🗑️ {ui.demo}</div>
@@ -130,9 +134,10 @@ export const Step5d: SceneFC = ({ t, T, ui }) => {
           ))}
         </div>
       </Abs>
-      <Pill x={440} y={440} text={ui.nl} bg={C.orange} anim={popStyle(prog(t, T.s(4), 0.4))} />
-      <Pill x={760} y={440} text={ui.eject} bg={C.teal} anim={popStyle(prog(t, T.s(4) + 2.5, 0.4))} />
-      <div style={{ fontFamily: EMOJI, position: 'absolute', left: 410, top: 60, fontSize: 60, ...fadeStyle(prog(t, T.s(2) + 1.2, 0.4)) }}>💻</div>
+      <Pill x={470} y={440} text={ui.nl} bg={C.orange} anim={popStyle(prog(t, T.s(4), 0.4))} />
+      <Pill x={760} y={440} text={ui.eject} bg={C.teal} anim={popStyle(prog(t, T.s(4) + 2, 0.4))} />
+      <Pill x={980} y={440} text={ui.unplugMicro} bg={C.green} anim={popStyle(prog(t, T.s(5), 0.4))} />
+      <div style={{ fontFamily: EMOJI, position: 'absolute', left: 420, top: 70, fontSize: 60, ...fadeStyle(prog(t, T.s(2) + 1.2, 0.4) * (1 - prog(t, T.s(5) + 0.8, 0.5))) }}>💻</div>
     </>
   );
 };
@@ -200,9 +205,9 @@ export const Step5g: SceneFC = ({ t, T, ui }) => {
   return (
     <>
       {benchOn ? (
-        <BenchScene t={t} T={T} upto={4} extra={[...STEP5_EARLY, 'grav', 'wVp', 'wVm', 'wT', 'wR', 'r1k', 'wD1']} view={[[T.s(3) - 0.2, VIEWS[5]], [T.s(3) + 1.2, camBox(784, 382, 330)]]}>
-          <Tag x={H(24, '-b').x} y={H(24, '-b').y} text="stripe (−) → − rail" o={win(t, T.s(3) + 3, T.dur)} dx={70} dy={40} size={10} color="#1e63d6" />
-          <Tag x={H(22, '+b').x} y={H(22, '+b').y} text="long leg (+) → + rail" o={win(t, T.s(3) + 3, T.dur)} dx={-80} dy={50} size={10} color="#e53935" />
+        <BenchScene t={t} T={T} upto={4} extra={[...STEP5_EARLY, 'grav', 'wVp', 'wVm', 'wT', 'wR', 'r1k', 'wD1']} view={[[T.s(3) - 0.2, VIEWS[5]], [T.s(3) + 1.2, camBox(784, 360, 330)]]}>
+          <Tag x={H(24, '-b').x} y={H(24, '-b').y} text="stripe (−) → − rail" o={win(t, T.s(3) + 3, T.dur)} dx={78} dy={-62} size={10} color="#1e63d6" />
+          <Tag x={H(22, '+b').x} y={H(22, '+b').y} text="long leg (+) → + rail" o={win(t, T.s(3) + 3, T.dur)} dx={-82} dy={22} size={10} color="#e53935" />
         </BenchScene>
       ) : (
         <>
@@ -230,32 +235,37 @@ export const Step5g: SceneFC = ({ t, T, ui }) => {
 
 // ---------------------------------------------------------------------------------------------
 export const Step5h: SceneFC = ({ t, T, ui }) => {
-  const checks = [ui.c1, ui.c2, ui.c3, ui.c4];
-  const checkAt = [T.s(0) + 0.5, T.s(0) + 4, T.s(1) + 0.3, T.s(1) + 3];
-  const say3 = T.s(5) + 1;
-  const vol = T.s(7) + 0.8;
+  const checks = [ui.c1, ui.c2, ui.c3, ui.c4, ui.c5];
+  const checkAt = [T.s(0) + 0.5, T.s(0) + 4, T.s(1) + 0.3, T.s(2) + 0.3, T.s(2) + 4];
+  const PLUG = 4;
+  const say3 = T.s(7) + 1;
+  const vol = T.s(9) + 0.8;
   const events = [{ t: say3, type: 'type' as const, text: 'say 3' }, { t: say3 + 0.5, text: '[cmd] say 3' }, { t: vol, type: 'type' as const, text: 'vol 15' }, { t: vol + 0.6, text: '[cmd] vol 15' }];
   const talking = T.robinOn(t);
-  const plugged = t > T.s(2);
-  const sp = voicePin('SP+');
+  const plugged = t > T.s(PLUG) && t < T.s(10);
+  const sp = voicePin('SP+'), vcc = voicePin('VCC'), gnd = voicePin('GND');
   return (
-    <BenchScene t={t} T={T} upto={5} view={plugged ? [[T.s(2), VIEWS[5]]] : VIEWS[5]} face={plugged && t > T.s(2) + 1.4 ? (talking ? 'talk' : 'happy') : undefined} bench={{ talking }}
+    <BenchScene t={t} T={T} upto={5} view={VIEWS[5]} face={plugged && t > T.s(PLUG) + 1.4 ? (talking ? 'talk' : 'happy') : undefined} bench={{ talking }}
       html={<>
-        <Abs x={16} y={492} w={1248} style={{ ...fadeStyle(win(t, 0.3, T.s(2) + 0.5, 0.4)), display: 'flex', gap: 8, alignItems: 'stretch' }}>
-          <div style={{ background: C.orange, color: '#fff', borderRadius: 12, padding: '8px 12px', fontSize: 16, fontWeight: 900, display: 'flex', alignItems: 'center' }}>🔍 {ui.checkT}</div>
+        <Abs x={16} y={492} w={1248} style={{ ...fadeStyle(win(t, 0.3, T.s(PLUG) + 0.5, 0.4)), display: 'flex', gap: 6, alignItems: 'stretch' }}>
+          <div style={{ background: C.orange, color: '#fff', borderRadius: 12, padding: '8px 10px', fontSize: 15, fontWeight: 900, display: 'flex', alignItems: 'center' }}>🔍 {ui.checkT}</div>
           {checks.map((c, i) => (
-            <div key={i} style={{ flex: 1, background: '#fff', borderRadius: 12, padding: '6px 10px', fontSize: 14.5, fontWeight: 800, lineHeight: 1.2, boxShadow: '0 4px 12px rgba(29,43,58,0.12)', opacity: clamp(prog(t, checkAt[i], 0.3)) }}>
+            <div key={i} style={{ flex: 1, background: '#fff', borderRadius: 12, padding: '6px 9px', fontSize: 13.5, fontWeight: 800, lineHeight: 1.2, boxShadow: '0 4px 12px rgba(29,43,58,0.12)', opacity: clamp(prog(t, checkAt[i], 0.3)) }}>
               <span style={{ color: C.green }}>☑</span> {c}
             </div>
           ))}
         </Abs>
-        <Term x={430} y={6} w={420} h={150} t={t} events={events} anim={fadeStyle(prog(t, T.s(5), 0.4))} size={12.5} />
-        <Card x={16} y={500} w={1248} icon="🔧" title={ui.fix} color={C.red} size={14} anim={popStyle(prog(t, T.s(8), 0.4))} />
-        <Abs x={1100} y={420} style={{ ...popStyle(prog(t, T.s(9), 0.4)), background: C.green, color: '#fff', borderRadius: 18, padding: '8px 16px', fontSize: 20, fontWeight: 900 }}>🔌 Unplug</Abs>
+        <Pill x={16} y={440} text={`🔎 ${ui.meter}`} bg={C.purple} size={16} anim={popStyle(win(t, T.s(3), T.s(PLUG) + 0.5, 0.4))} />
+        <Pill x={940} y={440} text={`😶 ${ui.face}`} bg={C.orange} size={16} anim={popStyle(win(t, T.s(PLUG), T.s(PLUG) + 5, 0.4))} />
+        <Term x={430} y={6} w={420} h={150} t={t} events={events} anim={fadeStyle(prog(t, T.s(7), 0.4))} size={12.5} />
+        <Abs x={1100} y={430} style={{ ...popStyle(prog(t, T.s(10), 0.4)), background: C.green, color: '#fff', borderRadius: 18, padding: '8px 16px', fontSize: 20, fontWeight: 900 }}>🔌 Unplug</Abs>
+        <Card x={16} y={500} w={1248} icon="🔧" title={ui.fix} color={C.red} size={13.5} anim={popStyle(prog(t, T.s(11), 0.4))} />
       </>}>
       <Ring x={H(24, '-b').x} y={H(24, '-b').y} t={t} on={t > checkAt[0] && t < checkAt[1]} color="#1e63d6" r={8} />
-      <Ring x={sp.x} y={sp.y} t={t} on={t > checkAt[3] && t < T.s(2)} color={C.orange} r={9} />
-      <Ring x={SPEAKER.cx} y={SPEAKER.cy} t={t} on={t > checkAt[3] && t < T.s(2)} color={C.orange} r={40} />
+      <Ring x={sp.x} y={sp.y} t={t} on={t > checkAt[3] && t < checkAt[4]} color={C.orange} r={12} />
+      <Ring x={SPEAKER.cx} y={SPEAKER.cy} t={t} on={t > checkAt[3] && t < checkAt[4]} color={C.orange} r={38} />
+      <Ring x={vcc.x} y={vcc.y} t={t} on={t > T.s(3) + 2 && t < T.s(PLUG)} color={C.purple} r={8} />
+      <Ring x={gnd.x} y={gnd.y} t={t} on={t > T.s(3) + 4 && t < T.s(PLUG)} color={C.purple} r={8} />
     </BenchScene>
   );
 };

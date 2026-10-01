@@ -45,7 +45,7 @@ On-screen text:
    - *spoken:* "The Arduino Uno R4 Wi-Fi comes from school. Check that it has a U S B C port, and a grid of little L E Ds on the board."
 3. [🔌 USB OUT] You need a USB-C data cable, and the micro-USB data cable you already have, for the voice module. Careful: some cheap cables can only charge, and then nothing works.
    - *spoken:* "You need a U S B C data cable, and the micro U S B data cable you already have, for the voice module. Careful: some cheap cables can only charge, and then nothing works."
-4. [🔌 USB OUT] At Pulsed you use a soldering iron with a stand, a drill with a clamp, a wire cutter, a small screwdriver, a hot-glue gun, insulating tape, and safety glasses.
+4. [🔌 USB OUT] At Pulsed you use a soldering iron with a stand and some solder, a drill with a clamp, a wire cutter and stripper, a small screwdriver, a hot-glue gun, insulating tape or heat-shrink, and safety glasses.
 5. [🔌 USB OUT] And later, a phone charger to power Robin at home.
 
 On-screen text:
@@ -58,7 +58,7 @@ On-screen text:
 - `chargeT`: Charge-only cables!
 - `chargeX`: They carry no data. Laptop sees nothing? Try another cable.
 - `toolsT`: At Pulsed
-- `toolsX`: Soldering iron + stand, drill + clamp, wire cutter, screwdriver, hot glue, tape, safety glasses.
+- `toolsX`: Soldering iron + stand + solder, drill + clamp, wire cutter + stripper, screwdriver, hot glue, tape or heat-shrink, safety glasses.
 - `phoneT`: Phone charger (5 V)
 - `phoneX`: Powers Robin at home, later.
 
@@ -68,7 +68,7 @@ On-screen text:
 1. [🔌 USB OUT] A quick word about jumper wires. A male end has a pin. A female end has a little hole.
 2. [🔌 USB OUT] Male to male wires go between the Arduino and the breadboard.
 3. [🔌 USB OUT] Male to female wires plug onto the pins of the motion sensor.
-4. [🔌 USB OUT] The voice module brings its own cable. Its white plug goes into the module, and the other end has four female sockets. So you connect it with four male to male wires.
+4. [🔌 USB OUT] The voice module brings its own cable. Its white plug goes into the module's white socket, and the other end has four female sockets. So you connect it with four male to male wires.
 5. [🔌 USB OUT] And one female to female wire may become two speaker wires. More about that in step five.
 
 On-screen text:
@@ -79,7 +79,7 @@ On-screen text:
 - `fm`: M – F
 - `fmUse`: onto the PIR pins
 - `grav`: Gravity cable
-- `gravUse`: white plug → 4 female sockets → 4 × M-M
+- `gravUse`: white plug → module socket · 4 female sockets → 4 × M-M
 - `ff`: F – F
 - `ffUse`: maybe: speaker wires (step 5)
 
@@ -89,8 +89,8 @@ On-screen text:
 1. [🔌 USB OUT] Before we touch a single wire, upload the firmware. The software guide, file 05, part A, has every click.
 2. [🔌 USB OUT] Install Arduino IDE 2, the UNO R4 boards package, and the ArduinoMqttClient library.
    - *spoken:* "Install Arduino I D E 2, the Uno R4 boards package, and the Arduino M Q T T Client library."
-3. [🔌 USB OUT] Copy arduino_secrets.example.h to arduino_secrets.h, and leave the WiFi name empty. That is offline test mode: no network needed yet.
-   - *spoken:* "Copy arduino secrets dot example dot h to arduino secrets dot h, and leave the Wi-Fi name empty. That is offline test mode: no network needed yet."
+3. [🔌 USB OUT] Copy arduino_secrets.example.h to arduino_secrets.h, and change the WiFi name to two empty quotes, like on screen. That is offline test mode: no network needed yet.
+   - *spoken:* "Copy arduino secrets dot example dot h to arduino secrets dot h, and change the Wi-Fi name to two empty quotes, like on screen. That is offline test mode: no network needed yet."
 4. [⚡ USB IN] Plug in the Arduino, and upload robin.ino. Open the Serial Monitor at 115200 baud, line ending Newline, and type help.
    - *spoken:* "Plug in the Arduino, and upload robin dot ino. Open the Serial Monitor at one hundred fifteen thousand two hundred baud, line ending Newline, and type help."
 5. [🔌 USB OUT] Then unplug the USB cable. From now on, we wire with the cable unplugged.
@@ -100,7 +100,7 @@ On-screen text:
 - `s1`: Arduino IDE 2
 - `s2`: Boards: Arduino UNO R4 Boards
 - `s3`: Library: ArduinoMqttClient
-- `s4`: arduino_secrets.h: SECRET_WIFI_SSID ""  → offline test mode
+- `s4`: arduino_secrets.h: SECRET_WIFI_SSID "MyPhoneHotspot" → ""  (offline test mode)
 - `s5`: Upload robin.ino
 - `s6`: Serial Monitor: 115200 baud · Newline
 - `guide`: docs/05, part A
@@ -114,9 +114,10 @@ On-screen text:
    - *spoken:* "The badge in the top corner shows it all the time: U S B out while you wire, U S B in only while you test."
 3. [🔌 USB OUT] Five volts can't hurt you, but it can destroy a module. Never connect the plus rail to the minus rail. That's a short circuit.
 4. [🔌 USB OUT] Read the label, not the picture. Pin order can differ between versions of a module, so always go by the names printed on your part.
-5. [🔌 USB OUT] Three things have a plus and a minus, and break when reversed: the module power pins, the capacitor, and the breadboard rails. Check them twice.
+5. [🔌 USB OUT] Three things have a plus and a minus, and do damage when reversed: the module power pins, the capacitor, and the breadboard rails. If the rails are swapped, everything on them is reversed. Check them twice.
 6. [🔌 USB OUT] Check every wire twice before you plug in. If something gets warm or smells, or the power light stays off, unplug immediately.
-7. [🔌 USB OUT] And wear safety glasses when you cut wire ends, solder, or drill.
+7. [🔌 USB OUT] Work on a wooden table or on cardboard. Never put the Arduino, the motion sensor, or the voice module on metal, or on your laptop.
+8. [🔌 USB OUT] And wear safety glasses when you cut wire ends, solder, or drill.
 
 On-screen text:
 - `goldenT`: Golden rule
@@ -126,9 +127,11 @@ On-screen text:
 - `labelT`: Read the label, not the picture
 - `labelX`: Pin order differs between module versions.
 - `polT`: + and − matter here
-- `polX`: Module power pins · the capacitor · the rails. Check twice.
+- `polX`: Module power pins · the capacitor · the rails (swapped rails reverse everything). Check twice.
 - `warmT`: Warm? Smells? LED off?
 - `warmX`: Unplug immediately.
+- `surfaceT`: Wood or cardboard, never metal
+- `surfaceX`: Not on the laptop either: bare solder points underneath short the 5 V.
 - `glassesT`: Safety glasses
 - `glassesX`: Cutting wire ends, soldering, drilling.
 - `short`: Short circuit: + straight to −
@@ -138,7 +141,7 @@ On-screen text:
 
 1. [🔌 USB OUT] Meet the breadboard. Underneath the holes, metal strips connect them in groups.
 2. [🔌 USB OUT] The long rows along the edges are the power rails. All holes along the red line are connected: that is plus. All holes along the blue line are connected: that is minus.
-3. [🔌 USB OUT] Careful: on some breadboards the red row is on the outside, on others on the inside. Always follow the red and blue lines printed on your board, not the picture.
+3. [🔌 USB OUT] Careful: on some breadboards the red row is on the outside, on others on the inside. Always follow the red and blue lines printed on your board, not the picture. And if a line has a break in the middle, the rail is split in two: bridge the gap with a short wire.
 4. [🔌 USB OUT] There is a pair of rails on each long side, and the two pairs are not connected. We use only the pair next to the Arduino’s power pins.
 5. [🔌 USB OUT] In the middle, each numbered column of five holes is one group. The gap in the middle separates the top five from the bottom five.
 6. [🔌 USB OUT] Two legs in the same group are connected. Two legs in different groups are not.
@@ -206,7 +209,7 @@ On-screen text:
 1. [🔌 USB OUT] Wiring. Put one leg of the LDR into the plus rail. Its other leg goes into column 5, in the bottom half of the board.
    - *spoken:* "Wiring. Put one leg of the L D R into the plus rail. Its other leg goes into column 5, in the bottom half of the board."
    - *adds* `ldr`: LDR: one leg in the + rail, the other in column 5 (bottom half). (a: + rail (col 3); b: column 5, row i)
-2. [🔌 USB OUT] Take a ten kilo-ohm resistor. The label on the bag tells you which is which. With four colour bands it reads brown, black, orange. With five bands, brown, black, black, red.
+2. [🔌 USB OUT] Take a ten kilo-ohm resistor. The label on the bag tells you which is which. With four colour bands it reads brown, black, orange. With five bands, brown, black, black, red. Keep the one kilo-ohm bag closed for now.
 3. [🔌 USB OUT] Put one leg in the same column 5, and the other leg in the minus rail.
    - *adds* `r10k`: 10 kΩ: one leg in column 5, the other in the − rail. (a: column 5, row g; b: − rail (col 9))
 4. [🔌 USB OUT] Finally, a wire from column 5 to pin A0.
@@ -226,9 +229,9 @@ On-screen text:
 1. [⚡ USB IN] Test time. Plug in, open the Serial Monitor, type raw, and press Enter.
 2. [⚡ USB IN] Cover the LDR with your finger: light_raw drops a lot. Shine your phone torch on it: it rises.
    - *spoken:* "Cover the L D R with your finger: light raw drops a lot. Shine your phone torch on it: it rises."
-3. [⚡ USB IN] Stuck near zero or near 1023? Then the LDR and the resistor are not in the same column, or the A0 wire is in the wrong column.
-   - *spoken:* "Stuck near zero or near ten twenty-three? Then the L D R and the resistor are not in the same column, or the A zero wire is in the wrong column."
-4. [🔌 USB OUT] Unplug.
+3. [🔌 USB OUT] Unplug.
+4. [🔌 USB OUT] Stuck near zero or near 1023? With the cable unplugged, check that the LDR and the resistor share one column, and that the A0 wire is in that column.
+   - *spoken:* "Stuck near zero or near ten twenty-three? With the cable unplugged, check that the L D R and the resistor share one column, and that the A zero wire is in that column."
 
 On-screen text:
 - `note`: pir_raw: the PIR is not connected yet, ignore it
@@ -255,6 +258,8 @@ On-screen text:
 2. [🔌 USB OUT] The time delay knob: turn it fully counter-clockwise. That is the shortest time, about three seconds.
 3. [🔌 USB OUT] The sensitivity knob: start in the middle.
 4. [🔌 USB OUT] If your sensor has a jumper, put it on H. Then the output stays high while you keep moving.
+5. [🔌 USB OUT] Knobs not labelled on your sensor? The time knob is the one that changes how long pir_raw stays high.
+   - *spoken:* "Knobs not labelled on your sensor? The time knob is the one that changes how long P I R raw stays high."
 
 On-screen text:
 - `tx`: time delay: fully counter-clockwise (≈ 3 s)
@@ -303,8 +308,8 @@ On-screen text:
    - *spoken:* "Test. Plug in, and wait sixty seconds. A P I R warms up, and gives random output at first."
 2. [⚡ USB IN] Type raw. Sit still: pir_raw stays around zero. Wave your hand: it jumps to about 650 to 700.
    - *spoken:* "Type raw. Sit still: P I R raw stays around zero. Wave your hand: it jumps to about 650 to 700."
-3. [⚡ USB IN] High for minutes? The time knob is not at minimum. Random flicker? Wait longer, point it away, or lower the sensitivity.
-4. [🔌 USB OUT] Unplug.
+3. [🔌 USB OUT] Unplug.
+4. [🔌 USB OUT] High for minutes? With the cable unplugged, turn the time knob fully counter-clockwise. Random flicker? Wait longer, point it away, or lower the sensitivity.
 
 On-screen text:
 - `warm`: PIR warming up…
@@ -367,25 +372,31 @@ On-screen text:
 
 1. [⚡ USB IN] Test. Plug in, type raw, and hold green: yes equals pressed.
 2. [⚡ USB IN] Pressing also shows a tick or a cross on the face, and the Serial Monitor prints: button, yes.
-3. [⚡ USB IN] Always pressed? You used two legs that are always connected. Move a wire to the diagonal leg.
-4. [🔌 USB OUT] Unplug.
+3. [🔌 USB OUT] Unplug.
+4. [🔌 USB OUT] Always pressed? You used two legs that are always connected. With the cable unplugged, move the wire to the diagonal leg, then test again.
 
 On-screen text:
-- `fix`: Always "pressed" → move a wire to the diagonal leg.
+- `fix`: Always "pressed" → unplug, move the wire to the diagonal leg, test again.
 
-## Step 5 of 8 · Voice module: two sets of pins  `step5a`
+## Step 5 of 8 · Voice module: its sockets and holes  `step5a`
 *2 · Build*
 
 1. [🔌 USB OUT] Step five: Robin’s voice. This step has the most parts, so we go slowly: speaker, sound files, cable, capacitor, and test.
-2. [🔌 USB OUT] The voice module has two sets of pins. The small white plug carries plus, minus, T and R: power and talking.
-3. [🔌 USB OUT] A row of pins or holes carries the speaker outputs, SP+ and SP−, and a few others we do not use.
-   - *spoken:* "A row of pins or holes carries the speaker outputs, S P plus and S P minus, and a few others we do not use."
-4. [🔌 USB OUT] Read the labels printed on your module. We go by those names, never by position.
+2. [🔌 USB OUT] The voice module has three places to connect things. The small white socket carries plus, minus, T and R: power and talking.
+3. [🔌 USB OUT] Two rows of small holes carry VCC, GND, RX, TX, BUSY, and the speaker outputs, SP+ and SP−, at the end of the bottom row.
+   - *spoken:* "Two rows of small holes carry V C C, G N D, R X, T X, BUSY, and the speaker outputs, S P plus and S P minus, at the end of the bottom row."
+4. [🔌 USB OUT] A small white 2-pin socket marked SPK is the same speaker output. But our speaker’s plug does not fit it, so we solder to the SP+ and SP− holes. Never push bare wires into the SPK socket.
+   - *spoken:* "A small white two-pin socket marked S P K is the same speaker output. But our speaker’s plug does not fit it, so we solder to the S P plus and S P minus holes. Never push bare wires into the S P K socket."
+5. [🔌 USB OUT] Read the labels printed on your module. We go by those names, never by position.
 
 On-screen text:
-- `plug`: white Gravity plug: T · R · − · +
-- `header`: header: … SP+ · SP− …
-- `usb`: micro-USB (sound files)
+- `plug`: white Gravity socket: T · R · − · +
+- `plugX`: power + talking (the cable goes here)
+- `header`: two rows of holes
+- `headerX`: VCC GND RX TX BUSY  /  ONE DACR DACL SP− SP+
+- `spk`: SPK socket
+- `spkX`: same speaker output; our plug does not fit. Never bare wires in it.
+- `usb`: micro-USB (on the back): sound files
 - `parts`: A speaker · B sound files · C cable · D capacitor · E test
 - `yours`: go by the labels on YOUR module
 
@@ -393,7 +404,8 @@ On-screen text:
 *2 · Build*
 
 1. [🔌 USB OUT] Part A: the speaker. The set has two speakers, and their four wires end in one white plug. We use one speaker. The other is a spare.
-2. [🔌 USB OUT] Safety glasses on. Cut the wires right behind the plug.
+2. [🔌 USB OUT] Safety glasses on. Cut the wires right behind the plug. Careful: this white 4-pin plug would also fit the module’s white socket. Never plug it in there. Cut it off.
+   - *spoken:* "Safety glasses on. Cut the wires right behind the plug. Careful: this white four-pin plug would also fit the module’s white socket. Never plug it in there. Cut it off."
 3. [🔌 USB OUT] Follow each wire back to its speaker, so you know which two wires belong to the speaker you will use. Never connect both speakers to the module. Together they would be too heavy for its amplifier.
 4. [🔌 USB OUT] Wrap each bare end of the spare speaker separately in tape, so they cannot touch anything.
 5. [🔌 USB OUT] Strip five millimetres from your speaker’s two wires, and twist the strands.
@@ -405,58 +417,68 @@ On-screen text:
 - `strip`: 4 · strip 5 mm, twist
 - `glasses`: Safety glasses on
 - `never`: Never both speakers on the module
+- `plugT`: Never put this plug in the module
+- `plugX`: It fits the Gravity socket, but would put a speaker across the power. Cut it off.
 
 ## Step 5 of 8 · Speaker: two solder joints  `step5c`
 *2 · Build*
 
-1. [🔌 USB OUT] Now look at SP+ and SP− on your module.
-   - *spoken:* "Now look at S P plus and S P minus on your module."
-2. [🔌 USB OUT] Are they pins? Then solder each speaker wire to one half of a cut female to female jumper, cover the joint with tape or heat-shrink, and push the halves onto the pins.
-3. [🔌 USB OUT] Are they holes? Then solder the wires straight into them, without a blob that reaches the hole next to it.
-4. [🔌 USB OUT] Red goes to SP+. For a single speaker, either way round works if your wires have no colours.
-   - *spoken:* "Red goes to S P plus. For a single speaker, either way round works if your wires have no colours."
+1. [🔌 USB OUT] Now find SP+ and SP− on your module: two neighbouring holes at the end of the bottom row, next to DACL.
+   - *spoken:* "Now find S P plus and S P minus on your module: two neighbouring holes at the end of the bottom row, next to D A C L."
+2. [🔌 USB OUT] On most boards they are holes. Solder the wires straight into them, without a blob that reaches the next hole, and never join SP+ to SP−.
+   - *spoken:* "On most boards they are holes. Solder the wires straight into them, without a blob that reaches the next hole, and never join S P plus to S P minus."
+3. [🔌 USB OUT] If your board has pins there instead, solder each wire to one half of a cut female to female jumper, cover the joint with tape or heat-shrink, and push the halves onto the pins.
+4. [🔌 USB OUT] Red goes to SP+. If your wires have no colours, either way round works for one speaker. Never solder the speaker to any other hole.
+   - *spoken:* "Red goes to S P plus. If your wires have no colours, either way round works for one speaker. Never solder the speaker to any other hole."
    - *adds* `voice`: DFR0534 voice module, off the board, lying flat away from the Arduino. (off the breadboard)
    - *adds* `spk`: one speaker of the 2 W set (the other is a spare with taped wire ends). (off the breadboard)
-   - *adds* `wSPp`: speaker + (red) → DFR0534 SP+ (soldered, step 5a). (speaker wire, red: speaker + → DFR0534 SP+)
-   - *adds* `wSPm`: speaker − (black) → DFR0534 SP− (soldered, step 5a). (speaker wire, black: speaker − → DFR0534 SP−)
-5. [🔌 USB OUT] Solder at Pulsed, with the iron in its stand, in a ventilated spot, and wash your hands afterwards. Never touch the tip. Never soldered before? Ask at Pulsed. It takes five minutes to learn.
+   - *adds* `wSPp`: speaker + (red) → DFR0534 SP+ hole (bottom row, last; soldered in step 5a). (speaker wire, red: speaker + → DFR0534 SP+)
+   - *adds* `wSPm`: speaker − (black) → DFR0534 SP− hole (bottom row, next to SP+; soldered in step 5a). (speaker wire, black: speaker − → DFR0534 SP−)
+5. [🔌 USB OUT] Then tape both wires down, about two centimetres from the joints, so a tug cannot tear them off.
+6. [🔌 USB OUT] Solder at Pulsed, with the iron in its stand, in a ventilated spot. Hold the wire with tape or a helping hand, not your fingers: the wire gets hot too. If the iron falls, let it fall. Switch it off when you are done, and wash your hands. Never soldered before? Ask at Pulsed. It takes five minutes to learn.
 
 On-screen text:
+- `holesT`: SP+ / SP− are holes (most boards)
+- `holesX`: solder straight in · no blob to the next hole · SP+ and SP− never joined
 - `pinsT`: SP+ / SP− are pins
 - `pinsX`: solder to F-F jumper halves, insulate, push on
-- `holesT`: SP+ / SP− are holes
-- `holesX`: solder straight in, no blob to the next hole
-- `red`: red → SP+
-- `safeT`: Hot tip: never touch it
-- `safeX`: Iron in its stand · ventilated spot · wash your hands · ask at Pulsed
+- `red`: red → SP+ · only these two holes
+- `tapeT`: Tape the wires down 2 cm from the joints
+- `tapeX`: so a tug cannot tear them off
+- `safeT`: Hot tip AND hot wire
+- `safeX`: Iron in its stand · ventilated · hold the wire with tape, not fingers · let a falling iron fall · switch off · wash hands
 
 ## Step 5 of 8 · Sound files onto the module  `step5d`
 *2 · Build*
 
 1. [🔌 USB OUT] Part B: Robin’s voice files. The module has its own eight megabytes of memory.
-2. [💽 MICRO] First, pull the white plug out of the module, so the module is connected to nothing else. Otherwise the laptop and the Arduino would both feed it five volts.
+2. [🔌 USB OUT] The Gravity cable is not in the module yet. Keep it out while the micro-USB cable is in, so only the laptop feeds the module.
+   - *spoken:* "The Gravity cable is not in the module yet. Keep it out while the micro U S B cable is in, so only the laptop feeds the module."
 3. [💽 MICRO] Connect the module to your laptop with the micro-USB data cable. It shows up as a small USB drive.
    - *spoken:* "Connect the module to your laptop with the micro U S B data cable. It shows up as a small U S B drive."
 4. [💽 MICRO] Delete any demo files on it. Copy the thirteen files, 01.mp3 to 13.mp3, from the folder audio/en into the root of the drive. Not inside a folder.
    - *spoken:* "Delete any demo files on it. Copy the thirteen files, zero one dot M P 3 to thirteen dot M P 3, from the folder audio slash E N into the root of the drive. Not inside a folder."
-5. [🔌 USB OUT] Use audio/nl for Dutch. Eject the drive safely, and unplug the micro-USB cable.
-   - *spoken:* "Use audio slash N L for Dutch. Eject the drive safely, and unplug the micro U S B cable."
+5. [💽 MICRO] Use audio/nl for Dutch. Then eject the drive safely.
+   - *spoken:* "Use audio slash N L for Dutch. Then eject the drive safely."
+6. [🔌 USB OUT] And unplug the micro-USB cable.
+   - *spoken:* "And unplug the micro U S B cable."
 
 On-screen text:
-- `unplug`: Gravity plug OUT first: never two 5 V sources at once
+- `unplug`: Gravity cable stays OUT while the micro-USB is in: never two 5 V sources at once
 - `drive`: 💽  USB drive (DFR0534)  ›  root
 - `demo`: demo files from the factory…
 - `nl`: 🇳🇱 Dutch? use audio/nl
-- `eject`: ⏏️ Eject safely, then unplug
+- `eject`: ⏏️ Eject safely
+- `unplugMicro`: 🔌 Unplug the micro-USB
 
 ## Step 5 of 8 · Voice wiring: the Gravity cable  `step5e`
 *2 · Build*
 
-1. [🔌 USB OUT] Part C: wiring, with the Arduino’s USB still unplugged. Plug the cable into the module’s white plug. It only fits one way.
-   - *spoken:* "Part C: wiring, with the Arduino’s U S B still unplugged. Plug the cable into the module’s white plug. It only fits one way."
-   - *adds* `grav`: Gravity cable: white plug into the module, 4 female sockets at the other end. (off the breadboard)
+1. [🔌 USB OUT] Part C: wiring, with the Arduino’s USB still unplugged. Push the cable’s white plug into the module’s white socket. It only fits one way.
+   - *spoken:* "Part C: wiring, with the Arduino’s U S B still unplugged. Push the cable’s white plug into the module’s white socket. It only fits one way."
+   - *adds* `grav`: Gravity cable: its white plug into the module's white Gravity socket, 4 female sockets at the other end. (off the breadboard)
 2. [🔌 USB OUT] Push one male to male wire fully into each of the four female sockets, so no metal shows.
-3. [🔌 USB OUT] Follow each wire back to the plug, and read the letter printed next to its pin: plus, minus, T, R. Put a small tape flag with that letter on each wire. Do not trust the wire colours.
+3. [🔌 USB OUT] Follow each wire back to the socket, and read the letter printed next to its pin: plus, minus, T, R. Put a small tape flag with that letter on each wire. Do not trust the wire colours.
 4. [🔌 USB OUT] Plus goes to the plus rail. Minus goes to the minus rail.
    - *adds* `wVp`: cable socket "+" → + rail. (M-M, red: Gravity cable socket "+" → + rail (col 27))
    - *adds* `wVm`: cable socket "−" → − rail. (M-M, black: Gravity cable socket "−" → − rail (col 26))
@@ -469,7 +491,7 @@ On-screen text:
 7. [🔌 USB OUT] And a wire from column 26 goes to pin D1.
    - *spoken:* "And a wire from column 26 goes to pin D one."
    - *adds* `wD1`: column 26 (top half) → Arduino D1 (TX). (M-M, pink: column 26, row b (top half) → Arduino D1)
-8. [🔌 USB OUT] Lay the module flat, away from the Arduino, and tape it down, so its pins cannot touch anything.
+8. [🔌 USB OUT] Lay the module flat on wood or cardboard, never metal, away from the Arduino, and tape it down, so its pins cannot touch anything.
 
 On-screen text:
 - `flags`: tape flags: + · − · T · R (go by the letters, not the colours)
@@ -479,7 +501,7 @@ On-screen text:
 - `r`: socket R → col 22 (top half)
 - `d1`: col 26 → D1 (TX)
 - `band`: 1 kΩ: brown · black · red  (5 bands: brown · black · black · brown)
-- `flat`: module flat, taped down, away from the Arduino
+- `flat`: module flat on wood/cardboard, taped down, away from the Arduino
 
 ## Step 5 of 8 · Why do T and R cross?  `step5f`
 *2 · Build*
@@ -509,7 +531,7 @@ On-screen text:
 3. [🔌 USB OUT] But it has a plus and a minus. The minus leg is under the light stripe with the minus signs, and it is the shorter leg.
 4. [🔌 USB OUT] Put the long plus leg in the plus rail, and the striped minus leg in the minus rail, next to the module’s power wires. The legs are five millimetres apart, so put them a column or two apart.
    - *adds* `cap`: 680 µF capacitor: long + leg in the + rail, striped − leg in the − rail. (plus: + rail (col 22); minus: − rail (col 24))
-5. [🔌 USB OUT] Backwards is bad: a reversed capacitor gets warm, bulges, or pops open. If one ever gets warm, unplug, do not touch it, and fit the spare the right way round.
+5. [🔌 USB OUT] Backwards is bad: a reversed capacitor gets warm, bulges, or pops open. If one ever gets warm, unplug, leave it ten minutes without touching it, and then fit the spare the right way round.
 
 On-screen text:
 - `tank`: a small water tank for current gulps
@@ -517,33 +539,40 @@ On-screen text:
 - `long`: longer leg = plus
 - `place`: long + leg → + rail · striped − leg → − rail
 - `warnT`: Backwards = warm, bulging, popping
-- `warnX`: Warm? Unplug, don’t touch, fit the spare the right way round.
+- `warnX`: Warm? Unplug, leave it 10 minutes untouched, then fit the spare the right way round.
 
 ## Step 5 of 8 · Voice: check, then test  `step5h`
 *2 · Build*
 
 1. [🔌 USB OUT] Before you plug in, check: the capacitor stripe is in the minus rail. The module’s plus is in the plus rail, and its minus in the minus rail.
-2. [🔌 USB OUT] T goes to D0. R goes through one kilo-ohm to D1. The spare speaker’s ends are taped, and no bare metal touches anything.
-   - *spoken:* "T goes to D zero. R goes through one kilo-ohm to D one. The spare speaker’s ends are taped, and no bare metal touches anything."
-3. [⚡ USB IN] Now plug in. After about two seconds, you hear:
-4. [⚡ USB IN] 🤖 Robin plays its own clip audio/en/01.mp3
-5. [⚡ USB IN] That is track one. Robin plays it on every start, as a sound check.
-6. [⚡ USB IN] Now type: say 3.
+2. [🔌 USB OUT] T goes to D0. R goes through one kilo-ohm to D1.
+   - *spoken:* "T goes to D zero. R goes through one kilo-ohm to D one."
+3. [🔌 USB OUT] The speaker’s two wires are in SP+ and SP−, and nothing else. No solder joins SP+ to SP−. The spare speaker’s ends are taped, and no bare metal touches anything.
+   - *spoken:* "The speaker’s two wires are in S P plus and S P minus, and nothing else. No solder joins S P plus to S P minus. The spare speaker’s ends are taped, and no bare metal touches anything."
+4. [🔌 USB OUT] Extra check: borrow a multimeter at Pulsed and set it to beep. The wire flagged plus must beep with the module’s VCC hole, and the wire flagged minus with its GND hole.
+   - *spoken:* "Extra check: borrow a multimeter at Pulsed and set it to beep. The wire flagged plus must beep with the module’s V C C hole, and the wire flagged minus with its G N D hole."
+5. [⚡ USB IN] Now plug in, with your face away from the capacitor. After about two seconds, you hear:
+6. [⚡ USB IN] 🤖 Robin plays its own clip audio/en/01.mp3
+7. [⚡ USB IN] That is track one. Robin plays it on every start, as a sound check.
+8. [⚡ USB IN] Now type: say 3.
    - *spoken:* "Now type: say three."
-7. [⚡ USB IN] 🤖 Robin plays its own clip audio/en/03.mp3
-8. [⚡ USB IN] Type vol 15 to make it quieter. Stay at 22 or lower, so the small speaker does not distort.
+9. [⚡ USB IN] 🤖 Robin plays its own clip audio/en/03.mp3
+10. [⚡ USB IN] Type vol 15 to make it quieter. Stay at 22 or lower, so the small speaker does not distort.
    - *spoken:* "Type vol fifteen to make it quieter. Stay at 22 or lower, so the small speaker does not distort."
-9. [⚡ USB IN] No sound? Check that T and R cross, that the files are in the root, and try vol 20. Pops or restarts when it is loud? Check the capacitor, and lower the volume.
-   - *spoken:* "No sound? Check that T and R cross, that the files are in the root, and try vol twenty. Pops or restarts when it is loud? Check the capacitor, and lower the volume."
-10. [🔌 USB OUT] Unplug.
+11. [🔌 USB OUT] Unplug.
+12. [🔌 USB OUT] No sound? With the cable unplugged, check that T and R cross, that the speaker is on SP+ and SP−, and that the files are in the root. Then try vol 20. Pops or restarts when it is loud? Unplug, check the capacitor stripe, and lower the volume.
+   - *spoken:* "No sound? With the cable unplugged, check that T and R cross, that the speaker is on S P plus and S P minus, and that the files are in the root. Then try vol twenty. Pops or restarts when it is loud? Unplug, check the capacitor stripe, and lower the volume."
 
 On-screen text:
 - `c1`: capacitor stripe in the − rail
 - `c2`: module + → + rail, − → − rail
 - `c3`: T → D0 · R → 1 kΩ → D1
-- `c4`: spare speaker ends taped · no bare metal touching
+- `c4`: speaker only on SP+ / SP− · no solder bridge
+- `c5`: spare ends taped · no bare metal touching
+- `meter`: Multimeter on beep: flag + ↔ VCC hole, flag − ↔ GND hole
+- `face`: face away from the capacitor
 - `checkT`: Check before you plug in
-- `fix`: No sound → T/R crossed? files in root? vol 20.  Pops / restarts → capacitor, lower volume.
+- `fix`: Unplug first. No sound → T/R crossed? speaker on SP+/SP−? files in root? vol 20.  Pops / restarts → capacitor, lower volume.
 
 ## Step 6 of 8 · Faces  `step6`
 *2 · Build*
@@ -598,20 +627,26 @@ On-screen text:
 ## Step 8 of 8 · The body: build it in  `step8b`
 *2 · Build*
 
-1. [🔌 USB OUT] Now build in. The Arduino goes inside, with the LED grid right behind the clear lid. That is Robin’s face.
-   - *spoken:* "Now build in. The Arduino goes inside, with the L E D grid right behind the clear lid. That is Robin’s face."
-2. [🔌 USB OUT] Glue the speaker behind its holes, with a few dots of hot glue on its rim. Never on the paper cone.
+1. [🔌 USB OUT] Now build in, with the USB unplugged. The Arduino goes inside, with the LED grid right behind the clear lid. That is Robin’s face.
+   - *spoken:* "Now build in, with the U S B unplugged. The Arduino goes inside, with the L E D grid right behind the clear lid. That is Robin’s face."
+2. [🔌 USB OUT] Glue the speaker behind its holes, with a few dots of hot glue on its rim, never on the paper cone. Hot glue and the nozzle burn: keep the gun on its stand, and do not touch the glue for a minute.
 3. [🔌 USB OUT] Tape the voice module down, so its pins cannot touch the Arduino. Stick the breadboard on top, with its sticky back.
-4. [🔌 USB OUT] For the Tessa touch: wrap a strip of felt around the grey sides, but never over the face, the PIR, the speaker holes, or the USB notch.
+4. [🔌 USB OUT] Moving everything into the box means re-plugging wires. So do the step five check again, and then the tests: raw, say 3, and the faces.
+   - *spoken:* "Moving everything into the box means re-plugging wires. So do the step five check again, and then the tests: raw, say three, and the faces."
+5. [🔌 USB OUT] Put a cable tie on the USB cable, just inside the notch, so a pull on the cable does not drag the Arduino.
+   - *spoken:* "Put a cable tie on the U S B cable, just inside the notch, so a pull on the cable does not drag the Arduino."
+6. [🔌 USB OUT] For the Tessa touch: wrap a strip of felt around the grey sides, but never over the face, the PIR, the speaker holes, or the USB notch.
    - *spoken:* "For the Tessa touch: wrap a strip of felt around the grey sides, but never over the face, the P I R, the speaker holes, or the U S B notch."
-5. [🔌 USB OUT] At home, power Robin from an undamaged, CE-marked phone charger, lay the cable where nobody trips over it, and do not cover the box.
-   - *spoken:* "At home, power Robin from an undamaged, C E-marked phone charger, lay the cable where nobody trips over it, and do not cover the box."
+7. [🔌 USB OUT] At home, power Robin from an undamaged, CE-marked phone charger, lay the cable where nobody trips over it, and do not cover the box. Keep drinks and metal things off the top. If the box ever feels warm, unplug it.
+   - *spoken:* "At home, power Robin from an undamaged, C E-marked phone charger, lay the cable where nobody trips over it, and do not cover the box. Keep drinks and metal things off the top. If the box ever feels warm, unplug it."
 
 On-screen text:
-- `glue`: hot glue on the speaker RIM, never the cone
+- `glue`: hot glue on the speaker RIM, never the cone · glue and nozzle burn
 - `tape`: voice module taped down, away from the Arduino
+- `recheck`: Wires moved? Step-5 check again, then the tests
+- `tie`: cable tie on the USB cable inside the notch
 - `felt`: felt: sides only (not face, PIR, speaker holes, USB notch)
-- `home`: At home: CE-marked charger · cable out of the way · box uncovered
+- `home`: At home: CE-marked charger · cable out of the way · box uncovered · no drinks on top · warm → unplug
 
 ## Recap: the whole circuit  `recap`
 *3 · Wrap-up*
@@ -694,13 +729,13 @@ Total parts: €35.95
 | PIR OUT | Arduino A1 | F-M |
 | YES button (green), across the middle gap (columns 11 and 13) | one leg's column to the − rail, the diagonally opposite leg's column to Arduino D2 | 2× M-M |
 | NO button (red), across the middle gap (columns 17 and 19) | one leg's column to the − rail, diagonal leg's column to Arduino D3 | 2× M-M |
-| DFR0534 white Gravity plug | the 4-wire cable that comes with the module; its other end has 4 female sockets | (the cable) |
-| cable wire from plug pin + | + rail | M-M |
-| cable wire from plug pin − | − rail | M-M |
-| cable wire from plug pin T (module talks) | Arduino D0 (RX, Arduino listens) | M-M |
-| cable wire from plug pin R (module listens) | column 22, top half; 1 kΩ from column 22 to column 26; column 26 → Arduino D1 (TX) | M-M + resistor + M-M |
+| DFR0534 white Gravity socket (T, R, −, +) | the 4-wire cable that comes with the module: its white plug goes in here; its other end has 4 female sockets | (the cable) |
+| cable wire at socket pin + | + rail | M-M |
+| cable wire at socket pin − | − rail | M-M |
+| cable wire at socket pin T (module talks) | Arduino D0 (RX, Arduino listens) | M-M |
+| cable wire at socket pin R (module listens) | column 22, top half; 1 kΩ from column 22 to column 26; column 26 → Arduino D1 (TX) | M-M + resistor + M-M |
 | 680 µF capacitor | long leg (+) in the + rail, striped leg (−) in the − rail, next to the module's + and − wires | its own legs |
-| DFR0534 SP+ / SP− | the two wires of one speaker from the set | soldered (step 5a) |
+| DFR0534 SP+ / SP− holes (bottom row, next to DACL) | the two wires of one speaker from the set (never the SPK socket) | soldered (step 5a) |
 
 ### Troubleshooting (= docs/04)
 | Symptom | Likely cause | Fix |
@@ -709,12 +744,12 @@ Total parts: €35.95
 | light_raw always ~0 or ~1023 | LDR/resistor not in the same column, or A0 wire in the wrong column | re-check the divider |
 | pir_raw random HIGH/LOW | warm-up, or it sees you | wait 60 s; point it away; lower sensitivity |
 | PIR stays HIGH ~minutes | time-delay knob not at minimum | turn Tx fully counter-clockwise |
-| Button always "pressed" | used two always-connected legs | use diagonal legs |
-| No sound | T/R swapped or not crossed, missing files, volume 0 | check T → D0 and D1 → 1 kΩ → R; vol 20; files in the root |
-| Plays the wrong sentence | old demo files still on the module | pull the Gravity plug out, then delete everything and copy again |
-| Pops, buzzing, or the board resets when it talks loudly | the speaker's current gulps make the 5 V dip | check the capacitor (stripe in the − rail, next to the module); vol 15; use a better USB port/charger |
+| Button always "pressed" | used two always-connected legs | unplug, then use diagonal legs |
+| No sound | T/R swapped or not crossed, speaker not on SP+/SP−, missing files, volume 0 | unplug; check T → D0, D1 → 1 kΩ → R, speaker on SP+/SP−, files in the root; then vol 20 |
+| Plays the wrong sentence | old demo files still on the module | unplug the Arduino, pull the Gravity cable's plug out of the module (by its body, not the wires), then delete everything and copy again |
+| Pops, buzzing, or the board resets when it talks loudly | the speaker's current gulps make the 5 V dip | unplug; check the capacitor (stripe in the − rail, next to the module); then vol 15; use a better USB port/charger |
 | Laptop says "USB device needs more power" or the port switches off when you plug in | the capacitor charging, or a short | unplug; check for a short (+ rail touching − rail); try another port or a powered hub |
-| Capacitor warm or bulging | put in backwards | unplug now, don’t touch it; fit the spare with the stripe in the − rail |
+| Capacitor warm or bulging | put in backwards | unplug now; leave it 10 minutes without touching it; fit the spare with the stripe in the − rail |
 | ✗ eyes forever | WiFi/MQTT problem | see 05, part C troubleshooting |
 
 ### Every part and wire on the workbench drawing
@@ -737,9 +772,9 @@ Total parts: €35.95
 | wGR | 4 | column 19 (bottom half, the diagonal leg) → − rail | M-M, black: column 19, row i (bottom half) → − rail (col 20) |
 | voice | 5 | DFR0534 voice module, off the board, lying flat away from the Arduino | off the breadboard |
 | spk | 5 | one speaker of the 2 W set (the other is a spare with taped wire ends) | off the breadboard |
-| wSPp | 5 | speaker + (red) → DFR0534 SP+ (soldered, step 5a) | speaker wire, red: speaker + → DFR0534 SP+ |
-| wSPm | 5 | speaker − (black) → DFR0534 SP− (soldered, step 5a) | speaker wire, black: speaker − → DFR0534 SP− |
-| grav | 5 | Gravity cable: white plug into the module, 4 female sockets at the other end | off the breadboard |
+| wSPp | 5 | speaker + (red) → DFR0534 SP+ hole (bottom row, last; soldered in step 5a) | speaker wire, red: speaker + → DFR0534 SP+ |
+| wSPm | 5 | speaker − (black) → DFR0534 SP− hole (bottom row, next to SP+; soldered in step 5a) | speaker wire, black: speaker − → DFR0534 SP− |
+| grav | 5 | Gravity cable: its white plug into the module's white Gravity socket, 4 female sockets at the other end | off the breadboard |
 | wVp | 5 | cable socket "+" → + rail | M-M, red: Gravity cable socket "+" → + rail (col 27) |
 | wVm | 5 | cable socket "−" → − rail | M-M, black: Gravity cable socket "−" → − rail (col 26) |
 | wT | 5 | cable socket "T" (module talks) → Arduino D0 (RX) | M-M, blue: Gravity cable socket "T" → Arduino D0 |
@@ -748,7 +783,7 @@ Total parts: €35.95
 | wD1 | 5 | column 26 (top half) → Arduino D1 (TX) | M-M, pink: column 26, row b (top half) → Arduino D1 |
 | cap | 5 | 680 µF capacitor: long + leg in the + rail, striped − leg in the − rail | plus: + rail (col 22); minus: − rail (col 24) |
 
-Drawing notes: the breadboard is drawn with the rail pair next to the Arduino as − inside, + outside, as printed on the drawn board; the video says to follow the red/blue lines printed on the real board. The top rail pair is unused. Modules (PIR, DFR0534, speaker) lie off the board; their pin order is drawn from the datasheets, and the video says to go by the printed labels.
+Drawing notes: the breadboard is drawn with the rail pair next to the Arduino as − inside, + outside, as printed on the drawn board; the video says to follow the red/blue lines printed on the real board. The top rail pair is unused. Modules (PIR, DFR0534, speaker) lie off the board. The DFR0534 is drawn after the board photo in its datasheet (page 2, Voice Module V1.0): Gravity socket T R − + on the left, top holes VCC GND RX TX BUSY, bottom holes ONE DACR DACL SP− SP+, SPK socket on the right. The video says to go by the printed labels.
 
 ## Automatic checks
 
@@ -840,13 +875,13 @@ Drawing notes: the breadboard is drawn with the rail pair next to the Arduino as
 - ✅ pin map row 9 matches docs/04: PIR OUT
 - ✅ pin map row 10 matches docs/04: YES button (green), across the middle gap (columns 11 and 13)
 - ✅ pin map row 11 matches docs/04: NO button (red), across the middle gap (columns 17 and 19)
-- ✅ pin map row 12 matches docs/04: DFR0534 white Gravity plug
-- ✅ pin map row 13 matches docs/04: cable wire from plug pin +
-- ✅ pin map row 14 matches docs/04: cable wire from plug pin −
-- ✅ pin map row 15 matches docs/04: cable wire from plug pin T (module talks)
-- ✅ pin map row 16 matches docs/04: cable wire from plug pin R (module listens)
+- ✅ pin map row 12 matches docs/04: DFR0534 white Gravity socket (T, R, −, +)
+- ✅ pin map row 13 matches docs/04: cable wire at socket pin +
+- ✅ pin map row 14 matches docs/04: cable wire at socket pin −
+- ✅ pin map row 15 matches docs/04: cable wire at socket pin T (module talks)
+- ✅ pin map row 16 matches docs/04: cable wire at socket pin R (module listens)
 - ✅ pin map row 17 matches docs/04: 680 µF capacitor
-- ✅ pin map row 18 matches docs/04: DFR0534 SP+ / SP−
+- ✅ pin map row 18 matches docs/04: DFR0534 SP+ / SP− holes (bottom row, next to DACL)
 - ✅ troubleshooting: 11 rows on screen, 11 in docs/04
 - ✅ troubleshooting row 1 matches docs/04: Nothing in Serial Monitor
 - ✅ troubleshooting row 2 matches docs/04: light_raw always ~0 or ~1023
@@ -882,4 +917,4 @@ Drawing notes: the breadboard is drawn with the rail pair next to the Arduino as
 Wire ends: w5v Arduino 5V → + rail (col 2); wgnd Arduino GND → − rail (col 1); wA0 column 5, row f (bottom half) → Arduino A0; wPV PIR VCC → + rail (col 29); wPG PIR GND → − rail (col 30); wPO PIR OUT → Arduino A1; wD2 column 11, row b (top half) → Arduino D2; wGG column 13, row i (bottom half) → − rail (col 14); wD3 column 17, row b (top half) → Arduino D3; wGR column 19, row i (bottom half) → − rail (col 20); wSPp speaker + → DFR0534 SP+; wSPm speaker − → DFR0534 SP−; wVp Gravity cable socket "+" → + rail (col 27); wVm Gravity cable socket "−" → − rail (col 26); wT Gravity cable socket "T" → Arduino D0; wR Gravity cable socket "R" → column 22, row b (top half); wD1 column 26, row b (top half) → Arduino D1
 
 
-**Cable-rule check: all passed** (R1 nothing wired while plugged in · R2 every test ends unplugged · R3 micro-USB only with the Gravity cable off · R4 capacitor stripe checked before plug-in · R5 every item added once, in its own step).
+**Cable-rule check: all passed** (R1 nothing wired or moved while plugged in · R2 every test ends unplugged · R3 micro-USB only with the Gravity cable off · R4 capacitor stripe checked before plug-in · R5 every item added once, in its own step).

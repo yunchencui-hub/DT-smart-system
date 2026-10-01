@@ -92,8 +92,8 @@ export const Step2c: SceneFC = ({ t, T, ui }) => {
       html={<>
         <Term x={650} y={20} w={610} h={400} t={t} events={events} anim={fadeStyle(prog(t, T.s(0) + 1.5, 0.4))} />
         <Card x={30} y={440} w={600} icon="ℹ️" title={ui.note} color="#7b8794" size={15} anim={popStyle(prog(t, t1 + 1, 0.4))} />
-        <Card x={650} y={440} w={610} icon="🔧" title={ui.fix} color={C.red} size={15} anim={popStyle(prog(t, T.s(2), 0.4))} />
-        <UNPLUG o={prog(t, T.s(3), 0.4)} />
+        <Card x={650} y={440} w={610} icon="🔧" title={ui.fix} color={C.red} size={15} anim={popStyle(prog(t, T.s(3), 0.4))} />
+        <UNPLUG o={prog(t, T.s(2), 0.4)} />
       </>}>
       <g opacity={win(t, t2, t3, 0.25)}>
         <ellipse cx={lh.x} cy={lh.y - 30} rx={22} ry={15} fill="#f1c9a5" stroke="#c48f6a" strokeWidth={2} />
@@ -186,10 +186,10 @@ export const Step3e: SceneFC = ({ t, T, ui }) => {
           <div style={{ height: 14, background: C.orange, borderRadius: 7, marginTop: 10, width: `${warmP * 100}%` }} />
         </Abs>
         <Term x={40} y={160} w={600} h={300} t={t} events={events} anim={fadeStyle(prog(t, T.s(1), 0.4))} />
-        <Card x={660} y={330} w={590} icon="🔧" title={ui.fix} color={C.red} size={15} anim={popStyle(prog(t, T.s(2), 0.4))} />
-        <UNPLUG o={prog(t, T.s(3), 0.4)} />
+        <Card x={660} y={330} w={590} icon="🔧" title={ui.fix} color={C.red} size={15} anim={popStyle(prog(t, T.s(3), 0.4))} />
+        <UNPLUG o={prog(t, T.s(2), 0.4)} />
       </>}>
-      <Emoji x={pc.x - 130} y={pc.y - 110} ch="👋" size={52} o={t > t2 - 0.3 && t < T.s(2) ? 1 : 0} rotate={Math.sin(t * 9) * 18} />
+      <Emoji x={pc.x - 130} y={pc.y - 110} ch="👋" size={52} o={t > t2 - 0.3 && t < T.s(1) + 8 && t < T.s(2) ? 1 : 0} rotate={Math.sin(t * 9) * 18} />
     </BenchScene>
   );
 };
@@ -227,7 +227,7 @@ export const Step4a: SceneFC = ({ t, T, ui }) => {
 
 export const Step4b: SceneFC = ({ t, T, ui }) => {
   // big close-up of one 12x12 button across the gap: legs in rows d and g, two columns apart
-  const p = 40, x0 = 360, rows = 'abcdefghij', rowYc = (r: string) => { const i = rows.indexOf(r); return 60 + (i < 5 ? i : i + 3) * p; };
+  const p = 40, x0 = 360, rows = 'abcdefghij', rowYc = (r: string) => { const i = rows.indexOf(r); return 70 + (i < 5 ? i : i + 2) * p; };
   const cols = [8, 9, 10, 11, 12, 13, 14, 15, 16];
   const cx = (c: number) => x0 + (c - 8) * p;
   const tl = { x: cx(11), y: rowYc('d') }, tr = { x: cx(13), y: rowYc('d') }, bl = { x: cx(11), y: rowYc('g') }, br = { x: cx(13), y: rowYc('g') };
@@ -235,10 +235,10 @@ export const Step4b: SceneFC = ({ t, T, ui }) => {
   return (
     <>
       <Stage>
-        <rect x={x0 - 30} y={30} width={cols.length * p + 20} height={11 * p + 30} rx={12} fill="#f6f3ec" stroke="#d8d1c3" strokeWidth={2} />
-        <rect x={x0 - 24} y={rowYc('e') + p * 0.6} width={cols.length * p + 8} height={p * 1.8} rx={4} fill="#e3ddd0" />
+        <rect x={x0 - 30} y={40} width={cols.length * p + 20} height={11 * p + 10} rx={12} fill="#f6f3ec" stroke="#d8d1c3" strokeWidth={2} />
+        <rect x={x0 - 24} y={rowYc('e') + p * 0.6} width={cols.length * p + 8} height={p * 0.8} rx={4} fill="#e3ddd0" />
         {cols.map((c) => rows.split('').map((r) => <rect key={`${c}${r}`} x={cx(c) - 4} y={rowYc(r) - 4} width={8} height={8} rx={1.5} fill="#3b3b3b" />))}
-        {cols.map((c) => <text key={c} x={cx(c)} y={24} fontSize={14} fontWeight={800} textAnchor="middle" fill="#8a8272">{c}</text>)}
+        {cols.map((c) => <text key={c} x={cx(c)} y={34} fontSize={14} fontWeight={800} textAnchor="middle" fill="#8a8272">{c}</text>)}
         {rows.split('').map((r) => <text key={r} x={x0 - 44} y={rowYc(r) + 5} fontSize={14} fontWeight={800} textAnchor="middle" fill="#8a8272">{r}</text>)}
         <Button tl={tl} tr={tr} bl={bl} br={br} cap="#2e9e4f" showLegs={t > T.s(0) + 1} />
         <g opacity={win(t, T.s(0) + 2, T.s(1) + 1)}>
@@ -274,8 +274,8 @@ export const Step4d: SceneFC = ({ t, T, ui }) => {
     <BenchScene t={t} T={T} upto={4} view={camBox(640, 240, 640)} face={holdG && t > T.s(1) ? 'yes' : undefined} bench={{ pressed: holdG ? ['btnG'] : [] }}
       html={<>
         <Term x={650} y={20} w={610} h={390} t={t} events={events} anim={fadeStyle(prog(t, T.s(0) + 2, 0.4))} />
-        <Card x={30} y={440} w={600} icon="🔧" title={ui.fix} color={C.red} size={16} anim={popStyle(prog(t, T.s(2), 0.4))} />
-        <UNPLUG o={prog(t, T.s(3), 0.4)} />
+        <Card x={30} y={440} w={600} icon="🔧" title={ui.fix} color={C.red} size={16} anim={popStyle(prog(t, T.s(3), 0.4))} />
+        <UNPLUG o={prog(t, T.s(2), 0.4)} />
       </>}>
       <Emoji x={H(12, 'e').x + 10} y={H(12, 'e').y - 30} ch="👆" size={40} o={holdG ? 1 : 0} />
     </BenchScene>
