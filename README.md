@@ -39,7 +39,7 @@ python -m robin --device sim-01 run --fake-time 03:00 --window-min 2 --check-eve
 ```
 Full guide: [docs/05_software_setup.md](docs/05_software_setup.md). **Start with [docs/00_START_HERE.md](docs/00_START_HERE.md).**
 
-**Prefer watching?** [video-remotion/](video-remotion/README.md) is the build guide as a video, following [docs/04](docs/04_assembly.md) step by step for the 30 Sep parts, safety-reviewed before rendering. The older [video/](video/README.md) (32 min: the idea, the build, and a day with the finished robot) still shows the old voice-module wiring.
+**Prefer watching?** [video-remotion/](video-remotion/README.md) is the build guide as a 24-min video, following [docs/04](docs/04_assembly.md) step by step for the 30 Sep parts, safety-reviewed before rendering. The older [video/](video/README.md) (32 min: the idea, the build, and a day with the finished robot) still shows the old voice-module wiring.
 
 ## Repository layout
 ```

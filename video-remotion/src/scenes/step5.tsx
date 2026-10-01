@@ -1,6 +1,6 @@
 import React from 'react';
 import { camBox, clamp, H, P, prog, pulse, win } from '../data/geom';
-import { gravityEnd, SPEAKER, voicePin } from '../data/modules';
+import { gravityEnd, HOLE_BOTTOM_Y, holeX, SPEAKER, voicePin } from '../data/modules';
 import { Abs, Card, Emoji, fadeStyle, Pill, popStyle, riseStyle, Ring, Stage, Tag, Term } from '../kit/basics';
 import { CapacitorSide, Speaker, VoiceModule } from '../kit/hardware';
 import { C, EMOJI, MONO } from '../theme';
@@ -109,7 +109,7 @@ export const Step5d: SceneFC = ({ t, T, ui }) => {
   const mx = 70, my = 200, ms = 1.4;
   const cable = clamp(prog(t, T.s(2) + 0.5, 1)) * (1 - prog(t, T.s(5) + 0.8, 0.5));
   const usbX = mx + 159 * ms, usbY = my + 77 * ms;
-  const sp = (i: number) => ({ x: mx + (46 + i * 20) * ms, y: my + 92 * ms });
+  const sp = (i: number) => ({ x: mx + holeX(i) * ms, y: my + HOLE_BOTTOM_Y * ms });
   return (
     <>
       <Stage>

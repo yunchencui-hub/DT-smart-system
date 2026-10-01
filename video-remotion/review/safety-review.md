@@ -43,5 +43,22 @@ The reviewer checked every round-1 fix in the files themselves, not in a summary
 | MEDIUM | The soldering safety advice came *after* "solder the wires straight in". | Step 5c (and docs/04 §5a) now starts with "Before you solder: safety glasses on…" and ends with "switch the iron off". |
 | LOW ×7 | "back to the socket" was ambiguous; "end of the bottom row" depends on orientation; telling the PIR knobs apart meant poking a powered board; one troubleshooting fix lacked "unplug"; the capacitor legs crossed other holes; the CLAUDE.md lesson was wrong; the micro-USB was not counted among the connections. | All fixed (the CLAUDE.md lesson was corrected from the datasheet photo). |
 
-## Round 3 (confirmation + visual check of every wiring still)
-*(pending)*
+## Round 3: PASS (0 BLOCKER, 0 HIGH, 0 MEDIUM): confirmation + visual check of every wiring still
+The reviewer re-checked the round-2 fixes in the files, and the cable state of every line in 5c, 5e and 5h: everything is USB OUT until the plug-in at 5h line 5. Then it opened **all 20 wiring stills**, one at the end of every line that adds a part or a wire (`npx tsx scripts/stills.ts --adds`), and measured the columns on each picture against `wiring.ts` and the pin map:
+- **Power:** 5V to + rail column 2 (red line), GND to − rail column 1 (blue line).
+- **LDR:** + rail column 3 and hole 5i. 10 kΩ from 5g to − rail column 9. A0 wire from 5f.
+- **PIR:** VCC to + rail column 29, GND to − rail column 30, OUT to A1.
+- **Buttons:** legs in rows d and g, columns 11/13 and 17/19. D2 from 11b, D3 from 17b. The ground wires come from the diagonal legs, 13i and 19i, to − rail columns 14 and 20.
+- **Voice module:** the cable's tape flags read T R − + like the module's socket. − to − rail column 26, + to + rail column 27, T to D0 (RX 0), R to 22b. The 1 kΩ from 22d to 26d (top half) is the only part in the R line, and D1 (TX 1) comes from 26b. The speaker is on SP− and SP+ at the end of the ONE…SP+ row. The module drawing matches the datasheet photo.
+- **Capacitor:** the long + leg ends on a red dot in + rail column 22, the striped − leg on a blue dot in − rail column 24. The side view shows the stripe on the shorter leg.
+- **Badge:** USB OUT on every wiring still; USB IN only on the plugged-in test still.
+
+Remaining points, all cosmetic, fixed before rendering:
+
+| Sev. | Finding | Fix |
+|---|---|---|
+| LOW | Step 2b line 1: the "column 5 = one group" tag covered both bottom rails at columns 1–4 while the LDR leg went into the + rail. | The tag now sits above, over rows d–e, away from the rails. |
+| LOW | Step 5d: the speaker wires started about 10–16 px right of the SP−/SP+ holes (the scene used its own hole spacing). | The scene now uses the module's own hole positions (`holeX`, `HOLE_BOTTOM_Y` from `modules.ts`). The micro-USB label moved below the connector so the cable no longer crosses it. |
+| LOW | Step 4c line 4: the YES and NO cards covered rows h–j at columns 1–15, which hid where the green button's ground wire starts (13i). | One card at a time, left of the breadboard. The NO card replaces the YES card. |
+
+**Verdict: PASS. Go ahead and render.** After these fixes netcheck still passes 369/369, every cable rule (R1–R5) passes, and `tsc` is clean. The fixed moments were re-rendered and checked by eye.

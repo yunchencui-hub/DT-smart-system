@@ -312,7 +312,7 @@ export const VoiceModule: React.FC<{ x: number; y: number; s?: number; highlight
       <text x={VOICE_W + 17} y={55} fontSize={8} fill="#1d2b3a" fontWeight={900}>SPK</text>
       {/* micro-USB (on the back, right edge) */}
       <rect x={VOICE_W - 1} y={70} width={10} height={14} rx={2} fill="#cfd6dc" stroke="#8a949c" strokeDasharray="2 1.5" />
-      <text x={VOICE_W + 12} y={81} fontSize={6.5} fill="#5b6b7b" fontWeight={800}>micro-USB (back)</text>
+      <text x={VOICE_W + 2} y={96} fontSize={6.5} fill="#5b6b7b" fontWeight={800}>micro-USB (back)</text>
     </g>
   );
 };

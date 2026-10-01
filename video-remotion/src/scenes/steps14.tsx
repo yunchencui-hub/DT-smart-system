@@ -78,7 +78,7 @@ export const Step2b: SceneFC = ({ t, T, ui }) => {
         <Card x={30} y={20} w={560} icon="🎨" title={ui.bands} text={ui.bag} color="#6d3b1f" size={17} anim={popStyle(win(t, T.s(1), T.s(3) + 1, 0.4))} />
         <Card x={30} y={440} w={560} icon="↔️" title="No + or − on the LDR and the resistor" color={C.green} size={17} anim={popStyle(prog(t, T.s(4), 0.4))} />
       </>}>
-      <Tag x={c5.x} y={c5.y} text={ui.col5} o={win(t, T.s(0) + 2, T.s(3))} dx={-70} dy={60} size={12} color="#b26a00" />
+      <Tag x={c5.x} y={c5.y} text={ui.col5} o={win(t, T.s(0) + 2, T.s(3))} dx={120} dy={-75} size={12} color="#b26a00" />
     </BenchScene>
   );
 };
@@ -258,8 +258,9 @@ export const Step4b: SceneFC = ({ t, T, ui }) => {
 export const Step4c: SceneFC = ({ t, T, ui }) => (
   <BenchScene t={t} T={T} upto={3} view={VIEWS[4]}
     html={<>
-      <Card x={30} y={440} w={420} icon="🟢" title={ui.g} color={C.green} size={16} anim={popStyle(prog(t, T.s(1), 0.4))} />
-      <Card x={470} y={440} w={420} icon="🔴" title={ui.r} color={C.red} size={16} anim={popStyle(prog(t, T.s(3), 0.4))} />
+      {/* one card at a time, left of the breadboard, so no hole of the button wiring is hidden */}
+      <Card x={30} y={440} w={420} icon="🟢" title={ui.g} color={C.green} size={16} anim={popStyle(win(t, T.s(1), T.s(3) - 0.2, 0.4))} />
+      <Card x={30} y={440} w={420} icon="🔴" title={ui.r} color={C.red} size={16} anim={popStyle(prog(t, T.s(3), 0.4))} />
     </>}>
     <Ring x={H(11, 'b').x} y={H(11, 'b').y} t={t} on={t > T.s(1) && t < T.s(2)} color="#2e9e4f" r={6} />
     <Ring x={H(13, 'i').x} y={H(13, 'i').y} t={t} on={t > T.s(2) && t < T.s(3)} color="#212121" r={6} />

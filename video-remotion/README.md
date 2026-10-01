@@ -1,6 +1,6 @@
 # Robin build guide, the Remotion video (follows docs/04)
 
-A narrated, animated video of [docs/04_assembly.md](../docs/04_assembly.md), step by step, for the parts of the **30 Sep 2026 order** (16 lines: 2 W speaker set, 680 µF capacitor, extra jumper wires; see [docs/03](../docs/03_shopping_list.md)). About 21 minutes, 1920 × 1080, with subtitles (`.srt`) and one chapter per scene.
+A narrated, animated video of [docs/04_assembly.md](../docs/04_assembly.md), step by step, for the parts of the **30 Sep 2026 order** (16 lines: 2 W speaker set, 680 µF capacitor, extra jumper wires; see [docs/03](../docs/03_shopping_list.md)). About 24 minutes (36 scenes), 1920 × 1080, with subtitles (`.srt`) and one chapter per scene.
 
 It replaces the build part of the older [`video/`](../video/README.md), whose voice-module wiring is outdated.
 
