@@ -33,5 +33,15 @@ Verified as correct in round 1:
 - the PIR settings;
 - every table matches docs/03 and docs/04.
 
-## Round 2
+## Round 2: PASS (0 BLOCKER, 0 HIGH, 3 MEDIUM)
+The reviewer checked every round-1 fix in the files themselves, not in a summary. It also re-rendered frames of 5c, 5d, 5e and 5h itself, and confirmed that the module drawing now matches the datasheet photo. It hand-checked the cable state of every line. Remaining points, fixed in commit `7c657cc`:
+
+| Sev. | Finding | Fix |
+|---|---|---|
+| MEDIUM | The multimeter check came after the capacitor was on the rails. An empty 680 µF capacitor gives a short chirp that a beginner can read as "it beeps", so the check could pass in exactly the case it should catch. | Moved to step 5c/5e (docs/04 §5c), before any rail wiring. It now asks for a **steady** beep from the wire's free pin; "silence or a short chirp: read the letters again". |
+| MEDIUM | "Bridge the split rail with a short wire" did not say which halves, so someone could bridge red to blue (a short). | "Join the two halves of the red line, and the two halves of the blue line. **Never red to blue.**" |
+| MEDIUM | The soldering safety advice came *after* "solder the wires straight in". | Step 5c (and docs/04 §5a) now starts with "Before you solder: safety glasses on…" and ends with "switch the iron off". |
+| LOW ×7 | "back to the socket" was ambiguous; "end of the bottom row" depends on orientation; telling the PIR knobs apart meant poking a powered board; one troubleshooting fix lacked "unplug"; the capacitor legs crossed other holes; the CLAUDE.md lesson was wrong; the micro-USB was not counted among the connections. | All fixed (the CLAUDE.md lesson was corrected from the datasheet photo). |
+
+## Round 3 (confirmation + visual check of every wiring still)
 *(pending)*
