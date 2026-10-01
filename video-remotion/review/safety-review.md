@@ -1,0 +1,64 @@
+# Safety review of the build video (before rendering)
+
+**What was reviewed:** everything the viewer hears and sees, i.e. `review/script.md`, which is generated from the video's own data. It was checked against `docs/04_assembly.md`, `docs/03_shopping_list.md`, the firmware (`robin.ino`, `voice.h`), the wiring data plus its automatic net check, and the real parts:
+- the DFR0534 datasheet and its board photo;
+- the Tinytronics pages for the speaker set 003415, the capacitor 006948, the 12×12 button 001204 and the Gravity cable.
+
+**Who reviewed it:** a separate reviewer agent that did not write the script, briefed as *"a lab supervisor for a first-time maker who does not want to make a bomb or a stupid thing"*. Findings were fixed in docs/04 first, then in the video data. The same reviewer then checked the result again.
+
+## Round 1: FAIL (0 BLOCKER, 2 HIGH)
+
+| Sev. | Finding | Fix (commit `5a52a1a`) |
+|---|---|---|
+| **HIGH** | "Pull the white plug out of the module" (step 5b) came before the cable was ever plugged in, and the module's *soldered socket* was called "the white plug". A beginner could rip the socket off the board. | The module has a **socket** and the cable has the **plug**, in the video and in docs/04. Step 5b now says "The Gravity cable is not in the module yet. Keep it out while the micro-USB cable is in." The troubleshooting row says to pull the plug "by its body, not the wires". |
+| **HIGH** | The module drawing showed one row of 8 pins, but the real board (datasheet photo) has two rows of holes plus an SPK socket. Matching the picture could put the speaker on TX/BUSY or across 5 V, and the pre-plug-in check never checked where the speaker went. | The drawing now matches the datasheet photo: Gravity socket **T R − +**, top holes **VCC GND RX TX BUSY**, bottom holes **ONE DACR DACL SP− SP+**, and a white **SPK** socket ("our plug doesn't fit; never bare wires in it"). The speaker goes on SP+/SP− only: this is said in 5a and 5c and is part of the step-5 check (spoken and on screen). docs/04 says the same. |
+| MEDIUM | Fixes were spoken while the badge said USB IN (step 4d "move a wire", step 5h "check the capacitor"). | Every test now says **"Unplug."** first, then the fix "with the cable unplugged". A new cable rule (R1) flags hands-on verbs in USB IN lines. |
+| MEDIUM | The speaker set's 4-pin plug also fits the module's Gravity socket, which would put one speaker across + and −. | Warning in step 5b (spoken plus an on-screen card) and in docs/04 §5a: never plug it in, cut it off. |
+| MEDIUM | The only check of the module's + and − was the tape flags. | An optional multimeter beep check: the wire flagged + must beep with the VCC hole, the wire flagged − with the GND hole (step 5h and docs/04). |
+| MEDIUM | "Leave the WiFi name empty", but the example file contains `"MyPhoneHotspot"`. | Now "change the WiFi name to two empty quotes", shown on screen as `"MyPhoneHotspot" → ""`. docs/04 §0 and docs/05 A.4 are reworded. |
+| MEDIUM | No hot-glue burn warning. | Step 8b and docs/04: keep the gun on its stand, don't touch the glue for a minute, let it cool. |
+| MEDIUM | Soldering advice was incomplete. | Hold the wire with tape or a helping hand (the wire gets hot), let a falling iron fall, switch the iron off. |
+| MEDIUM | No re-check after moving everything into the box; no strain relief; nothing about drinks or metal on top. | Step 8b and docs/04: build in with the USB unplugged, redo the step-5 check and the tests, put a cable tie on the USB cable, keep drinks and metal off the top, unplug if the box gets warm. |
+| MEDIUM | Nothing about the work surface (bare solder points on metal or a laptop short the 5 V). | New rule in the safety scene and in docs/04: work on wood or cardboard, never on metal or the laptop. Step 5e says the same. |
+| LOW ×12 | The badge timing in 5d; the speaker missing from the 5d drawing; "5 V" splitting across a line; how to handle a failed capacitor; split rails; the tool list; unlabelled PIR knobs; the 1 kΩ bag; the rails wording; the breadboard gap drawn 4 pitches wide; speaker-wire strain relief; using a knife to remove burrs. | All fixed. The drawn capacitor's + leg is now also visibly the longer one. |
+
+Verified as correct in round 1:
+- netcheck 369/369;
+- the firmware pins and serial settings;
+- the 1 kΩ in the R line at 5 V;
+- 680 µF across a USB rail (some laptop ports may switch off; this is covered in troubleshooting);
+- the volume advice and "never two speakers (4 Ω)";
+- the 12×12 button geometry (rows d/g);
+- the resistor bands;
+- the PIR settings;
+- every table matches docs/03 and docs/04.
+
+## Round 2: PASS (0 BLOCKER, 0 HIGH, 3 MEDIUM)
+The reviewer checked every round-1 fix in the files themselves, not in a summary. It also re-rendered frames of 5c, 5d, 5e and 5h itself, and confirmed that the module drawing now matches the datasheet photo. It hand-checked the cable state of every line. Remaining points, fixed in commit `7c657cc`:
+
+| Sev. | Finding | Fix |
+|---|---|---|
+| MEDIUM | The multimeter check came after the capacitor was on the rails. An empty 680 µF capacitor gives a short chirp that a beginner can read as "it beeps", so the check could pass in exactly the case it should catch. | Moved to step 5c/5e (docs/04 §5c), before any rail wiring. It now asks for a **steady** beep from the wire's free pin; "silence or a short chirp: read the letters again". |
+| MEDIUM | "Bridge the split rail with a short wire" did not say which halves, so someone could bridge red to blue (a short). | "Join the two halves of the red line, and the two halves of the blue line. **Never red to blue.**" |
+| MEDIUM | The soldering safety advice came *after* "solder the wires straight in". | Step 5c (and docs/04 §5a) now starts with "Before you solder: safety glasses on…" and ends with "switch the iron off". |
+| LOW ×7 | "back to the socket" was ambiguous; "end of the bottom row" depends on orientation; telling the PIR knobs apart meant poking a powered board; one troubleshooting fix lacked "unplug"; the capacitor legs crossed other holes; the CLAUDE.md lesson was wrong; the micro-USB was not counted among the connections. | All fixed (the CLAUDE.md lesson was corrected from the datasheet photo). |
+
+## Round 3: PASS (0 BLOCKER, 0 HIGH, 0 MEDIUM): confirmation + visual check of every wiring still
+The reviewer re-checked the round-2 fixes in the files, and the cable state of every line in 5c, 5e and 5h: everything is USB OUT until the plug-in at 5h line 5. Then it opened **all 20 wiring stills**, one at the end of every line that adds a part or a wire (`npx tsx scripts/stills.ts --adds`), and measured the columns on each picture against `wiring.ts` and the pin map:
+- **Power:** 5V to + rail column 2 (red line), GND to − rail column 1 (blue line).
+- **LDR:** + rail column 3 and hole 5i. 10 kΩ from 5g to − rail column 9. A0 wire from 5f.
+- **PIR:** VCC to + rail column 29, GND to − rail column 30, OUT to A1.
+- **Buttons:** legs in rows d and g, columns 11/13 and 17/19. D2 from 11b, D3 from 17b. The ground wires come from the diagonal legs, 13i and 19i, to − rail columns 14 and 20.
+- **Voice module:** the cable's tape flags read T R − + like the module's socket. − to − rail column 26, + to + rail column 27, T to D0 (RX 0), R to 22b. The 1 kΩ from 22d to 26d (top half) is the only part in the R line, and D1 (TX 1) comes from 26b. The speaker is on SP− and SP+ at the end of the ONE…SP+ row. The module drawing matches the datasheet photo.
+- **Capacitor:** the long + leg ends on a red dot in + rail column 22, the striped − leg on a blue dot in − rail column 24. The side view shows the stripe on the shorter leg.
+- **Badge:** USB OUT on every wiring still; USB IN only on the plugged-in test still.
+
+Remaining points, all cosmetic, fixed before rendering:
+
+| Sev. | Finding | Fix |
+|---|---|---|
+| LOW | Step 2b line 1: the "column 5 = one group" tag covered both bottom rails at columns 1–4 while the LDR leg went into the + rail. | The tag now sits above, over rows d–e, away from the rails. |
+| LOW | Step 5d: the speaker wires started about 10–16 px right of the SP−/SP+ holes (the scene used its own hole spacing). | The scene now uses the module's own hole positions (`holeX`, `HOLE_BOTTOM_Y` from `modules.ts`). The micro-USB label moved below the connector so the cable no longer crosses it. |
+| LOW | Step 4c line 4: the YES and NO cards covered rows h–j at columns 1–15, which hid where the green button's ground wire starts (13i). | One card at a time, left of the breadboard. The NO card replaces the YES card. |
+
+**Verdict: PASS. Go ahead and render.** After these fixes netcheck still passes 369/369, every cable rule (R1–R5) passes, and `tsc` is clean. The fixed moments were re-rendered and checked by eye.
