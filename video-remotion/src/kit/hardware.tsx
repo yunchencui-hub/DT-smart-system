@@ -207,6 +207,8 @@ export const CapacitorTop: React.FC<{ plus: Pt; minus: Pt; body?: Pt; r?: number
     <g>
       <Leg pts={`${plus.x},${plus.y} ${plus.x},${b.y + 8} ${b.x - 5 * mSide},${b.y}`} />
       <Leg pts={`${minus.x},${minus.y} ${minus.x},${b.y + 8} ${b.x + 5 * mSide},${b.y}`} />
+      <circle cx={plus.x} cy={plus.y} r={3.4} fill="#e53935" stroke="#fff" strokeWidth={1} />
+      <circle cx={minus.x} cy={minus.y} r={3.4} fill="#1e63d6" stroke="#fff" strokeWidth={1} />
       <circle cx={b.x} cy={b.y} r={r} fill="#1f3f8f" stroke="#10245a" strokeWidth={1.5} />
       <path d={`M${b.x + mSide * r * 0.35},${b.y - r * 0.94} A${r},${r} 0 0 ${mSide > 0 ? 1 : 0} ${b.x + mSide * r * 0.35},${b.y + r * 0.94} Z`} fill="#cfd8e8" />
       {[-0.45, 0, 0.45].map((k, i) => <text key={i} x={b.x + mSide * r * 0.68} y={b.y + k * r + 3} fontSize={8} fontWeight={900} textAnchor="middle" fill="#1f3f8f">−</text>)}

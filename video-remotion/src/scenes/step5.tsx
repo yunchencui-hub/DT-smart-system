@@ -83,7 +83,7 @@ export const Step5b: SceneFC = ({ t, T, ui }) => {
 
 // ---------------------------------------------------------------------------------------------
 export const Step5c: SceneFC = ({ t, T, ui }) => {
-  const smoke = t > T.s(1) && t < T.s(5) + 2;
+  const smoke = t > T.s(2) && t < T.s(6) + 1;
   return (
     <>
       <Stage>
@@ -92,11 +92,12 @@ export const Step5c: SceneFC = ({ t, T, ui }) => {
           <circle cx={470 + 116 * 2} cy={36 + 92 * 2 + 30} r={8} fill="#bdbdbd" /><circle cx={470 + 112 * 2} cy={36 + 92 * 2 + 14} r={10} fill="#bdbdbd" opacity={0.6} />
         </g>
       </Stage>
-      <Card x={30} y={290} w={590} icon="⭕" title={ui.holesT} text={ui.holesX} color={C.purple} size={17} anim={popStyle(prog(t, T.s(1), 0.4))} />
-      <Card x={660} y={290} w={590} icon="📌" title={ui.pinsT} text={ui.pinsX} color={C.orange} size={17} anim={popStyle(prog(t, T.s(2), 0.4))} />
-      <Pill x={900} y={40} text={ui.red} bg={C.red} anim={popStyle(prog(t, T.s(3), 0.4))} />
-      <Card x={30} y={420} w={1220} icon="🩹" title={ui.tapeT} text={ui.tapeX} color={C.teal} size={18} anim={popStyle(win(t, T.s(4), T.s(5), 0.4))} />
-      <Card x={30} y={420} w={1220} icon="🔥" title={ui.safeT} text={ui.safeX} color={C.red} size={17} anim={popStyle(prog(t, T.s(5), 0.4))} />
+      <Card x={30} y={290} w={590} icon="⭕" title={ui.holesT} text={ui.holesX} color={C.purple} size={17} anim={popStyle(prog(t, T.s(2), 0.4))} />
+      <Card x={660} y={290} w={590} icon="📌" title={ui.pinsT} text={ui.pinsX} color={C.orange} size={17} anim={popStyle(prog(t, T.s(3), 0.4))} />
+      <Pill x={900} y={40} text={ui.red} bg={C.red} anim={popStyle(prog(t, T.s(4), 0.4))} />
+      <Card x={30} y={420} w={1220} icon="🥽" title={ui.safeT} text={ui.safeX} color={C.red} size={17} anim={popStyle(win(t, 0.3, T.s(2), 0.4))} />
+      <Card x={30} y={420} w={1220} icon="🩹" title={ui.tapeT} text={ui.tapeX} color={C.teal} size={18} anim={popStyle(win(t, T.s(5), T.s(6), 0.4))} />
+      <Card x={30} y={420} w={1220} icon="🔌" title={ui.offT} color={C.green} size={18} anim={popStyle(prog(t, T.s(6), 0.4))} />
     </>
   );
 };
@@ -150,17 +151,18 @@ export const Step5e: SceneFC = ({ t, T, ui }) => {
   return (
     <BenchScene t={t} T={T} upto={4} extra={STEP5_EARLY} view={VIEWS[5]} bench={{ flags }}
       html={<>
-        <Card x={20} y={500} w={640} icon="🏷️" title={ui.flags} color={C.purple} size={15} anim={popStyle(win(t, T.s(2), T.s(5), 0.4))} />
-        <Card x={20} y={500} w={640} icon="🎨" title={ui.band} color="#6d3b1f" size={14} anim={popStyle(win(t, T.s(5) + 1, T.s(7), 0.4))} />
-        <Card x={680} y={500} w={580} icon="📌" title={ui.flat} color={C.teal} size={15} anim={popStyle(prog(t, T.s(7), 0.4))} />
+        <Card x={20} y={500} w={640} icon="🏷️" title={ui.flags} color={C.purple} size={15} anim={popStyle(win(t, T.s(2), T.s(3), 0.4))} />
+        <Card x={20} y={500} w={760} icon="🔎" title={ui.meter} color={C.purple} size={15} anim={popStyle(win(t, T.s(3), T.s(6), 0.4))} />
+        <Card x={20} y={500} w={640} icon="🎨" title={ui.band} color="#6d3b1f" size={14} anim={popStyle(win(t, T.s(6) + 1, T.s(8), 0.4))} />
+        <Card x={680} y={500} w={580} icon="📌" title={ui.flat} color={C.teal} size={15} anim={popStyle(prog(t, T.s(8), 0.4))} />
       </>}>
-      <Tag x={e('+').x} y={e('+').y} text={ui.plus} o={win(t, T.s(3), T.s(5))} dx={-70} dy={40} size={12} color="#e53935" />
-      <Tag x={e('−').x} y={e('−').y} text={ui.minus} o={win(t, T.s(3) + 1.5, T.s(5))} dx={-80} dy={10} size={12} color={C.ink} />
-      <Tag x={d0.x} y={d0.y} text={ui.t} o={win(t, T.s(4), T.s(6) + 2)} dx={40} dy={-40} size={12} color="#1e63d6" />
-      <Tag x={c22.x} y={c22.y} text={ui.r} o={win(t, T.s(5), T.s(7))} dx={-40} dy={-50} size={12} color="#00a3a3" />
-      <Tag x={d1.x} y={d1.y} text={ui.d1} o={win(t, T.s(6), T.dur)} dx={-10} dy={-60} size={12} color="#ec407a" />
-      <Ring x={c22.x} y={c22.y} t={t} on={t > T.s(5) && t < T.s(5) + 3} color="#00a3a3" r={6} />
-      <Ring x={c26.x} y={c26.y} t={t} on={t > T.s(6) && t < T.s(7)} color="#ec407a" r={6} />
+      <Tag x={e('+').x} y={e('+').y} text={ui.plus} o={win(t, T.s(4), T.s(6))} dx={-70} dy={40} size={12} color="#e53935" />
+      <Tag x={e('−').x} y={e('−').y} text={ui.minus} o={win(t, T.s(4) + 1.5, T.s(6))} dx={-80} dy={10} size={12} color={C.ink} />
+      <Tag x={d0.x} y={d0.y} text={ui.t} o={win(t, T.s(5), T.s(7) + 2)} dx={40} dy={-40} size={12} color="#1e63d6" />
+      <Tag x={c22.x} y={c22.y} text={ui.r} o={win(t, T.s(6), T.s(8))} dx={-40} dy={-50} size={12} color="#00a3a3" />
+      <Tag x={d1.x} y={d1.y} text={ui.d1} o={win(t, T.s(7), T.dur)} dx={-10} dy={-60} size={12} color="#ec407a" />
+      <Ring x={c22.x} y={c22.y} t={t} on={t > T.s(6) && t < T.s(6) + 3} color="#00a3a3" r={6} />
+      <Ring x={c26.x} y={c26.y} t={t} on={t > T.s(7) && t < T.s(8)} color="#ec407a" r={6} />
     </BenchScene>
   );
 };

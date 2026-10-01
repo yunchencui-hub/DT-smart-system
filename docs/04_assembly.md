@@ -19,7 +19,7 @@
 Two legs in the same 5-hole group = connected. Two legs in different groups = not connected.
 There is a pair of rails on each long side, and the two pairs are **not** connected to each other. Use only the pair next to the Arduino's power pins.
 **Which rail is + ?** Breadboards differ: on some the red (+) row is on the outside, on others on the inside. Always follow the **red line (+)** and **blue line (−)** printed on *your* board, not the position in a picture.
-If the red or blue line has a **break in the middle**, that rail is split in two halves: bridge the gap with a short wire (+ to +, − to −).
+If the red or blue line has a **break in the middle**, that rail is split in two halves: join the two halves of the red line with a short wire, and the two halves of the blue line with another (+ to +, − to −; **never red to blue**).
 
 **Safety (read once):**
 - 5 V can't hurt you, but it can kill a module. Never connect the + rail to the − rail (a short circuit).
@@ -89,7 +89,7 @@ Wire it as in the pin map (LDR and resistor legs share one column; that column g
 2. Set the two knobs (use a small screwdriver):
    - **Time delay (Tx)**: fully **counter-clockwise** (shortest, ≈ 3 s).
    - **Sensitivity (Sx)**: middle to start.
-   - Knobs not labelled on your board? The time knob is the one that changes how long `pir_raw` stays high.
+   - Knobs not labelled on your board? Turn both fully counter-clockwise, then turn one back to the middle. If `pir_raw` then stays high for minutes in the test, unplug and swap them.
    - If there's a jumper: put it on **H** (repeat trigger: stays HIGH while you keep moving).
 3. Wire VCC → + rail, GND → − rail, **OUT → A1** (F-M wires: the female end onto the PIR pin, the male end into the rail or straight into the Arduino header). Go by the labels you read under the dome.
 
@@ -113,17 +113,19 @@ The module comes with a **Gravity cable**: its white plug fits the module's Grav
 
 ### 5a. Speaker (the only soldering, 2 joints)
 The speaker set has **two** speakers whose four wires end in one white plug. We use one speaker; the other is a spare.
+
+**Before you solder:** safety glasses on. Solder at Pulsed with the iron in its stand, in a ventilated spot. Hold the wire with tape or a helping hand, not your fingers: the wire gets hot too. Never touch the tip; if the iron falls, let it fall. Never soldered? Ask at Pulsed; it takes 5 minutes to learn.
+
 1. **Safety glasses on.** Cut the wires right behind the white plug. **Careful:** that 4-pin plug would also fit the module's Gravity socket. Never plug it in there (it would put a speaker straight across the power): cut it off.
 2. Follow each wire back to its speaker, so you know which **two** wires belong to the speaker you'll use. Never connect both speakers to the module (together they would be 4 Ω, too heavy for its amplifier).
 3. The spare speaker: wrap each of its two bare wire ends **separately** in tape, so they can't touch anything (or cut them again with ~1 cm of insulation left, so no copper shows).
 4. Strip 5 mm from your speaker's two wires and twist the strands.
-5. Find **SP+ and SP−** on the module: two neighbouring holes at the end of the row with ONE, DACR and DACL.
+5. Find **SP+ and SP−** on the module: two neighbouring holes marked SP− and SP+, at the end of the row that starts with ONE (next to DACL).
    - **holes** (as on the datasheet photo): solder the wires straight into the SP+ and SP− holes. No solder may reach the next hole (DACL) or join SP+ to SP−;
    - **pins** (if your board has header pins there): solder each speaker wire to one half of a cut female-female jumper, cover the joint with tape or heat-shrink, and push the halves onto SP+ and SP−.
    Red wire → SP+ (if your wires aren't red/black, either way round works for one speaker). **Never** solder the speaker to VCC, GND, RX, TX, BUSY or a DAC hole.
 6. Tape both speaker wires down about 2 cm from the joints, so a tug can't tear them off.
-
-Solder at Pulsed with the iron in its stand, in a ventilated spot. Hold the wire with tape or a helping hand, not your fingers: the wire gets hot too. If the iron falls, let it fall. Switch it off when you're done, and wash your hands. Never soldered? Ask at Pulsed; it takes 5 minutes to learn.
+7. Switch the iron off when you're done, and wash your hands.
 
 ### 5b. Put Robin's voice on the module
 1. The Gravity cable is not in the module yet: **keep it out** while the micro-USB cable is in, so only the laptop powers the module. (Otherwise the laptop's USB and the Arduino's 5 V would be connected together. If the cable is in, pull its plug out by the plug's body, never by the wires.)
@@ -132,7 +134,8 @@ Solder at Pulsed with the iron in its stand, in a ventilated spot. Hold the wire
 
 ### 5c. Wire it (USB unplugged)
 1. Push the cable's white plug into the module's white Gravity socket (it fits one way only).
-2. Push one **male-male** wire **fully** into each of the cable's 4 female sockets (no bare metal showing). Follow each wire back to the socket and read the label printed next to its pin on the module: **+, −, T, R**. Put a small tape flag with that letter on each wire. **Don't trust the wire colours:** go by the labels.
+2. Push one **male-male** wire **fully** into each of the cable's 4 female sockets (no bare metal showing). Follow each wire back to the module's white socket and read the label printed on the module next to its pin: **+, −, T, R**. Put a small tape flag with that letter on each wire. **Don't trust the wire colours:** go by the labels.
+   **Extra check (recommended):** borrow a multimeter at Pulsed and set it to beep (continuity). Touch the free pin of the wire flagged **+** and the module's **VCC** hole: it must beep **steadily**. Then the wire flagged **−** and the **GND** hole. Silence, or only a short chirp, means: read the letters again.
 3. **+** → + rail, **−** → − rail.
 4. **T** → Arduino **D0**.
 5. **R** → column 22 (top half). The **1 kΩ** resistor (bag label; 4 bands brown, black, red, (gold) or 5 bands brown, black, black, brown, (brown)) goes from column 22 to column 26. A wire from column 26 → Arduino **D1**.
@@ -150,8 +153,7 @@ Put the **long (+) leg in the + rail** (red line) and the **striped (−) leg in
 **Backwards is dangerous for the part:** a reversed capacitor gets warm, bulges, or pops open. If a capacitor ever gets warm or bulges: unplug, leave it for 10 minutes without touching it, then replace it with the spare the right way round. Keep your face away from the capacitor the first time you plug in.
 
 **✅ Test (check first, then plug in):**
-1. Before you plug in, check: capacitor stripe in the − rail; module + in the + rail and − in the − rail; T → D0; R → 1 kΩ → D1; **the speaker's two wires are in SP+ and SP− and nothing else** (not VCC, GND, RX, TX, BUSY or DAC), and no solder joins SP+ to SP−; the spare speaker's wire ends are taped; no bare metal touches anything.
-   **Extra check (recommended):** borrow a multimeter at Pulsed and set it to beep (continuity). With the USB unplugged, the wire flagged **+** must beep with the module's **VCC** hole, and the wire flagged **−** with its **GND** hole.
+1. Before you plug in, check: capacitor stripe in the − rail; module + in the + rail and − in the − rail; T → D0; R → 1 kΩ → D1; **the speaker's two wires are in SP+ and SP− and nothing else** (not VCC, GND, RX, TX, BUSY or DAC), and no solder joins SP+ to SP−; the spare speaker's wire ends are taped; no bare metal touches anything. Did the multimeter check in 5c beep steadily for + and −?
 2. Plug in (face away from the capacitor). After ~2 s you hear *"Hello, I'm Robin"* (track 1 plays on every boot).
 3. Type `say 3` and hear the medicine question. `vol 15` makes it quieter; stay at `vol 22` or lower so the small speaker doesn't distort.
 4. **Unplug.** No sound, pops or restarts? Fix it with the cable unplugged (see Troubleshooting).
@@ -189,7 +191,7 @@ Tessa is made of felt and wood to feel warm. A strip of felt around the grey sid
 | Symptom | Likely cause | Fix |
 |---|---|---|
 | Nothing in Serial Monitor | wrong baud / port | 115200 baud, correct COM port; press reset |
-| `light_raw` always ~0 or ~1023 | LDR/resistor not in the same column, or A0 wire in the wrong column | re-check the divider |
+| `light_raw` always ~0 or ~1023 | LDR/resistor not in the same column, or A0 wire in the wrong column | unplug; re-check the divider |
 | `pir_raw` random HIGH/LOW | warm-up, or it sees you | wait 60 s; point it away; lower sensitivity |
 | PIR stays HIGH ~minutes | time-delay knob not at minimum | turn Tx fully counter-clockwise |
 | Button always "pressed" | used two *always-connected* legs | unplug, then use diagonal legs |

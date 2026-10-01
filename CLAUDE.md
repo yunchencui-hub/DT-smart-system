@@ -45,7 +45,7 @@ Read this file first in every session. Keep it short. Update **Status** and **De
 - The demo clock starts when the brain starts: start the brain at minute 5:30 of the demo (docs/08).
 - `pkill -f "robin ..."` kills your own shell. Use `pgrep -f "^[^ ]*python[^ ]* -m robin"`.
 - Video: SVG `stroke-dasharray` drawing makes dashed lines solid, so fade them in instead. Inline styles beat the `.night` CSS, so set header colours in `seek`.
-- DFR0534: T/R/+/− are only on the white Gravity plug; the header has VCC GND BUSY SP+ SP− DACL DACR ONE. The Gravity cable ends in FEMALE sockets, so M-M wires (docs/04 said F-M until 30 Sep).
+- DFR0534 (datasheet p.2 board photo, V1.0; the pin TABLE is incomplete): white Gravity **socket** T R − + on the module (the cable has the plug); holes VCC GND RX TX BUSY / ONE DACR DACL SP− SP+; a separate 2-pin SPK socket (our speaker plug doesn't fit). Speaker → SP+/SP− holes only. The Gravity cable ends in FEMALE sockets, so M-M wires (docs/04 said F-M until 30 Sep). The speaker set's 4-pin plug also fits the Gravity socket: never plug it in.
 - Fontys order form (FOR 05-03, .xlsm): write the sheet XML directly. Re-saving with openpyxl or LibreOffice drops the macro buttons. tinytronics.nl blocks curl (Cloudflare), but the WebFetch tool gets through. The SKU is the 6-digit number, not the model code in the title (breadboard = 000070, not BB400P).
 
 ## Status (update me)

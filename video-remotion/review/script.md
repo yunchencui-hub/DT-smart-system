@@ -141,7 +141,7 @@ On-screen text:
 
 1. [🔌 USB OUT] Meet the breadboard. Underneath the holes, metal strips connect them in groups.
 2. [🔌 USB OUT] The long rows along the edges are the power rails. All holes along the red line are connected: that is plus. All holes along the blue line are connected: that is minus.
-3. [🔌 USB OUT] Careful: on some breadboards the red row is on the outside, on others on the inside. Always follow the red and blue lines printed on your board, not the picture. And if a line has a break in the middle, the rail is split in two: bridge the gap with a short wire.
+3. [🔌 USB OUT] Careful: on some breadboards the red row is on the outside, on others on the inside. Always follow the red and blue lines printed on your board, not the picture. And if the red or blue line has a break in the middle, that rail is split in two. Join the two halves of the red line with a short wire, and the two halves of the blue line with another. Never red to blue.
 4. [🔌 USB OUT] There is a pair of rails on each long side, and the two pairs are not connected. We use only the pair next to the Arduino’s power pins.
 5. [🔌 USB OUT] In the middle, each numbered column of five holes is one group. The gap in the middle separates the top five from the bottom five.
 6. [🔌 USB OUT] Two legs in the same group are connected. Two legs in different groups are not.
@@ -258,8 +258,8 @@ On-screen text:
 2. [🔌 USB OUT] The time delay knob: turn it fully counter-clockwise. That is the shortest time, about three seconds.
 3. [🔌 USB OUT] The sensitivity knob: start in the middle.
 4. [🔌 USB OUT] If your sensor has a jumper, put it on H. Then the output stays high while you keep moving.
-5. [🔌 USB OUT] Knobs not labelled on your sensor? The time knob is the one that changes how long pir_raw stays high.
-   - *spoken:* "Knobs not labelled on your sensor? The time knob is the one that changes how long P I R raw stays high."
+5. [🔌 USB OUT] Knobs not labelled on your sensor? Turn both fully counter-clockwise, then turn one back to the middle. If pir_raw then stays high for minutes in the test, unplug and swap them.
+   - *spoken:* "Knobs not labelled on your sensor? Turn both fully counter-clockwise, then turn one back to the middle. If P I R raw then stays high for minutes in the test, unplug and swap them."
 
 On-screen text:
 - `tx`: time delay: fully counter-clockwise (≈ 3 s)
@@ -382,9 +382,10 @@ On-screen text:
 *2 · Build*
 
 1. [🔌 USB OUT] Step five: Robin’s voice. This step has the most parts, so we go slowly: speaker, sound files, cable, capacitor, and test.
-2. [🔌 USB OUT] The voice module has three places to connect things. The small white socket carries plus, minus, T and R: power and talking.
-3. [🔌 USB OUT] Two rows of small holes carry VCC, GND, RX, TX, BUSY, and the speaker outputs, SP+ and SP−, at the end of the bottom row.
-   - *spoken:* "Two rows of small holes carry V C C, G N D, R X, T X, BUSY, and the speaker outputs, S P plus and S P minus, at the end of the bottom row."
+2. [🔌 USB OUT] The voice module has three places for wires, plus the micro-USB on the back. The small white socket carries plus, minus, T and R: power and talking.
+   - *spoken:* "The voice module has three places for wires, plus the micro U S B on the back. The small white socket carries plus, minus, T and R: power and talking."
+3. [🔌 USB OUT] Two rows of small holes carry VCC, GND, RX, TX, BUSY, and the speaker outputs, SP+ and SP−, at the end of the row that starts with ONE.
+   - *spoken:* "Two rows of small holes carry V C C, G N D, R X, T X, BUSY, and the speaker outputs, S P plus and S P minus, at the end of the row that starts with ONE."
 4. [🔌 USB OUT] A small white 2-pin socket marked SPK is the same speaker output. But our speaker’s plug does not fit it, so we solder to the SP+ and SP− holes. Never push bare wires into the SPK socket.
    - *spoken:* "A small white two-pin socket marked S P K is the same speaker output. But our speaker’s plug does not fit it, so we solder to the S P plus and S P minus holes. Never push bare wires into the S P K socket."
 5. [🔌 USB OUT] Read the labels printed on your module. We go by those names, never by position.
@@ -423,21 +424,24 @@ On-screen text:
 ## Step 5 of 8 · Speaker: two solder joints  `step5c`
 *2 · Build*
 
-1. [🔌 USB OUT] Now find SP+ and SP− on your module: two neighbouring holes at the end of the bottom row, next to DACL.
-   - *spoken:* "Now find S P plus and S P minus on your module: two neighbouring holes at the end of the bottom row, next to D A C L."
-2. [🔌 USB OUT] On most boards they are holes. Solder the wires straight into them, without a blob that reaches the next hole, and never join SP+ to SP−.
+1. [🔌 USB OUT] Before you solder: safety glasses on. Solder at Pulsed, with the iron in its stand, in a ventilated spot. Hold the wire with tape or a helping hand, not your fingers: the wire gets hot too. Never touch the tip, and if the iron falls, let it fall. Never soldered before? Ask at Pulsed. It takes five minutes to learn.
+2. [🔌 USB OUT] Now find SP+ and SP− on your module: two neighbouring holes marked SP− and SP+, at the end of the row that starts with ONE, next to DACL.
+   - *spoken:* "Now find S P plus and S P minus on your module: two neighbouring holes marked S P minus and S P plus, at the end of the row that starts with ONE, next to D A C L."
+3. [🔌 USB OUT] On most boards they are holes. Solder the wires straight into them, without a blob that reaches the next hole, and never join SP+ to SP−.
    - *spoken:* "On most boards they are holes. Solder the wires straight into them, without a blob that reaches the next hole, and never join S P plus to S P minus."
-3. [🔌 USB OUT] If your board has pins there instead, solder each wire to one half of a cut female to female jumper, cover the joint with tape or heat-shrink, and push the halves onto the pins.
-4. [🔌 USB OUT] Red goes to SP+. If your wires have no colours, either way round works for one speaker. Never solder the speaker to any other hole.
+4. [🔌 USB OUT] If your board has pins there instead, solder each wire to one half of a cut female to female jumper, cover the joint with tape or heat-shrink, and push the halves onto the pins.
+5. [🔌 USB OUT] Red goes to SP+. If your wires have no colours, either way round works for one speaker. Never solder the speaker to any other hole.
    - *spoken:* "Red goes to S P plus. If your wires have no colours, either way round works for one speaker. Never solder the speaker to any other hole."
    - *adds* `voice`: DFR0534 voice module, off the board, lying flat away from the Arduino. (off the breadboard)
    - *adds* `spk`: one speaker of the 2 W set (the other is a spare with taped wire ends). (off the breadboard)
    - *adds* `wSPp`: speaker + (red) → DFR0534 SP+ hole (bottom row, last; soldered in step 5a). (speaker wire, red: speaker + → DFR0534 SP+)
    - *adds* `wSPm`: speaker − (black) → DFR0534 SP− hole (bottom row, next to SP+; soldered in step 5a). (speaker wire, black: speaker − → DFR0534 SP−)
-5. [🔌 USB OUT] Then tape both wires down, about two centimetres from the joints, so a tug cannot tear them off.
-6. [🔌 USB OUT] Solder at Pulsed, with the iron in its stand, in a ventilated spot. Hold the wire with tape or a helping hand, not your fingers: the wire gets hot too. If the iron falls, let it fall. Switch it off when you are done, and wash your hands. Never soldered before? Ask at Pulsed. It takes five minutes to learn.
+6. [🔌 USB OUT] Then tape both wires down, about two centimetres from the joints, so a tug cannot tear them off.
+7. [🔌 USB OUT] Switch the iron off when you are done, and wash your hands.
 
 On-screen text:
+- `safeT`: Before you solder: glasses on, hot tip AND hot wire
+- `safeX`: Iron in its stand · ventilated · hold the wire with tape, not fingers · never touch the tip · let a falling iron fall
 - `holesT`: SP+ / SP− are holes (most boards)
 - `holesX`: solder straight in · no blob to the next hole · SP+ and SP− never joined
 - `pinsT`: SP+ / SP− are pins
@@ -445,8 +449,7 @@ On-screen text:
 - `red`: red → SP+ · only these two holes
 - `tapeT`: Tape the wires down 2 cm from the joints
 - `tapeX`: so a tug cannot tear them off
-- `safeT`: Hot tip AND hot wire
-- `safeX`: Iron in its stand · ventilated · hold the wire with tape, not fingers · let a falling iron fall · switch off · wash hands
+- `offT`: Iron off · wash your hands
 
 ## Step 5 of 8 · Sound files onto the module  `step5d`
 *2 · Build*
@@ -478,23 +481,26 @@ On-screen text:
    - *spoken:* "Part C: wiring, with the Arduino’s U S B still unplugged. Push the cable’s white plug into the module’s white socket. It only fits one way."
    - *adds* `grav`: Gravity cable: its white plug into the module's white Gravity socket, 4 female sockets at the other end. (off the breadboard)
 2. [🔌 USB OUT] Push one male to male wire fully into each of the four female sockets, so no metal shows.
-3. [🔌 USB OUT] Follow each wire back to the socket, and read the letter printed next to its pin: plus, minus, T, R. Put a small tape flag with that letter on each wire. Do not trust the wire colours.
-4. [🔌 USB OUT] Plus goes to the plus rail. Minus goes to the minus rail.
+3. [🔌 USB OUT] Follow each wire back to the module’s white socket, and read the letter printed on the module next to its pin: plus, minus, T, R. Put a small tape flag with that letter on each wire. Do not trust the wire colours.
+4. [🔌 USB OUT] Extra check: borrow a multimeter at Pulsed, and set it to beep. Touch the free pin of the wire flagged plus, and the module’s VCC hole: it must beep steadily. Then the wire flagged minus, and the GND hole. Silence, or only a short chirp, means: read the letters again.
+   - *spoken:* "Extra check: borrow a multimeter at Pulsed, and set it to beep. Touch the free pin of the wire flagged plus, and the module’s V C C hole: it must beep steadily. Then the wire flagged minus, and the G N D hole. Silence, or only a short chirp, means: read the letters again."
+5. [🔌 USB OUT] Plus goes to the plus rail. Minus goes to the minus rail.
    - *adds* `wVp`: cable socket "+" → + rail. (M-M, red: Gravity cable socket "+" → + rail (col 27))
    - *adds* `wVm`: cable socket "−" → − rail. (M-M, black: Gravity cable socket "−" → − rail (col 26))
-5. [🔌 USB OUT] T goes to pin D0.
+6. [🔌 USB OUT] T goes to pin D0.
    - *spoken:* "T goes to pin D zero."
    - *adds* `wT`: cable socket "T" (module talks) → Arduino D0 (RX). (M-M, blue: Gravity cable socket "T" → Arduino D0)
-6. [🔌 USB OUT] R goes to column 22, in the top half. A one kilo-ohm resistor bridges column 22 to column 26. With four bands it reads brown, black, red. With five bands, brown, black, black, brown.
+7. [🔌 USB OUT] R goes to column 22, in the top half. A one kilo-ohm resistor bridges column 22 to column 26. With four bands it reads brown, black, red. With five bands, brown, black, black, brown.
    - *adds* `wR`: cable socket "R" (module listens) → column 22 (top half). (M-M, teal: Gravity cable socket "R" → column 22, row b (top half))
    - *adds* `r1k`: 1 kΩ from column 22 to column 26 (top half). (a: column 22, row d; b: column 26, row d)
-7. [🔌 USB OUT] And a wire from column 26 goes to pin D1.
+8. [🔌 USB OUT] And a wire from column 26 goes to pin D1.
    - *spoken:* "And a wire from column 26 goes to pin D one."
    - *adds* `wD1`: column 26 (top half) → Arduino D1 (TX). (M-M, pink: column 26, row b (top half) → Arduino D1)
-8. [🔌 USB OUT] Lay the module flat on wood or cardboard, never metal, away from the Arduino, and tape it down, so its pins cannot touch anything.
+9. [🔌 USB OUT] Lay the module flat on wood or cardboard, never metal, away from the Arduino, and tape it down, so its pins cannot touch anything.
 
 On-screen text:
 - `flags`: tape flags: + · − · T · R (go by the letters, not the colours)
+- `meter`: Multimeter on beep: flag + ↔ VCC hole, flag − ↔ GND hole: a STEADY beep
 - `plus`: socket + → + rail
 - `minus`: socket − → − rail
 - `t`: socket T → D0 (RX)
@@ -549,8 +555,7 @@ On-screen text:
    - *spoken:* "T goes to D zero. R goes through one kilo-ohm to D one."
 3. [🔌 USB OUT] The speaker’s two wires are in SP+ and SP−, and nothing else. No solder joins SP+ to SP−. The spare speaker’s ends are taped, and no bare metal touches anything.
    - *spoken:* "The speaker’s two wires are in S P plus and S P minus, and nothing else. No solder joins S P plus to S P minus. The spare speaker’s ends are taped, and no bare metal touches anything."
-4. [🔌 USB OUT] Extra check: borrow a multimeter at Pulsed and set it to beep. The wire flagged plus must beep with the module’s VCC hole, and the wire flagged minus with its GND hole.
-   - *spoken:* "Extra check: borrow a multimeter at Pulsed and set it to beep. The wire flagged plus must beep with the module’s V C C hole, and the wire flagged minus with its G N D hole."
+4. [🔌 USB OUT] And if you did the multimeter check in part C: both wires beeped steadily.
 5. [⚡ USB IN] Now plug in, with your face away from the capacitor. After about two seconds, you hear:
 6. [⚡ USB IN] 🤖 Robin plays its own clip audio/en/01.mp3
 7. [⚡ USB IN] That is track one. Robin plays it on every start, as a sound check.
@@ -569,7 +574,7 @@ On-screen text:
 - `c3`: T → D0 · R → 1 kΩ → D1
 - `c4`: speaker only on SP+ / SP− · no solder bridge
 - `c5`: spare ends taped · no bare metal touching
-- `meter`: Multimeter on beep: flag + ↔ VCC hole, flag − ↔ GND hole
+- `meter`: multimeter check from part C: steady beeps for + and −
 - `face`: face away from the capacitor
 - `checkT`: Check before you plug in
 - `fix`: Unplug first. No sound → T/R crossed? speaker on SP+/SP−? files in root? vol 20.  Pops / restarts → capacitor, lower volume.
@@ -741,7 +746,7 @@ Total parts: €35.95
 | Symptom | Likely cause | Fix |
 |---|---|---|
 | Nothing in Serial Monitor | wrong baud / port | 115200 baud, correct COM port; press reset |
-| light_raw always ~0 or ~1023 | LDR/resistor not in the same column, or A0 wire in the wrong column | re-check the divider |
+| light_raw always ~0 or ~1023 | LDR/resistor not in the same column, or A0 wire in the wrong column | unplug; re-check the divider |
 | pir_raw random HIGH/LOW | warm-up, or it sees you | wait 60 s; point it away; lower sensitivity |
 | PIR stays HIGH ~minutes | time-delay knob not at minimum | turn Tx fully counter-clockwise |
 | Button always "pressed" | used two always-connected legs | unplug, then use diagonal legs |

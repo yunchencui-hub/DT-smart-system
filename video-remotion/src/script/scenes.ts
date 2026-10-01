@@ -121,7 +121,7 @@ export const SCENES: SceneDef[] = [
     lines: [
       'Meet the breadboard. Underneath the holes, metal strips connect them in groups.',
       'The long rows along the edges are the power rails. All holes along the red line are connected: that is plus. All holes along the blue line are connected: that is minus.',
-      'Careful: on some breadboards the red row is on the outside, on others on the inside. Always follow the red and blue lines printed on your board, not the picture. And if a line has a break in the middle, the rail is split in two: bridge the gap with a short wire.',
+      'Careful: on some breadboards the red row is on the outside, on others on the inside. Always follow the red and blue lines printed on your board, not the picture. And if the red or blue line has a break in the middle, that rail is split in two. Join the two halves of the red line with a short wire, and the two halves of the blue line with another. Never red to blue.',
       'There is a pair of rails on each long side, and the two pairs are not connected. We use only the pair next to the Arduino’s power pins.',
       'In the middle, each numbered column of five holes is one group. The gap in the middle separates the top five from the bottom five.',
       'Two legs in the same group are connected. Two legs in different groups are not.',
@@ -208,7 +208,7 @@ export const SCENES: SceneDef[] = [
       'The time delay knob: turn it fully counter-clockwise. That is the shortest time, about three seconds.',
       'The sensitivity knob: start in the middle.',
       'If your sensor has a jumper, put it on H. Then the output stays high while you keep moving.',
-      'Knobs not labelled on your sensor? The time knob is the one that changes how long pir_raw stays high.',
+      'Knobs not labelled on your sensor? Turn both fully counter-clockwise, then turn one back to the middle. If pir_raw then stays high for minutes in the test, unplug and swap them.',
     ],
     ui: { tx: 'time delay: fully counter-clockwise (≈ 3 s)', sx: 'sensitivity: middle', jumper: 'jumper on H (repeat trigger)' },
   },
@@ -290,8 +290,8 @@ export const SCENES: SceneDef[] = [
     id: 'step5a', part: BUILD, step: 'Step 5 of 8', title: 'Voice module: its sockets and holes',
     lines: [
       'Step five: Robin\u2019s voice. This step has the most parts, so we go slowly: speaker, sound files, cable, capacitor, and test.',
-      'The voice module has three places to connect things. The small white socket carries plus, minus, T and R: power and talking.',
-      'Two rows of small holes carry VCC, GND, RX, TX, BUSY, and the speaker outputs, SP+ and SP−, at the end of the bottom row.',
+      'The voice module has three places for wires, plus the micro-USB on the back. The small white socket carries plus, minus, T and R: power and talking.',
+      'Two rows of small holes carry VCC, GND, RX, TX, BUSY, and the speaker outputs, SP+ and SP−, at the end of the row that starts with ONE.',
       'A small white 2-pin socket marked SPK is the same speaker output. But our speaker\u2019s plug does not fit it, so we solder to the SP+ and SP− holes. Never push bare wires into the SPK socket.',
       'Read the labels printed on your module. We go by those names, never by position.',
     ],
@@ -321,19 +321,21 @@ export const SCENES: SceneDef[] = [
   {
     id: 'step5c', part: BUILD, step: 'Step 5 of 8', title: 'Speaker: two solder joints',
     lines: [
-      'Now find SP+ and SP− on your module: two neighbouring holes at the end of the bottom row, next to DACL.',
+      'Before you solder: safety glasses on. Solder at Pulsed, with the iron in its stand, in a ventilated spot. Hold the wire with tape or a helping hand, not your fingers: the wire gets hot too. Never touch the tip, and if the iron falls, let it fall. Never soldered before? Ask at Pulsed. It takes five minutes to learn.',
+      'Now find SP+ and SP− on your module: two neighbouring holes marked SP− and SP+, at the end of the row that starts with ONE, next to DACL.',
       'On most boards they are holes. Solder the wires straight into them, without a blob that reaches the next hole, and never join SP+ to SP−.',
       'If your board has pins there instead, solder each wire to one half of a cut female to female jumper, cover the joint with tape or heat-shrink, and push the halves onto the pins.',
       { say: 'Red goes to SP+. If your wires have no colours, either way round works for one speaker. Never solder the speaker to any other hole.', adds: ['voice', 'spk', 'wSPp', 'wSPm'] },
       'Then tape both wires down, about two centimetres from the joints, so a tug cannot tear them off.',
-      'Solder at Pulsed, with the iron in its stand, in a ventilated spot. Hold the wire with tape or a helping hand, not your fingers: the wire gets hot too. If the iron falls, let it fall. Switch it off when you are done, and wash your hands. Never soldered before? Ask at Pulsed. It takes five minutes to learn.',
+      'Switch the iron off when you are done, and wash your hands.',
     ],
     ui: {
+      safeT: 'Before you solder: glasses on, hot tip AND hot wire', safeX: 'Iron in its stand · ventilated · hold the wire with tape, not fingers · never touch the tip · let a falling iron fall',
       holesT: 'SP+ / SP− are holes (most boards)', holesX: 'solder straight in · no blob to the next hole · SP+ and SP− never joined',
       pinsT: 'SP+ / SP− are pins', pinsX: 'solder to F-F jumper halves, insulate, push on',
       red: 'red → SP+ · only these two holes',
       tapeT: 'Tape the wires down 2 cm from the joints', tapeX: 'so a tug cannot tear them off',
-      safeT: 'Hot tip AND hot wire', safeX: 'Iron in its stand · ventilated · hold the wire with tape, not fingers · let a falling iron fall · switch off · wash hands',
+      offT: 'Iron off · wash your hands',
     },
   },
   {
@@ -357,7 +359,8 @@ export const SCENES: SceneDef[] = [
     lines: [
       { say: 'Part C: wiring, with the Arduino\u2019s USB still unplugged. Push the cable\u2019s white plug into the module\u2019s white socket. It only fits one way.', adds: ['grav'] },
       'Push one male to male wire fully into each of the four female sockets, so no metal shows.',
-      'Follow each wire back to the socket, and read the letter printed next to its pin: plus, minus, T, R. Put a small tape flag with that letter on each wire. Do not trust the wire colours.',
+      'Follow each wire back to the module\u2019s white socket, and read the letter printed on the module next to its pin: plus, minus, T, R. Put a small tape flag with that letter on each wire. Do not trust the wire colours.',
+      'Extra check: borrow a multimeter at Pulsed, and set it to beep. Touch the free pin of the wire flagged plus, and the module\u2019s VCC hole: it must beep steadily. Then the wire flagged minus, and the GND hole. Silence, or only a short chirp, means: read the letters again.',
       { say: 'Plus goes to the plus rail. Minus goes to the minus rail.', adds: ['wVp', 'wVm'] },
       { say: 'T goes to pin D0.', adds: ['wT'] },
       { say: 'R goes to column 22, in the top half. A one kilo-ohm resistor bridges column 22 to column 26. With four bands it reads brown, black, red. With five bands, brown, black, black, brown.', adds: ['wR', 'r1k'] },
@@ -366,6 +369,7 @@ export const SCENES: SceneDef[] = [
     ],
     ui: {
       flags: 'tape flags: + · − · T · R (go by the letters, not the colours)',
+      meter: 'Multimeter on beep: flag + ↔ VCC hole, flag − ↔ GND hole: a STEADY beep',
       plus: 'socket + → + rail', minus: 'socket − → − rail', t: 'socket T → D0 (RX)', r: 'socket R → col 22 (top half)', d1: 'col 26 → D1 (TX)',
       band: '1 kΩ: brown · black · red  (5 bands: brown · black · black · brown)',
       flat: 'module flat on wood/cardboard, taped down, away from the Arduino',
@@ -402,7 +406,7 @@ export const SCENES: SceneDef[] = [
       'Before you plug in, check: the capacitor stripe is in the minus rail. The module\u2019s plus is in the plus rail, and its minus in the minus rail.',
       'T goes to D0. R goes through one kilo-ohm to D1.',
       'The speaker\u2019s two wires are in SP+ and SP−, and nothing else. No solder joins SP+ to SP−. The spare speaker\u2019s ends are taped, and no bare metal touches anything.',
-      'Extra check: borrow a multimeter at Pulsed and set it to beep. The wire flagged plus must beep with the module\u2019s VCC hole, and the wire flagged minus with its GND hole.',
+      'And if you did the multimeter check in part C: both wires beeped steadily.',
       { say: 'Now plug in, with your face away from the capacitor. After about two seconds, you hear:', usb: 'in' },
       { robin: 1 },
       'That is track one. Robin plays it on every start, as a sound check.',
@@ -415,7 +419,7 @@ export const SCENES: SceneDef[] = [
     ui: {
       c1: 'capacitor stripe in the − rail', c2: 'module + → + rail, − → − rail', c3: 'T → D0 · R → 1 kΩ → D1',
       c4: 'speaker only on SP+ / SP− · no solder bridge', c5: 'spare ends taped · no bare metal touching',
-      meter: 'Multimeter on beep: flag + ↔ VCC hole, flag − ↔ GND hole', face: 'face away from the capacitor',
+      meter: 'multimeter check from part C: steady beeps for + and −', face: 'face away from the capacitor',
       checkT: 'Check before you plug in', fix: 'Unplug first. No sound → T/R crossed? speaker on SP+/SP−? files in root? vol 20.  Pops / restarts → capacitor, lower volume.',
     },
   },
@@ -516,7 +520,7 @@ export const SCENES: SceneDef[] = [
 // The troubleshooting table (on screen) = the table in docs/04.
 export const TROUBLE_ROWS: [string, string, string][] = [
   ['Nothing in Serial Monitor', 'wrong baud / port', '115200 baud, correct COM port; press reset'],
-  ['light_raw always ~0 or ~1023', 'LDR/resistor not in the same column, or A0 wire in the wrong column', 're-check the divider'],
+  ['light_raw always ~0 or ~1023', 'LDR/resistor not in the same column, or A0 wire in the wrong column', 'unplug; re-check the divider'],
   ['pir_raw random HIGH/LOW', 'warm-up, or it sees you', 'wait 60 s; point it away; lower sensitivity'],
   ['PIR stays HIGH ~minutes', 'time-delay knob not at minimum', 'turn Tx fully counter-clockwise'],
   ['Button always "pressed"', 'used two always-connected legs', 'unplug, then use diagonal legs'],
