@@ -50,7 +50,7 @@ const unsigned long DEBOUNCE_MS      = 40;    // button contacts bounce for a fe
 const unsigned long RECONNECT_MS     = 5000;  // wait between reconnect attempts
 const unsigned long LINK_CHECK_MS    = 1000;  // how often we ask "are we still online?"
 const unsigned long KEEPALIVE_MS     = 15000; // broker declares us dead after ~1.5x this
-const uint8_t       DEFAULT_VOLUME   = 20;    // 0-30; keep <= 22 for the 1 W speaker
+const uint8_t       DEFAULT_VOLUME   = 20;    // 0-30; keep <= 22 so the small 2 W speaker doesn't distort
 
 // ---------- Objects ----------
 WiFiClient wifiClient;

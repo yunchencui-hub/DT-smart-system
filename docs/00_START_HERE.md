@@ -7,7 +7,7 @@ Hi partner 👋 This folder is our project manual. Read the files in number orde
 | **00_START_HERE** | this roadmap | now |
 | [01_requirements_map](01_requirements_map.md) | the 7 knock-outs: what they really ask + our proof | now |
 | [02_design](02_design.md) | architecture, choices, trade-offs, ethics | week 1, then re-read before the oral |
-| [03_shopping_list](03_shopping_list.md) | verified parts list (€39.00) + purchase-request email | **week 1** |
+| [03_shopping_list](03_shopping_list.md) | verified parts list (€42.90, updated 30 Sep) + purchase-request email | **week 1** |
 | [04_assembly](04_assembly.md) | wiring, step by step with a test after each step | when the parts arrive |
 | [05_software_setup](05_software_setup.md) | install + run (incl. the simulator, no hardware needed) | **week 1** |
 | [06_data_and_ml](06_data_and_ml.md) | collecting your data, training, tuning | before data collection |
@@ -15,7 +15,8 @@ Hi partner 👋 This folder is our project manual. Read the files in number orde
 | [08_demo_script](08_demo_script.md) | the 10-minute knock-out demo + proof video | final weeks |
 | [09_learning_guide](09_learning_guide.md) | glossary, self-quizzes, oral-exam practice, challenges | every phase |
 | [templates/](templates/) | Design Notes prompts, test plan table, learning journal | when needed |
-| [../video/](../video/README.md) | 32-min animated build guide (idea → 8 build steps → Robin at work), with chapters | before you wire, then per step |
+| [../video-remotion/](../video-remotion/README.md) | 24-min build-guide video that follows 04 step by step (30 Sep parts, safety-reviewed), with chapters | before you wire, then per step |
+| [../video/](../video/README.md) | older 32-min animated guide (idea → build → Robin at work); its voice-module wiring is outdated | for the idea and "Robin at work" parts |
 
 ## The plan (adjust the weeks to your course calendar)
 

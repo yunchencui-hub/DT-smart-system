@@ -15,7 +15,7 @@ Four parts. **Do B and the simulator run first, today.** You can see the whole s
 1. Install **Arduino IDE 2** from <https://www.arduino.cc/en/software>.
 2. *Tools → Board → Boards Manager*: install **"Arduino UNO R4 Boards"**.
 3. *Tools → Manage Libraries*: install **ArduinoMqttClient** (by Arduino). That's the only extra library: the voice driver (`voice.h`) and faces (`face.h`) are in our own sketch, and WiFiS3 + LED matrix come with the board package.
-4. In the folder `firmware/robin/`, copy `arduino_secrets.example.h` to **`arduino_secrets.h`**. For the first tests leave `SECRET_WIFI_SSID ""` (offline test mode).
+4. In the folder `firmware/robin/`, copy `arduino_secrets.example.h` to **`arduino_secrets.h`**. For the first tests change `SECRET_WIFI_SSID` to `""` (two quotes with nothing between them: offline test mode; the example file has a placeholder name there).
 5. Open `firmware/robin/robin.ino`. Choose *Tools → Board → Arduino UNO R4 WiFi* and the right *Port*. Click **Upload** (→).
 6. *Tools → Serial Monitor*: **115200 baud**, line ending **"Newline"**. Type `help`.
 

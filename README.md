@@ -23,7 +23,7 @@ Robin is a small tabletop robot for older people who live alone. Like [Tessa](ht
 Details: [docs/01_requirements_map.md](docs/01_requirements_map.md)
 
 ## Budget
-**€39.00 incl. VAT and shipping** (Tinytronics, prices checked 24 Sep 2026), or €30.95 if Pulsed supplies breadboard/wires/resistors. See [docs/03_shopping_list.md](docs/03_shopping_list.md).
+**€42.90 incl. VAT and shipping** (16 Tinytronics order lines, €35.95 + €6.95 parcel; updated 30 Sep 2026 after tutor feedback: 2 W speaker set, 680 µF capacitor, extra jumper wires), or €32.95 if Pulsed supplies breadboard/wires/resistors. See [docs/03_shopping_list.md](docs/03_shopping_list.md).
 
 ## Quick start (no hardware needed)
 ```bash
@@ -39,7 +39,7 @@ python -m robin --device sim-01 run --fake-time 03:00 --window-min 2 --check-eve
 ```
 Full guide: [docs/05_software_setup.md](docs/05_software_setup.md). **Start with [docs/00_START_HERE.md](docs/00_START_HERE.md).**
 
-**Prefer watching?** [video/](video/README.md) is a 32-minute animated walkthrough: the idea, all 8 build steps with a test after each, and a day with the finished robot.
+**Prefer watching?** [video-remotion/](video-remotion/README.md) is the build guide as a 24-min video, following [docs/04](docs/04_assembly.md) step by step for the 30 Sep parts, safety-reviewed before rendering. The older [video/](video/README.md) (32 min: the idea, the build, and a day with the finished robot) still shows the old voice-module wiring.
 
 ## Repository layout
 ```
@@ -49,7 +49,8 @@ backend/robin/        Python: ingest, db, weather, processing, model, train, bra
 backend/tests/        pytest suite (ingestion, processing, model, brain, weather)
 audio/                sentences (tracks.yaml), generator (Piper TTS), ready-made MP3s (en, nl)
 broker/               Mosquitto config
-video/                animated build-guide video, generated from code (see video/README.md)
+video-remotion/       build-guide video (Remotion, React), follows docs/04 (see video-remotion/README.md)
+video/                older animated walkthrough video, generated from code (see video/README.md)
 CLAUDE.md             project memory for AI-assisted sessions
 ```
 

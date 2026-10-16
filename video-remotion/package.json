@@ -1,0 +1,34 @@
+{
+  "name": "robin-build-guide",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Robin build-guide video (Remotion). Follows docs/04_assembly.md step by step.",
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio",
+    "faces": "tsx scripts/faces.ts",
+    "netcheck": "tsx scripts/netcheck.ts",
+    "review": "tsx scripts/review.ts",
+    "voice": "tsx scripts/voice.ts",
+    "voice:draft": "tsx scripts/voice.ts --draft",
+    "stills": "tsx scripts/stills.ts",
+    "render": "remotion render RobinBuildGuide out/robin_build_guide.mp4",
+    "finish": "tsx scripts/finish.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.531",
+    "@remotion/cli": "4.0.531",
+    "@remotion/fonts": "4.0.531",
+    "@remotion/renderer": "4.0.531",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.531"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.0",
+    "@types/react": "19.1.8",
+    "tsx": "4.20.3",
+    "typescript": "5.8.3"
+  }
+}
