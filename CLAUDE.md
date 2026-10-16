@@ -33,6 +33,7 @@ Read this file first in every session. Keep it short. Update **Status** and **De
 - `broker/mosquitto.conf`: LAN broker config.
 - `video/`: older generated build-guide video (outdated voice wiring) (SVG scenes + Piper narration → MP4). `node video/build.mjs all`; see `video/README.md`.
 - `video-remotion/`: **current** build-guide video (Remotion/React), follows docs/04. Script = `src/script/scenes.ts`, wiring = `src/data/wiring.ts` (one source for picture, pin map, review copy, net check). See its README.
+- `video-assets/`: **real** photos (`images/`) and short clips of the actual build and tests, for a real-footage assembly + test video (tool not chosen yet). Shot list, naming and privacy rules in its README.
 
 ## How to verify
 - `cd backend && python -m pytest -q`
@@ -50,6 +51,7 @@ Read this file first in every session. Keep it short. Update **Status** and **De
 - Video: SVG `stroke-dasharray` drawing makes dashed lines solid, so fade them in instead. Inline styles beat the `.night` CSS, so set header colours in `seek`.
 - DFR0534 (datasheet p.2 board photo, V1.0; the pin TABLE is incomplete): white Gravity **socket** T R − + on the module (the cable has the plug); holes VCC GND RX TX BUSY / ONE DACR DACL SP− SP+; a separate 2-pin SPK socket (our speaker plug doesn't fit). Speaker → SP+/SP− holes only. The Gravity cable ends in FEMALE sockets, so M-M wires (docs/04 said F-M until 30 Sep). The speaker set's 4-pin plug also fits the Gravity socket: never plug it in.
 - Fontys order form (FOR 05-03, .xlsm): write the sheet XML directly. Re-saving with openpyxl or LibreOffice drops the macro buttons. tinytronics.nl blocks curl (Cloudflare), but the WebFetch tool gets through. The SKU is the 6-digit number, not the model code in the title (breadboard = 000070, not BB400P).
+- The GitHub repo is **public**: never commit personal data or secrets (order form, WiFi secrets, ntfy topic, faces, GPS data in phone photos). GitHub's browser upload takes at most 25 MB per file.
 
 ## Status (update me)
 - 2026-09-24: v1 done. BOM verified: **€39.00** (scenario A) / €30.95 (B) / €25.00 (C). Firmware compiles (R4 WiFi + UNO WiFi Rev2), 36 pytest pass, E2E with Mosquitto + simulator verified (night check-in, yes/no, offline alert, latency, report). Audio en+nl generated.
@@ -57,4 +59,5 @@ Read this file first in every session. Keep it short. Update **Status** and **De
 - 2026-09-27: Fontys order form FOR 05-03 filled: user buys everything (scenario A, 15 Tinytronics lines, €32.05 incl. VAT). All SKUs and prices re-checked on the product pages; docs/03 corrected. All required fields filled; the user already owns the micro-USB cable. Ready to e-mail to store-room@fontys.nl. The form adds no Tinytronics shipping (its own AND() quirk). The form is not committed (personal data).
 - 2026-09-30: tutor feedback (Jules: more jumper wires; speakers are tricky). Order form updated in another session to **16 lines, €35.95** (≈ €42.90 with parcel): speaker set 8 Ω 2 W (003415) replaces the 1 W speaker, M-M ×3, M-F ×2, + 680 µF 25 V ×2 (006948). docs/03, docs/04 (Gravity cable + M-M, capacitor step, speaker-set step, safety fixes), README, docs/00 updated.
 - 2026-10-01: new build video `video-remotion/` (Remotion, 36 scenes, 24.3 min, 1080p, SRT + chapters), follows docs/04 for the 30 Sep parts. Before rendering, a separate reviewer agent did 3 safety rounds (R1 FAIL 2 HIGH → fixed; R2 PASS 3 MEDIUM → fixed; R3 PASS + visual check of all 20 wiring stills); record in `video-remotion/review/safety-review.md`. Gates: `netcheck` 369/369, cable rules R1–R5 (`review.ts`). The MP4 is git-ignored and was shared in the session.
-- **Next for user:** register concept #12, confirm board = UNO R4 WiFi, e-mail the completed order form (30 Sep version) to store-room@fontys.nl, run the simulator (docs/05 B).
+- 2026-10-16: `video-assets/images/` created on main for a real-footage assembly + test video. Its README has the shot list (docs/04 steps + ✅ tests, docs/08 demo, the user's own TCs), names, phone settings and privacy rules. The user asked for an "anatomy skill": none exists in this session (only `cco-anatomy`, a context-usage tool, unrelated); asked what they mean.
+- **Next for user:** register concept #12, confirm board = UNO R4 WiFi, e-mail the completed order form (30 Sep version) to store-room@fontys.nl, run the simulator (docs/05 B), take the real photos while building (`video-assets/README.md`).
