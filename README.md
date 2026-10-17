@@ -51,6 +51,7 @@ audio/                sentences (tracks.yaml), generator (Piper TTS), ready-made
 broker/               Mosquitto config
 video-remotion/       build-guide video (Remotion, React), follows docs/04 (see video-remotion/README.md)
 video/                older animated walkthrough video, generated from code (see video/README.md)
+video-assets/         real photos and clips of the build and tests, for a real-footage video (shot list: video-assets/README.md)
 CLAUDE.md             project memory for AI-assisted sessions
 ```
 
