@@ -21,3 +21,6 @@ audio/voices/
 video/build/
 video/*.mp4
 video/*.srt
+
+# Anatomy skill example pages (rebuild with: node .claude/skills/anatomy/examples/<name>/build.mjs)
+.claude/skills/anatomy/examples/*/*.html
