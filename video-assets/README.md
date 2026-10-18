@@ -34,7 +34,7 @@ Anyone can see what you upload here, and Git keeps it in the history even after 
 | `demo-` | the full-system run (docs/08) |
 | `tc01-`, `tc02-` … | your own test cases from your test plan |
 
-Examples: `s0-01-all-parts.jpg`, `s2-03-ldr-test-covered.jpg`, `s5d-02-capacitor-stripe.jpg`, `demo-04-phone-alert.png`.
+Examples: `s0-01-all-parts.jpg`, `s2-03-ldr-test-covered.jpg`, `s5d-02-capacitor-stripe.jpg`, `demo-04-phone-alert.png`, `tc01-01-setup.jpg`. Screenshots may be `.png`.
 Clips go in `video-assets/clips/` with the same names (`.mp4` or `.mov`), **5–10 s each** (see the size limit under *Upload*).
 
 ## Shot list
@@ -59,10 +59,20 @@ Clips go in `video-assets/clips/` with the same names (`.mp4` or `.mov`), **5–
 ### Tests
 - **Each part on its own:** the 🎬 ✅ tests above already show this.
 - **The whole system (docs/08):** film the moments of the demo: telemetry in MQTT Explorer while you wave · green button → event message + ✓ · the cup over Robin · torch on and walking in → Robin asks → red button → the phone buzzes (ntfy topic hidden) · USB pulled → the offline alert. Robot on the phone, laptop as a screen recording, one clap at the start.
-- **Your test cases:** for every case in your own test plan (docs/07): a photo of the setup and a screenshot of the measured result, named `tc01-…`. You and your duo partner write the cases; this list doesn't.
+- **Your test cases:** for every case in your own test plan (docs/07): a photo of the setup and a screenshot of the measured result, named `tc01-01-setup.jpg`, `tc01-02-result.png` for test case 1, `tc02-01-…` for test case 2. You and your duo partner write the cases; this list doesn't.
 
 Bonus: the photos for the docs/08 proof package (overview, wiring close-up, inside the box, the face, the phone notification) come out of this list.
 
 ## Upload
 On github.com: open `video-assets/images` → **Add file → Upload files** → drag the photos in → **Commit changes**. For the first clips, open `video-assets` and drag a whole folder named `clips` onto the upload page: GitHub creates `video-assets/clips/` for you.
 **Size:** the browser upload takes at most **25 MB per file**. Phone photos (2–6 MB) are fine. A 1080p clip is roughly 2 MB per second, so 5–10 s stays under the limit. Longer clips need `git` from the command line (GitHub refuses anything over 100 MB).
+
+## How it becomes a video
+The video is built by the Remotion project in [`video-remotion/`](../video-remotion/README.md) (composition `RobinRealBuild`): a chapter per step in docs/04 order, then the tests, each file with its caption. Every picture carries a badge: **REAL PHOTO** or **REAL CLIP** for your footage, **DRAWING** for the anatomy figure, so a drawing never passes for proof.
+```bash
+cd video-remotion
+npm run real            # checks names and privacy (GPS!), shows which shots are still missing
+npm run real:render     # draft: steps without files show a "still to shoot" card
+npm run real -- --final && npm run real:render   # the version to hand in: real footage only
+```
+Captions: by default the `<what>` part of the name (`s3-02-pir-knobs` → "PIR knobs"). Better captions go in `captions.json` in this folder: `{ "s3-02-pir-knobs.jpg": "Tx fully counter-clockwise, jumper on H" }`.

@@ -14,6 +14,10 @@
     "stills": "tsx scripts/stills.ts",
     "render": "remotion render RobinBuildGuide out/robin_build_guide.mp4",
     "finish": "tsx scripts/finish.ts",
+    "real": "tsx scripts/real-assets.ts",
+    "real:stills": "tsx scripts/real-stills.ts",
+    "real:studio": "remotion studio src/real/index.ts",
+    "real:render": "remotion render src/real/index.ts RobinRealBuild out/robin_real_build.mp4",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

@@ -52,6 +52,23 @@ npm run render && npm run finish      # out/robin_build_guide_v2.mp4 (+ .srt, 72
 Optional: `REMOTION_BROWSER=/path/to/chrome-headless-shell` uses an existing browser instead of Remotion's download.
 Change a sentence or a wire in `src/script/scenes.ts` / `src/data/wiring.ts`, then run `netcheck`, `voice` (only new sentences are synthesised), `review` and `stills` before rendering again.
 
+## The real-footage video (`RobinRealBuild`)
+A second video from **our own photos and clips** in [`video-assets/`](../video-assets/README.md): a chapter per docs/04 step, then the tests. It has its own entry point, so it needs neither Piper nor the narration timeline. Each picture is badged REAL PHOTO, REAL CLIP or DRAWING (the anatomy figure), and a step nobody has filmed yet shows a "still to shoot" card with its planned shots.
+```
+src/real/plan.ts             the chapters and the planned shots (= the shot list in video-assets/README.md)
+src/real/timeline.ts         segments in whole frames, from the manifest
+src/real/RealBuild.tsx       the video: intro, chapter titles, photos, clips (with their sound), placeholders, end
+scripts/real-assets.ts       scan video-assets: names, HEIC, GPS in photos and clips → src/gen/real.json + public/real/
+scripts/real-stills.ts       PNG stills for checking
+```
+```bash
+npm run real                # draft manifest + coverage report (exit 1 if a file stores a GPS location)
+npm run real:stills         # one still per kind of screen (--all, --seg 3,7)
+npm run real:render         # out/robin_real_build.mp4
+npm run real -- --final     # without the placeholder cards, for the version to hand in
+```
+`npm run real -- --assets <dir>` scans another folder, for layout tests with dummy files. Clips are used up to 30 s.
+
 ## Credits and licences
 - [Remotion](https://www.remotion.dev) (free for individuals; see its licence for companies).
 - Fonts Nunito and JetBrains Mono (SIL OFL 1.1, `public/fonts/LICENSE-*.txt`); emoji from Noto Color Emoji.
