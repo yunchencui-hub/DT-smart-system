@@ -69,7 +69,42 @@ npm run real -- --final     # without the placeholder cards, for the version to 
 ```
 `npm run real -- --assets <dir>` scans another folder, for layout tests with dummy files. Clips are used up to 30 s.
 
+## The anatomy + ELI5 video (`RobinAnatomyBuild`)
+The same build, step by step (docs/04), as **isometric figures in the style of the "anatomy" skill**, explained in plain words (ELI5). About 17 minutes, 16 chapters. The bench is drawn in 3D from the real sizes (UNO R4 WiFi, 400-point breadboard, HC-SR501, DFR0534, 2 W speaker, 680 µF can), and every part drops in exactly where `src/data/wiring.ts` puts it, so `netcheck` and the cable rules check this video too. The side panel shows the **renders of the parts we received** (`video-assets/parts/`), always badged RENDER; the header says *drawings, not footage*.
+
+What the viewer sees:
+- **Fig n card** (anatomy convention): Fig number top left, title top right, the USB state bottom left, a live readout bottom right (the wire going in now, e.g. `Arduino 5V → + rail`).
+- **One idea per picture:** only the part being added glows; the rail, column or pin the narrator talks about lights up on the board (never a leader line).
+- **Explainer figures:** the breadboard with its plastic lifted off (the metal clips), the PIR from the front with its dome pulled off (the pin labels).
+- **Predict pauses** before the LDR, button, T/R and capacitor steps: guess first, then the test shows the answer.
+- **Tests:** the USB-C plug slides in (ON LED, boot face ✗, then the scene's face), a Serial Monitor with example values in the firmware's own format, Robin's real voice clips; then it slides out again.
+- **Faces:** a FACE card shows the face from above, because the 8.5 mm front header hides the matrix's bottom rows at this camera angle (as on the real board).
+
+```
+src/anatomy/kit/iso-kit.ts   the anatomy skill's core, vendored unchanged (MIT, commit 1482e84; licence next to it)
+src/anatomy/world.ts         the bench in 3D (mm): holes, pins, sockets, wire routes, from src/data/wiring.ts
+src/anatomy/draw.ts          coloured kit solids, round rods (resistors), tubes (wires), surface glows
+src/anatomy/parts.ts         every part as solids, built once; the LED matrix and the USB cable per frame
+src/anatomy/Bench.tsx        the bench figure (painter's order by depth; a wire = 2 housings + 1 tube)
+src/anatomy/figures.tsx      breadboard x-ray, PIR front, part render card
+src/anatomy/script.ts        THE script: lines, cable state, adds, camera, glows, faces, Serial Monitor lines
+src/anatomy/timeline.ts      figure state at any time (eased camera, glows, plug, part drop-in)
+src/anatomy/AnatomyBuild.tsx the video: plate, side panel (renders, ELI5, CONNECT checklist), overlay, narration
+scripts/anatomy-assets.ts    copies video-assets/parts/*.png to public/parts/
+scripts/anatomy-stills.ts    stills per line (--scenes, --lines, --at)
+```
+```bash
+npm run anatomy:prep            # part renders -> public/parts/, LED faces from face.h
+npm run netcheck                # electrical check of the wiring data
+npm run anatomy:voice           # Piper narration + timeline (anatomy:voice:draft = estimated timings, no audio)
+npm run anatomy:review          # review/anatomy-script.md + cable rules R1-R5 (must pass)
+npm run anatomy:stills -- --scenes a-step2 --scale 1   # check the pictures first
+npm run anatomy:render && npm run anatomy:finish       # out/robin_anatomy_build_v1.mp4 (+ .srt, chapters, 720p copy)
+```
+Not used from the skill: its `audit.mjs` geometry proof and line-end check need its own recorder and HTML pages, so this bench was checked with close-up stills instead (every scene, several zooms). Two deliberate deviations from its craft rules: colour (wire colours, red/blue rails, caps and the capacitor stripe are what the viewer must match) and the silkscreen text printed on the real boards.
+
 ## Credits and licences
 - [Remotion](https://www.remotion.dev) (free for individuals; see its licence for companies).
+- The isometric kit `src/anatomy/kit/iso-kit.ts`: from the "anatomy" skill, [github.com/wheresryan22/anatomy](https://github.com/wheresryan22/anatomy), MIT, © 2026 Ryan (`src/anatomy/kit/LICENSE-anatomy.txt`).
 - Fonts Nunito and JetBrains Mono (SIL OFL 1.1, `public/fonts/LICENSE-*.txt`); emoji from Noto Color Emoji.
 - Narrator: Piper `en_US-norman-medium`; Robin: its own clips from `audio/en/` (`en_GB-cori-high`). See the main README.

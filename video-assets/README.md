@@ -67,6 +67,9 @@ Bonus: the photos for the docs/08 proof package (overview, wiring close-up, insi
 On github.com: open `video-assets/images` → **Add file → Upload files** → drag the photos in → **Commit changes**. For the first clips, open `video-assets` and drag a whole folder named `clips` onto the upload page: GitHub creates `video-assets/clips/` for you.
 **Size:** the browser upload takes at most **25 MB per file**. Phone photos (2–6 MB) are fine. A 1080p clip is roughly 2 MB per second, so 5–10 s stays under the limit. Longer clips need `git` from the command line (GitHub refuses anything over 100 MB).
 
+## parts/ · renders of the parts we received
+`parts/` holds 3D **renders** (drawings, not photos) of every part we received, 1200 × 900 PNG, plus `catalog.png`, `all_materials_overview.png` and `inventory_full_quantities.png`. They were uploaded on 18 Oct 2026 (first to the repository root, then moved here). The anatomy + ELI5 build video (`video-remotion`, composition `RobinAnatomyBuild`) shows them in its "You need" panel and kit overview, always with a **RENDER** badge. They are not proof of the build, so the real-footage video doesn't use them. Their names don't follow the `<step>-<nn>-<what>` rule on purpose: they are a library, not shots. The files carry no metadata (checked: no text chunks).
+
 ## How it becomes a video
 The video is built by the Remotion project in [`video-remotion/`](../video-remotion/README.md) (composition `RobinRealBuild`): a chapter per step in docs/04 order, then the tests, each file with its caption. Every picture carries a badge: **REAL PHOTO** or **REAL CLIP** for your footage, **DRAWING** for the anatomy figure, so a drawing never passes for proof.
 ```bash

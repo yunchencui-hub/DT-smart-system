@@ -3,20 +3,24 @@
 //   FFMPEG=/path/to/full/ffmpeg npx tsx scripts/finish.ts
 // In:  out/robin_build_guide.mp4 (from remotion render)
 // Out: out/robin_build_guide_v2.mp4, out/robin_build_guide_v2.srt, out/robin_build_guide_v2_720p.mp4
+// With --script anatomy: out/robin_anatomy_build.mp4 -> out/robin_anatomy_build_v1{.mp4,.srt,_720p.mp4}
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import tl from '../src/gen/timeline.json';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.resolve(HERE, '../out');
 const FFMPEG = process.env.FFMPEG || 'ffmpeg';
-const SRC = path.join(OUT, 'robin_build_guide.mp4');
-const DST = path.join(OUT, 'robin_build_guide_v2.mp4');
-const SRT = path.join(OUT, 'robin_build_guide_v2.srt');
-const SMALL = path.join(OUT, 'robin_build_guide_v2_720p.mp4');
-if (!fs.existsSync(SRC)) throw new Error(`${SRC} not found: run npm run render first`);
+const ANATOMY = process.argv.includes('--script') && process.argv[process.argv.indexOf('--script') + 1] === 'anatomy';
+type TL = { scenes: { start: number; end: number; title: string; step?: string; lines: { kind: string; chunks: { start: number; end: number; cap: string }[] }[] }[] };
+const tl: TL = JSON.parse(fs.readFileSync(path.resolve(HERE, `../src/gen/${ANATOMY ? 'anatomy-timeline' : 'timeline'}.json`), 'utf8'));
+const NAME = ANATOMY ? 'robin_anatomy_build' : 'robin_build_guide', V = ANATOMY ? 'v1' : 'v2';
+const SRC = path.join(OUT, `${NAME}.mp4`);
+const DST = path.join(OUT, `${NAME}_${V}.mp4`);
+const SRT = path.join(OUT, `${NAME}_${V}.srt`);
+const SMALL = path.join(OUT, `${NAME}_${V}_720p.mp4`);
+if (!fs.existsSync(SRC)) throw new Error(`${SRC} not found: run npm run ${ANATOMY ? 'anatomy:render' : 'render'} first`);
 
 // ---------- subtitles: one cue per sentence (Robin's own lines prefixed), until the next cue starts
 const ts = (s: number) => {
@@ -33,7 +37,7 @@ cues.forEach((c, i) => { if (i + 1 < cues.length) c.end = Math.min(c.end, cues[i
 fs.writeFileSync(SRT, cues.map((c, i) => `${i + 1}\n${ts(c.start)} --> ${ts(c.end)}\n${c.text}\n`).join('\n'));
 
 // ---------- chapters: one per scene, "Step 5 of 8 · Voice wiring: …"
-const meta = [';FFMETADATA1', 'title=Robin build guide (follows docs/04, parts of 30 Sep 2026)'];
+const meta = [';FFMETADATA1', ANATOMY ? 'title=Robin build guide, anatomy + ELI5 (follows docs/04)' : 'title=Robin build guide (follows docs/04, parts of 30 Sep 2026)'];
 for (const s of tl.scenes) {
   meta.push('[CHAPTER]', 'TIMEBASE=1/1000', `START=${Math.round(s.start * 1000)}`, `END=${Math.round(s.end * 1000)}`, `title=${(s.step ? s.step + ' · ' : '') + s.title}`);
 }
