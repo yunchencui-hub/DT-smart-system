@@ -1,5 +1,6 @@
-// Vendored from the "anatomy" skill (github.com/wheresryan22/anatomy, MIT, commit 1482e84, kit/iso-kit.ts), unchanged
-// below this header. Licence: ./LICENSE-anatomy.txt. Used for the isometric figures of the build video (src/anatomy/).
+// Vendored from the "anatomy" skill, unchanged below this header: kit/iso-kit.ts, byte-identical to the user's claude.ai
+// skill upload (anthropic-skills:anatomy, build e9488296…+cloud.3) and to upstream github.com/wheresryan22/anatomy at
+// 1482e84 (MIT, ./LICENSE-anatomy.txt). Only this library file is here, because Remotion imports it at render time.
 export type Flat = [number, number];
 export type Point3 = [number, number, number];
 export type Plane = [number, number];

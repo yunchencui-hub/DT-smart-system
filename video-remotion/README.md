@@ -81,7 +81,7 @@ What the viewer sees:
 - **Faces:** a FACE card shows the face from above, because the 8.5 mm front header hides the matrix's bottom rows at this camera angle (as on the real board).
 
 ```
-src/anatomy/kit/iso-kit.ts   the anatomy skill's core, vendored unchanged (MIT, commit 1482e84; licence next to it)
+src/anatomy/kit/iso-kit.ts   the anatomy skill's core, unchanged (= the account upload's kit/iso-kit.ts; MIT, licence next to it)
 src/anatomy/world.ts         the bench in 3D (mm): holes, pins, sockets, wire routes, from src/data/wiring.ts
 src/anatomy/draw.ts          coloured kit solids, round rods (resistors), tubes (wires), surface glows
 src/anatomy/parts.ts         every part as solids, built once; the LED matrix and the USB cable per frame
