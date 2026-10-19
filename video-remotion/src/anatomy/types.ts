@@ -22,6 +22,7 @@ export type Extra = {
   soft?: boolean; // a fix without wiring (baud rate, secrets, files): no need to unplug for it
   readout?: string; // the figure card's live readout from this line on
   press?: number; // buttonXray: 0 = up, 1 = pressed
+  faceCard?: boolean; // this line only: the FACE card takes the Serial Monitor's place in the side panel
   net?: 'wifi' | 'mqtt' | 'auth' | 'drop' | 'ok'; // network figure: where the message gets stuck
   drive?: 'old' | 'empty' | 'new'; // drive figure: what is on the voice module
 };

@@ -153,7 +153,7 @@ const SidePanel: React.FC<{ def: AScene; sc: TScene; t: number }> = ({ def, sc, 
   const face = v.usbOutAt(t) < 0.05 ? faceAt(v, t, st) : null;
   return (
     <div style={{ position: 'absolute', left: 900, top: 8, width: 364, height: 548, display: 'flex', flexDirection: 'column', gap: 10, fontFamily: FONT }}>
-      {serial !== null ? (
+      {st.faceCard ? <FaceCard face={face} /> : serial !== null ? (
         <Serial lines={serial} h={def.faceCard ? 150 : def.fault !== undefined || st.doc ? 180 : 206} />
       ) : def.need?.length ? (
         <div style={{ background: '#fff', borderRadius: 10, boxShadow: '0 0 0 1px #e3ddd2', padding: '10px 12px' }}>
@@ -170,7 +170,7 @@ const SidePanel: React.FC<{ def: AScene; sc: TScene; t: number }> = ({ def, sc, 
           <div style={{ fontSize: 19, fontWeight: 800, color: C.tealDark, lineHeight: 1.25, marginTop: 5 }}>{def.eli5}</div>
         </div>
       )}
-      {def.faceCard && <FaceCard face={face} />}
+      {def.faceCard && !st.faceCard && <FaceCard face={face} />}
       {def.fault !== undefined || st.doc ? <DoctorCard doc={st.doc} seen={docsSeen(def, sc, t)} soft={!def.lines.some((l) => typeof l !== 'string' && l.doc === 'unplug')} /> : null}
       <Notes def={def} sc={sc} t={t} />
       <Connect sc={sc} t={t} />

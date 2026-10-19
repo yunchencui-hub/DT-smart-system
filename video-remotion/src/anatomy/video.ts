@@ -14,7 +14,7 @@ export type TScene = { id: string; title: string; part: string; step?: string; s
 export type TLJson = { fps: number; total: number; draft: boolean; scenes: TScene[] };
 export type FigState = {
   view: AView; fig: AFig; render?: string; lift: number; face: string | null; glow: string[]; group?: string;
-  doc?: Doc; readout?: string; press: number; net?: Extra['net']; drive?: Extra['drive'];
+  doc?: Doc; readout?: string; press: number; net?: Extra['net']; drive?: Extra['drive']; faceCard?: boolean;
 };
 export type VideoCfg = {
   tl: TLJson; scenes: AScene[];
@@ -112,6 +112,7 @@ export function makeVideo(cfg: VideoCfg) {
       view: e.view ?? s.view, fig: e.fig ?? s.fig, render: e.render ?? s.render, lift: e.lift ?? s.lift,
       face: e.face ?? s.face, glow: e.glow ?? s.glow, group: e.group ?? s.group, doc: e.doc ?? s.doc,
       readout: e.readout ?? s.readout, press: e.press ?? s.press, net: e.net ?? s.net, drive: e.drive ?? s.drive,
+      faceCard: e.faceCard ?? false, // one line only
     };
   };
   // the state carries over from scene to scene (the bench is one bench); glows, doctor's step and readout don't

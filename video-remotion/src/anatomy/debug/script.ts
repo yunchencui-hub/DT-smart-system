@@ -58,7 +58,7 @@ export const SCENES: AScene[] = [
       'Your doctor\'s bag has four tools.',
       { say: 'One: the Serial Monitor, at 115200 baud. Type raw, and Robin tells you what every sensor feels. It is Robin\'s thermometer.', usb: 'in', view: 'uno', serial: ['> raw', '[cmd] raw', RAW(3, 431), RAW(4, 430)] },
       { say: 'In offline test mode, it also writes tx-failed every 2 seconds. There is no network to send to, so that is normal.', speak: 'In offline test mode, it also writes T X failed every two seconds. There is no network to send to, so that is normal.', serial: [TX(5, 12034), TX(6, 14034)] },
-      { say: 'Two: Robin\'s face. Crossed eyes for a moment mean it is starting up. In online mode, crossed eyes that don\'t go away mean it can\'t reach the laptop.', face: 'offline' },
+      { say: 'Two: Robin\'s face. Crossed eyes for a moment mean it is starting up. In online mode, crossed eyes that don\'t go away mean it can\'t reach the laptop.', face: 'offline', faceCard: true },
       { say: 'Unplug.', usb: 'out', face: 'happy' },
       { say: 'Three: the pin map in file 04, and the labels printed on your parts. The label is always right; a picture, or your memory, can be wrong.', view: 'full' },
       'Four: a multimeter set to beep, borrowed at Pulsed. It beeps when two points are connected. Use it only with the USB cable unplugged.',
