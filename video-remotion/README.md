@@ -87,9 +87,10 @@ src/anatomy/draw.ts          coloured kit solids, round rods (resistors), tubes 
 src/anatomy/parts.ts         every part as solids, built once; the LED matrix and the USB cable per frame
 src/anatomy/Bench.tsx        the bench figure (painter's order by depth; a wire = 2 housings + 1 tube)
 src/anatomy/figures.tsx      breadboard x-ray, PIR front, part render card
+src/anatomy/types.ts         scene and line types, shared by both anatomy videos
 src/anatomy/script.ts        THE script: lines, cable state, adds, camera, glows, faces, Serial Monitor lines
-src/anatomy/timeline.ts      figure state at any time (eased camera, glows, plug, part drop-in)
-src/anatomy/AnatomyBuild.tsx the video: plate, side panel (renders, ELI5, CONNECT checklist), overlay, narration
+src/anatomy/video.ts         makeVideo(): figure state at any time (eased camera, glows, plug, part drop-in, faults)
+src/anatomy/IsoVideo.tsx     the player: plate, side panel (renders, ELI5, CONNECT checklist), overlay, narration
 scripts/anatomy-assets.ts    copies video-assets/parts/*.png to public/parts/
 scripts/anatomy-stills.ts    stills per line (--scenes, --lines, --at)
 ```
@@ -102,6 +103,29 @@ npm run anatomy:stills -- --scenes a-step2 --scale 1   # check the pictures firs
 npm run anatomy:render && npm run anatomy:finish       # out/robin_anatomy_build_v1.mp4 (+ .srt, chapters, 720p copy)
 ```
 Not used from the skill: its `audit.mjs` geometry proof and line-end check need its own recorder and HTML pages, so this bench was checked with close-up stills instead (every scene, several zooms). Two deliberate deviations from its craft rules: colour (wire colours, red/blue rails, caps and the capacitor stripe are what the viewer must match) and the silkscreen text printed on the real boards.
+
+## The anatomy + ELI5 debug guide (`RobinAnatomyDebug`)
+How to find and fix what goes wrong, on the same 3D bench, fully built. About 12 minutes, 15 chapters: the routine, the tools, then **11 cases** taken from the Troubleshooting table in docs/04 and C.4 in docs/05 (no Serial Monitor output, light_raw stuck, PIR jumps, PIR stays HIGH, button always pressed, no sound, wrong sentence, pops/restarts, "needs more power", warm capacitor, crossed eyes online).
+
+The ELI5 idea: **be Robin's doctor**. Every case follows the same five steps, ticked on a DOCTOR card in the side panel: 🩺 symptom → 🔌 unplug → 🔍 look and measure → 🔧 change one thing → ✅ test again. A software fix (baud rate, secrets, files on the module) shows "Unplug: not needed, no wiring".
+- **The fault is drawn in**: the wrong wire or leg glows red from the moment the narrator points at it, then swaps for the right one at the fix. The wrong parts live in `src/anatomy/faults.ts`, apart from `wiring.ts`, so `netcheck` still checks only the real build.
+- **Explainer figures**: the button opened up (which legs are joined inside), the network as three stations (Robin, phone hotspot, laptop with Mosquitto), the MP3 module's drive as a file list.
+- Same player as the build video (`IsoVideo` with its own `makeVideo` config), so camera, plug, faces and the Serial Monitor work the same way.
+
+```
+src/anatomy/faults.ts         the wrong wiring per case (LDR leg one column off, button ground, T/R not crossed, short, capacitor backwards)
+src/anatomy/debug/script.ts   THE debug script: cases, fault per case, doctor step per line
+src/anatomy/debug/figures.tsx button x-ray, network stations, MP3 drive, the five-step loop screen
+src/anatomy/debug/Root.tsx    composition RobinAnatomyDebug (entry point debug/index.ts)
+scripts/videos.ts             one list of the narrated videos for voice, review, finish and stills (--script guide|anatomy|debug)
+```
+```bash
+npm run debug:voice                      # Piper narration + timeline (debug:voice:draft = estimated timings)
+npm run debug:review                     # review/debug-script.md + rules R1-R3 and D0-D3 (must pass)
+npm run debug:stills -- --scenes d-button --scale 1
+npm run debug:render && npm run debug:finish   # out/robin_anatomy_debug_v1.mp4 (+ .srt, chapters, 720p copy)
+```
+Extra review rules for the debug guide: **D0** every fault and hidden part exists; **D1** every wiring fix happens with the cable out (a software fix is marked `soft` and may not touch wiring); **D2** every case tests again after its fix; **D3** the faulty part is pointed at before it is swapped.
 
 ## Credits and licences
 - [Remotion](https://www.remotion.dev) (free for individuals; see its licence for companies).

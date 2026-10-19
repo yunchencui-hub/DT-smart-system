@@ -6,7 +6,7 @@
 //   R3 the module goes on micro-USB only while its Gravity cable is not yet connected
 //   R4 the capacitor is placed, and its stripe is checked, before the first plug-in after it
 //   R5 every bench item is added exactly once, in the step it belongs to (not for the debugging guide: its bench is built)
-// and for the debugging guide (--script debug): D1 wiring fixes with the cable out, D2 a test after every fix,
+// and for the debugging guide (--script debug): D0 fault and hidden ids exist, D1 wiring fixes with the cable out, D2 a test after every fix,
 // D3 a faulty part is pointed at before it is swapped
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
