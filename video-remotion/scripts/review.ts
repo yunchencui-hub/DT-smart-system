@@ -49,6 +49,8 @@ w();
 let usb: Usb = 'out';
 const added = new Map<string, string>();
 let capPlacedAt = -1, stripeCheckedAt = -1, idx = 0;
+// debugging guide: its bench starts built, so R3 follows the Gravity plug from the words ("pull the Gravity…" / "Gravity plug back")
+let gravIn = true;
 for (const s of SCENES) {
   w(`## ${s.step ? s.step + ' · ' : ''}${s.title}  \`${s.id}\``);
   w(`*${s.part}*`);
@@ -71,7 +73,7 @@ for (const s of SCENES) {
         pluggedInScene = true;
         if (capPlacedAt >= 0 && stripeCheckedAt < capPlacedAt) errors.push(`R4 ${s.id}: plugged in after the capacitor was placed, without a stripe check first`);
       }
-      if (l.usb === 'micro' && added.has('grav')) errors.push(`R3 ${s.id}: module on micro-USB while its Gravity cable is connected`);
+      if (l.usb === 'micro' && (DEBUG ? gravIn : added.has('grav'))) errors.push(`R3 ${s.id}: module on micro-USB while its Gravity cable is connected`);
       usb = l.usb;
     }
     const badge = usb === 'out' ? '🔌 USB OUT' : usb === 'in' ? '⚡ USB IN' : '💽 MICRO';
@@ -80,6 +82,8 @@ for (const s of SCENES) {
       // R1b: no hands-on fixing while the cable is in (a GND wire brushing the + rail is a short)
       if (usb === 'in' && /\b(move|connect|rewire|swap|bend|push|turn the|put the|check the capacitor)\b/i.test(cap)) errors.push(`R1 ${s.id}: "${cap.slice(0, 60)}…" asks for hands-on work while USB IN`);
       if (/stripe/i.test(cap) && capPlacedAt >= 0) stripeCheckedAt = idx;
+      if (/pull the Gravity/i.test(cap)) gravIn = false;
+      if (/Gravity plug back/i.test(cap)) gravIn = true;
       w(`${i + 1}. [${badge}] ${cap}`);
       const spoken = sentences(typeof l === 'string' ? l : l.speak ?? l.say).map(speakify).join(' ');
       if (spoken !== cap) w(`   - *spoken:* "${spoken}"`);

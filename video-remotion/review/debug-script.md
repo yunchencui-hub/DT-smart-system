@@ -31,11 +31,11 @@ On-screen text:
    - *doctor's step:* fix
 6. [🔌 USB OUT] Step five: test again, then unplug. Still not fixed? Back to step three, with the next suspect.
    - *doctor's step:* test
-7. [🔌 USB OUT] Really stuck? Go back to the last test that passed. The mistake is in what you added after it. That is why the guide tests after every step.
+7. [🔌 USB OUT] Really stuck? Go back to the last test that passed. The mistake is usually in what you added after it, or in a wire you bumped while adding it. That is why the guide tests after every step.
    - *doctor's step:* test
 
 On-screen text:
-- `back`: Stuck? Go back to the last test that passed: the mistake is in what came after it.
+- `back`: Stuck? Go back to the last test that passed: the mistake is usually in what came after it, or in a wire you bumped.
 
 ## The doctor's bag  `d-tools`
 *1 · The method*
@@ -44,10 +44,13 @@ On-screen text:
 2. [⚡ USB IN] One: the Serial Monitor, at 115200 baud. Type raw, and Robin tells you what every sensor feels. It is Robin's thermometer.
    - *spoken:* "One: the Serial Monitor, at one hundred fifteen thousand two hundred baud. Type raw, and Robin tells you what every sensor feels. It is Robin's thermometer."
    - *Serial Monitor shows:* `> raw` · `[cmd] raw` · `pir_raw=3 (HIGH if > 400)  light_raw=431  yes=-  no=-` · `pir_raw=4 (HIGH if > 400)  light_raw=430  yes=-  no=-`
-3. [⚡ USB IN] Two: Robin's face. Crossed eyes for a moment mean it is starting up. Crossed eyes that stay mean, in online mode, that it can't reach the laptop.
-4. [🔌 USB OUT] Unplug.
-5. [🔌 USB OUT] Three: the pin map in file 04, and the labels printed on your parts. The label is always right; a picture, or your memory, can be wrong.
-6. [🔌 USB OUT] Four: a multimeter set to beep, borrowed at Pulsed. It beeps when two points are connected. Use it only with the USB cable unplugged.
+3. [⚡ USB IN] In offline test mode, it also writes tx-failed every 2 seconds. There is no network to send to, so that is normal.
+   - *spoken:* "In offline test mode, it also writes T X failed every two seconds. There is no network to send to, so that is normal."
+   - *Serial Monitor shows:* `[tx-failed] {"boot":48213,"seq":5,"ms":12034,…}` · `[tx-failed] {"boot":48213,"seq":6,"ms":14034,…}`
+4. [⚡ USB IN] Two: Robin's face. Crossed eyes for a moment mean it is starting up. In online mode, crossed eyes that don't go away mean it can't reach the laptop.
+5. [🔌 USB OUT] Unplug.
+6. [🔌 USB OUT] Three: the pin map in file 04, and the labels printed on your parts. The label is always right; a picture, or your memory, can be wrong.
+7. [🔌 USB OUT] Four: a multimeter set to beep, borrowed at Pulsed. It beeps when two points are connected. Use it only with the USB cable unplugged.
    - *spoken:* "Four: a multimeter set to beep, borrowed at Pulsed. It beeps when two points are connected. Use it only with the U S B cable unplugged."
 
 Figure card: Fig 1 · The finished bench
@@ -71,7 +74,7 @@ ELI5 card: Debugging is being Robin's doctor.
    - *doctor's step:* fix (no wiring: software or files)
 5. [⚡ USB IN] Test: press the reset button on the board once. The start message appears.
    - *doctor's step:* test
-   - *Serial Monitor shows:* `` · `Robin firmware 1.0.0` · `Offline test mode: type 'help' in the Serial Monitor.`
+   - *Serial Monitor shows:* `` · `Robin firmware 1.0.0` · `[queue] events waiting: 1` · `Offline test mode: type 'help' in the Serial Monitor.` · `[tx-failed] {"boot":48213,"seq":0,"ms":4012,…}`
    - *glows:* reset
 6. [🔌 USB OUT] Unplug.
 
@@ -106,10 +109,10 @@ ELI5 card: Two people must talk at the same speed to understand each other.
    - *spoken:* "Move the leg into column five. And if light raw is ever stuck near ten twenty-three instead, it is usually the resistor that misses the column."
    - *doctor's step:* fix (the faulty part is swapped for the right one)
    - *glows:* col:5:bottom
-8. [⚡ USB IN] Test again: cover the LDR, and light_raw drops. Shine the torch on it, and it rises.
-   - *spoken:* "Test again: cover the L D R, and light raw drops. Shine the torch on it, and it rises."
+8. [⚡ USB IN] Test again: plug in, cover the LDR and type raw: light_raw drops. Type raw again with the torch on it: it rises.
+   - *spoken:* "Test again: plug in, cover the L D R and type raw: light raw drops. Type raw again with the torch on it: it rises."
    - *doctor's step:* test
-   - *Serial Monitor shows:* `pir_raw=4 (HIGH if > 400)  light_raw=431  yes=-  no=-` · `pir_raw=3 (HIGH if > 400)  light_raw=35  yes=-  no=-` · `pir_raw=4 (HIGH if > 400)  light_raw=889  yes=-  no=-`
+   - *Serial Monitor shows:* `> raw` · `[cmd] raw` · `pir_raw=4 (HIGH if > 400)  light_raw=35  yes=-  no=-` · `> raw` · `[cmd] raw` · `pir_raw=3 (HIGH if > 400)  light_raw=889  yes=-  no=-`
 9. [🔌 USB OUT] Unplug.
 
 Figure card: Fig 3 · Case 2 · Light
@@ -119,22 +122,24 @@ ELI5 card: Parts only meet when their legs share the same five holes.
 ## Case 3 · pir_raw jumps while nobody moves  `d-pirjump`
 *2 · The cases*
 
-1. [⚡ USB IN] Case three: nobody moves, but pir_raw jumps up and down.
-   - *spoken:* "Case three: nobody moves, but P I R raw jumps up and down."
+1. [⚡ USB IN] Case three: nobody moves, but each time you type raw, pir_raw may be high again: about 670 for a few seconds, then near 0.
+   - *spoken:* "Case three: nobody moves, but each time you type raw, P I R raw may be high again: about six hundred seventy for a few seconds, then near zero."
    - *doctor's step:* symptom
-   - *Serial Monitor shows:* `> raw` · `[cmd] raw` · `pir_raw=671 (HIGH if > 400)  light_raw=430  yes=-  no=-` · `pir_raw=3 (HIGH if > 400)  light_raw=431  yes=-  no=-` · `pir_raw=668 (HIGH if > 400)  light_raw=429  yes=-  no=-` · `pir_raw=2 (HIGH if > 400)  light_raw=430  yes=-  no=-`
+   - *Serial Monitor shows:* `> raw` · `[cmd] raw` · `pir_raw=3 (HIGH if > 400)  light_raw=430  yes=-  no=-` · `pir_raw=671 (HIGH if > 400)  light_raw=431  yes=-  no=-` · `> raw` · `[cmd] raw` · `pir_raw=669 (HIGH if > 400)  light_raw=430  yes=-  no=-` · `> raw` · `[cmd] raw` · `pir_raw=2 (HIGH if > 400)  light_raw=431  yes=-  no=-`
 2. [⚡ USB IN] Two usual reasons. A PIR needs about 60 seconds to warm up, and until then its output is random. Or it simply sees you: you are warm, and you never sit perfectly still.
    - *spoken:* "Two usual reasons. A P I R needs about sixty seconds to warm up, and until then its output is random. Or it simply sees you: you are warm, and you never sit perfectly still."
    - *doctor's step:* look
-3. [🔌 USB OUT] Unplug, and point the PIR away from you, at an empty part of the room.
-   - *spoken:* "Unplug, and point the P I R away from you, at an empty part of the room."
+3. [🔌 USB OUT] Unplug.
+   - *doctor's step:* unplug
+4. [🔌 USB OUT] Point the PIR away from you, at an empty part of the room.
+   - *spoken:* "Point the P I R away from you, at an empty part of the room."
    - *doctor's step:* fix
-4. [⚡ USB IN] Test again: plug in, wait the full 60 seconds, then sit still. Now pir_raw stays near 0.
-   - *spoken:* "Test again: plug in, wait the full sixty seconds, then sit still. Now P I R raw stays near zero."
+5. [⚡ USB IN] Test again: plug in, wait the full 60 seconds, then sit still and type raw. Now pir_raw stays near 0.
+   - *spoken:* "Test again: plug in, wait the full sixty seconds, then sit still and type raw. Now P I R raw stays near zero."
    - *doctor's step:* test
-   - *Serial Monitor shows:* `pir_raw=3 (HIGH if > 400)  light_raw=430  yes=-  no=-` · `pir_raw=2 (HIGH if > 400)  light_raw=431  yes=-  no=-` · `pir_raw=3 (HIGH if > 400)  light_raw=430  yes=-  no=-`
-5. [🔌 USB OUT] Still jumping? Unplug, turn the sensitivity knob, Sx, a little lower, and test again.
-   - *spoken:* "Still jumping? Unplug, turn the sensitivity knob, S x, a little lower, and test again."
+   - *Serial Monitor shows:* `> raw` · `[cmd] raw` · `pir_raw=3 (HIGH if > 400)  light_raw=430  yes=-  no=-` · `pir_raw=2 (HIGH if > 400)  light_raw=431  yes=-  no=-` · `pir_raw=3 (HIGH if > 400)  light_raw=430  yes=-  no=-`
+6. [🔌 USB OUT] Still jumping? Unplug, turn the sensitivity knob, Sx, a little counter-clockwise, and test again.
+   - *spoken:* "Still jumping? Unplug, turn the sensitivity knob, S x, a little counter-clockwise, and test again."
    - *doctor's step:* fix
    - *glows:* knobs
 
@@ -145,10 +150,10 @@ ELI5 card: A PIR needs a minute to wake up, and it sees anything warm that moves
 ## Case 4 · The PIR stays HIGH for minutes  `d-pirhigh`
 *2 · The cases*
 
-1. [⚡ USB IN] Case four: you wave once, and pir_raw stays high for minutes.
-   - *spoken:* "Case four: you wave once, and P I R raw stays high for minutes."
+1. [⚡ USB IN] Case four: you wave once, and for minutes, every raw still shows pir_raw high.
+   - *spoken:* "Case four: you wave once, and for minutes, every raw still shows P I R raw high."
    - *doctor's step:* symptom
-   - *Serial Monitor shows:* `> raw` · `[cmd] raw` · `pir_raw=670 (HIGH if > 400)  light_raw=431  yes=-  no=-` · `pir_raw=668 (HIGH if > 400)  light_raw=430  yes=-  no=-` · `pir_raw=671 (HIGH if > 400)  light_raw=431  yes=-  no=-` · `pir_raw=669 (HIGH if > 400)  light_raw=430  yes=-  no=-`
+   - *Serial Monitor shows:* `> raw` · `[cmd] raw` · `pir_raw=670 (HIGH if > 400)  light_raw=431  yes=-  no=-` · `pir_raw=668 (HIGH if > 400)  light_raw=430  yes=-  no=-` · `> raw` · `[cmd] raw` · `pir_raw=671 (HIGH if > 400)  light_raw=431  yes=-  no=-` · `pir_raw=669 (HIGH if > 400)  light_raw=430  yes=-  no=-`
 2. [🔌 USB OUT] Unplug.
    - *doctor's step:* unplug
 3. [🔌 USB OUT] Look at the time knob, Tx. It decides how long the PIR keeps saying yes after it saw a movement. Turned up, that can be minutes.
@@ -159,11 +164,11 @@ ELI5 card: A PIR needs a minute to wake up, and it sees anything warm that moves
    - *spoken:* "Turn T x fully counter-clockwise: the shortest time, about three seconds. Knobs not labelled? Use the trick from step three of the build."
    - *doctor's step:* fix
    - *glows:* knobs
-5. [⚡ USB IN] Test again: wave once. After a few seconds, pir_raw drops back to near 0.
-   - *spoken:* "Test again: wave once. After a few seconds, P I R raw drops back to near zero."
+5. [⚡ USB IN] Test again: plug in and wait 60 seconds. Wave once, then step out of its view. A few seconds later, type raw, and pir_raw is back near 0.
+   - *spoken:* "Test again: plug in and wait sixty seconds. Wave once, then step out of its view. A few seconds later, type raw, and P I R raw is back near zero."
    - *doctor's step:* test
-   - *Serial Monitor shows:* `pir_raw=670 (HIGH if > 400)  light_raw=431  yes=-  no=-` · `pir_raw=669 (HIGH if > 400)  light_raw=430  yes=-  no=-` · `pir_raw=4 (HIGH if > 400)  light_raw=431  yes=-  no=-` · `pir_raw=3 (HIGH if > 400)  light_raw=430  yes=-  no=-`
-6. [🔌 USB OUT] Unplug.
+   - *Serial Monitor shows:* `> raw` · `[cmd] raw` · `pir_raw=4 (HIGH if > 400)  light_raw=431  yes=-  no=-` · `pir_raw=3 (HIGH if > 400)  light_raw=430  yes=-  no=-`
+6. [🔌 USB OUT] Unplug. Still high while you sit in front of it? With the jumper on H, every small movement starts the time again: it simply sees you.
 
 Figure card: Fig 5 · Case 4 · Motion, stuck
 
@@ -194,14 +199,14 @@ ELI5 card: The time knob is how long the PIR keeps saying "yes".
 8. [🔌 USB OUT] Now only a press lets the dome bridge the two strips, and only then is D2 connected to ground.
    - *spoken:* "Now only a press lets the dome bridge the two strips, and only then is D two connected to ground."
    - *doctor's step:* fix
-9. [⚡ USB IN] Test again: yes is pressed only while you hold green.
+9. [⚡ USB IN] Test again: plug in, type raw, and press green once. Yes is pressed only while you hold it.
    - *doctor's step:* test
-   - *Serial Monitor shows:* `pir_raw=3 (HIGH if > 400)  light_raw=430  yes=-  no=-` · `pir_raw=2 (HIGH if > 400)  light_raw=431  yes=pressed  no=-` · `pir_raw=3 (HIGH if > 400)  light_raw=430  yes=-  no=-`
+   - *Serial Monitor shows:* `> raw` · `[cmd] raw` · `pir_raw=3 (HIGH if > 400)  light_raw=430  yes=-  no=-` · `pir_raw=2 (HIGH if > 400)  light_raw=431  yes=pressed  no=-` · `pir_raw=3 (HIGH if > 400)  light_raw=430  yes=-  no=-`
 10. [🔌 USB OUT] Unplug.
 
 Figure card: Fig 6 · Case 5 · Button
 
-ELI5 card: Inside, the legs hold hands in pairs. Diagonal legs never do.
+ELI5 card: Inside, the legs hold hands in pairs.
 
 ## Case 6 · No sound  `d-sound`
 *2 · The cases*
@@ -234,8 +239,14 @@ ELI5 card: Inside, the legs hold hands in pairs. Diagonal legs never do.
 8. [⚡ USB IN] Test again: plug in, and Robin says hello.
    - *doctor's step:* test
 9. [⚡ USB IN] 🤖 Robin plays its own clip audio/en/01.mp3
-10. [🔌 USB OUT] Unplug. Still silent in your build? Then, unplugged, check that the speaker wires are in SP+ and SP−, and that 01.mp3 to 13.mp3 are in the root of the drive. Then plug in and try vol 20.
-   - *spoken:* "Unplug. Still silent in your build? Then, unplugged, check that the speaker wires are in S P plus and S P minus, and that zero one dot M P 3 to thirteen dot M P 3 are in the root of the drive. Then plug in and try vol twenty."
+10. [🔌 USB OUT] Unplug. Still silent in your build? Then check, unplugged, that the speaker wires are in SP+ and SP−.
+   - *spoken:* "Unplug. Still silent in your build? Then check, unplugged, that the speaker wires are in S P plus and S P minus."
+   - *doctor's step:* look
+11. [🔌 USB OUT] Then the files. First pull the Gravity plug out of the module, then connect the micro-USB data cable: the files 01.mp3 to 13.mp3 must be in the root of the drive. Case seven shows how.
+   - *spoken:* "Then the files. First pull the Gravity plug out of the module, then connect the micro U S B data cable: the files zero one dot M P 3 to thirteen dot M P 3 must be in the root of the drive. Case seven shows how."
+   - *doctor's step:* look
+12. [🔌 USB OUT] Micro-USB out, Gravity plug back in. Then plug in and listen for hello: Robin sets the volume to 20 by itself at every start.
+   - *spoken:* "Micro U S B out, Gravity plug back in. Then plug in and listen for hello: Robin sets the volume to twenty by itself at every start."
    - *doctor's step:* look
 
 Figure card: Fig 7 · Case 6 · Voice
@@ -254,8 +265,8 @@ ELI5 card: Mouth to ear, ear to mouth: T and R must cross.
    - *doctor's step:* look
 3. [🔌 USB OUT] Unplug the Arduino. Then pull the Gravity cable's plug out of the module, by the plug's body, never by the wires.
    - *doctor's step:* unplug
-4. [💽 MICRO] Connect the module to the laptop with the micro-USB cable, and delete everything on it.
-   - *spoken:* "Connect the module to the laptop with the micro U S B cable, and delete everything on it."
+4. [💽 MICRO] Connect the module to the laptop with the micro-USB data cable, and delete everything on it.
+   - *spoken:* "Connect the module to the laptop with the micro U S B data cable, and delete everything on it."
    - *doctor's step:* fix (no wiring: software or files)
 5. [💽 MICRO] Copy 01.mp3 to 13.mp3 into the root again, and eject the drive.
    - *spoken:* "Copy zero one dot M P 3 to thirteen dot M P 3 into the root again, and eject the drive."
@@ -279,7 +290,7 @@ ELI5 card: Robin asks for a file by its first two digits.
 
 1. [⚡ USB IN] Case eight: when Robin talks loudly, you hear pops or buzzing, or the board restarts and the start message appears again.
    - *doctor's step:* symptom
-   - *Serial Monitor shows:* `> say 3` · `[cmd] say 3` · `` · `Robin firmware 1.0.0` · `Offline test mode: type 'help' in the Serial Monitor.`
+   - *Serial Monitor shows:* `> say 3` · `[cmd] say 3` · `` · `Robin firmware 1.0.0` · `[queue] events waiting: 1` · `Offline test mode: type 'help' in the Serial Monitor.`
 2. [🔌 USB OUT] Unplug.
    - *doctor's step:* unplug
 3. [🔌 USB OUT] A loud word makes the speaker gulp current, and the 5 volts dips. Without its water tank, the dip resets the brain. Look next to the module's power wires: the capacitor is missing.
@@ -290,13 +301,18 @@ ELI5 card: Robin asks for a file by its first two digits.
 5. [🔌 USB OUT] Check that the stripe is in the minus rail.
    - *doctor's step:* fix
    - *glows:* rail:-b
-6. [⚡ USB IN] Plug in, with your face away from the capacitor, and type vol 15. Now say 3 plays without pops.
-   - *spoken:* "Plug in, with your face away from the capacitor, and type vol fifteen. Now say three plays without pops."
+6. [⚡ USB IN] Test: plug in, with your face away from the capacitor, and type say 3. It plays without pops.
+   - *spoken:* "Test: plug in, with your face away from the capacitor, and type say three. It plays without pops."
    - *doctor's step:* test
-   - *Serial Monitor shows:* `> vol 15` · `[cmd] vol 15` · `> say 3` · `[cmd] say 3`
+   - *Serial Monitor shows:* `> say 3` · `[cmd] say 3`
 7. [⚡ USB IN] 🤖 Robin plays its own clip audio/en/03.mp3
-8. [🔌 USB OUT] Unplug. Still popping? Try another USB port, or a good phone charger.
-   - *spoken:* "Unplug. Still popping? Try another U S B port, or a good phone charger."
+8. [🔌 USB OUT] Unplug. Still popping? Then change the next thing, the volume: type vol 15, and test again.
+   - *spoken:* "Unplug. Still popping? Then change the next thing, the volume: type vol fifteen, and test again."
+   - *doctor's step:* fix (no wiring: software or files)
+9. [🔌 USB OUT] vol 15 only lasts until the next restart. To keep it, set DEFAULT_VOLUME to 15 in robin.ino and upload, and set volume to 15 in config.yaml.
+   - *spoken:* "Vol fifteen only lasts until the next restart. To keep it, set default volume to fifteen in robin dot ino and upload, and set volume to fifteen in config dot yaml."
+10. [🔌 USB OUT] Still popping after that? Try another USB port, or a good phone charger.
+   - *spoken:* "Still popping after that? Try another U S B port, or a good phone charger."
 
 Figure card: Fig 9 · Case 8 · Power dips
 
@@ -320,12 +336,13 @@ ELI5 card: No water tank: a big gulp empties the pipe.
 5. [🔌 USB OUT] ⏸ pause 2.5 s: Predict: which wire joins + to −?
 6. [🔌 USB OUT] Here: one wire goes straight from the plus rail to the minus rail.
    - *doctor's step:* look
-7. [🔌 USB OUT] Take it out. Then check that no bare leg or wire end touches both rails.
+7. [🔌 USB OUT] Take it out. Then check that no bare leg or wire end touches both rails, that the Arduino, the PIR and the voice module don't lie on metal or on your laptop, and that the module's pins don't touch the Arduino.
+   - *spoken:* "Take it out. Then check that no bare leg or wire end touches both rails, that the Arduino, the P I R and the voice module don't lie on metal or on your laptop, and that the module's pins don't touch the Arduino."
    - *doctor's step:* fix (the faulty part is swapped for the right one)
 8. [⚡ USB IN] Test again: the power LED comes on, and the laptop stays quiet.
    - *spoken:* "Test again: the power L E D comes on, and the laptop stays quiet."
    - *doctor's step:* test
-9. [🔌 USB OUT] Unplug. Did the message come only once? The capacitor charging can cause it too: try another port, or a powered hub.
+9. [🔌 USB OUT] Unplug. Did the message come only once, and did nothing get warm? Check that the capacitor's stripe and the module's minus wire are in the minus rail. Then it can be the capacitor charging: try another port, or a powered hub.
 
 Figure card: Fig 10 · Case 9 · Short circuit
 
@@ -344,15 +361,17 @@ ELI5 card: A short is a shortcut: the current skips all the parts.
 3. [🔌 USB OUT] Look at the stripe: it faces the plus rail. The capacitor is in backwards.
    - *doctor's step:* look
    - *glows:* rail:+b
-4. [🔌 USB OUT] Don't use it again. Fit the spare: the stripe and the short leg in the minus rail, the long leg in the plus rail.
+4. [🔌 USB OUT] Don't use it again: put it in the electronics recycling, so it never gets mixed up with the spare.
+   - *doctor's step:* fix
+5. [🔌 USB OUT] Fit the spare: the stripe and the short leg in the minus rail, the long leg in the plus rail.
    - *doctor's step:* fix (the faulty part is swapped for the right one)
    - *glows:* rail:-b
-5. [🔌 USB OUT] Check that the stripe is in the minus rail.
+6. [🔌 USB OUT] Check that the stripe is in the minus rail.
    - *doctor's step:* fix
    - *glows:* rail:-b
-6. [⚡ USB IN] Test: plug in, with your face away from the capacitor. It stays cool.
+7. [⚡ USB IN] Test: plug in, with your face away from the capacitor. Look and listen: nothing bulges, hisses or smells.
    - *doctor's step:* test
-7. [🔌 USB OUT] Unplug.
+8. [🔌 USB OUT] Unplug. Only now touch it with a finger: it is cool.
 
 Figure card: Fig 11 · Case 10 · Capacitor
 
@@ -363,35 +382,39 @@ ELI5 card: A capacitor in backwards is like a tank filled the wrong way: it swel
 
 1. [⚡ USB IN] Case eleven: in online mode, the face keeps its crossed eyes and never turns happy.
    - *doctor's step:* symptom
-   - *Serial Monitor shows:* `[wifi] connecting to my-hotspot` · `[wifi] failed, will retry`
-2. [⚡ USB IN] Crossed eyes mean Robin can't deliver its messages. Think of letters: WiFi is the road to the post office, your phone's hotspot. MQTT is the mailbox: Mosquitto on your laptop.
-   - *spoken:* "Crossed eyes mean Robin can't deliver its messages. Think of letters: Wi-Fi is the road to the post office, your phone's hotspot. M Q T T is the mailbox: Mosquitto on your laptop."
+   - *Serial Monitor shows:* `[wifi] connecting to my-hotspot` · `[wifi] failed, will retry` · `[tx-failed] {"boot":48213,"seq":3,"ms":9530,…}`
+2. [⚡ USB IN] Crossed eyes mean Robin can't deliver its messages. Think of letters: WiFi is the road, through your phone's hotspot. MQTT is the mailbox: Mosquitto on your laptop.
+   - *spoken:* "Crossed eyes mean Robin can't deliver its messages. Think of letters: Wi-Fi is the road, through your phone's hotspot. M Q T T is the mailbox: Mosquitto on your laptop."
    - *doctor's step:* look
-3. [⚡ USB IN] The Serial Monitor tells you where the letter got stuck. "[wifi] failed, will retry" means the road is blocked: check the hotspot's name and password letter by letter, capitals count, and use 2.4 gigahertz.
-   - *spoken:* "The Serial Monitor tells you where the letter got stuck. "Wi-Fi failed, will retry" means the road is blocked: check the hotspot's name and password letter by letter, capitals count, and use two point four gigahertz."
+3. [⚡ USB IN] The Serial Monitor tells you where the letter got stuck. Skip the tx-failed lines: they only mean "not sent yet".
+   - *spoken:* "The Serial Monitor tells you where the letter got stuck. Skip the T X failed lines: they only mean: not sent yet."
    - *doctor's step:* look
-4. [⚡ USB IN] "[mqtt] failed, error -1" or "-2" means the road works, but the mailbox doesn't answer: a wrong IP address, a firewall, Mosquitto not running, or the laptop on another network.
-   - *spoken:* ""M Q T T failed, error minus one" or "minus two" means the road works, but the mailbox doesn't answer: a wrong I P address, a firewall, Mosquitto not running, or the laptop on another network."
+4. [⚡ USB IN] "[wifi] failed, will retry" means the road is blocked: check the hotspot's name and password letter by letter, capitals count, and use 2.4 gigahertz.
+   - *spoken:* ""Wi-Fi failed, will retry" means the road is blocked: check the hotspot's name and password letter by letter, capitals count, and use two point four gigahertz."
    - *doctor's step:* look
-   - *Serial Monitor shows:* `[wifi] connected, IP 192.168.43.20` · `[mqtt] connecting to 192.168.43.10:1883` · `[mqtt] failed, error -2`
-5. [⚡ USB IN] Error 4 or 5: the mailbox wants a password. Set it in the secrets, or use our broker config.
+5. [⚡ USB IN] "[mqtt] failed, error -2" means the road works, but the mailbox can't be reached: a wrong IP address, a firewall, Mosquitto not running or started without our config, or the laptop on another network. Error -1 means it was reached, but didn't answer within 5 seconds.
+   - *spoken:* ""M Q T T failed, error minus two" means the road works, but the mailbox can't be reached: a wrong I P address, a firewall, Mosquitto not running or started without our config, or the laptop on another network. Error minus one means it was reached, but didn't answer within five seconds."
+   - *doctor's step:* look
+   - *Serial Monitor shows:* `[wifi] connecting to my-hotspot` · `[wifi] connected, IP 192.168.43.20` · `[mqtt] connecting to 192.168.43.10:1883` · `[mqtt] failed, error -2`
+6. [⚡ USB IN] Error 4 or 5: the mailbox wants a password. Set it in the secrets, or use our broker config.
    - *spoken:* "Error four or five: the mailbox wants a password. Set it in the secrets, or use our broker config."
    - *doctor's step:* look
-   - *Serial Monitor shows:* `[mqtt] failed, error 5`
-6. [⚡ USB IN] It connects, then drops every 20 seconds or so? Something blocks the loop: don't add delay() in loop().
+   - *Serial Monitor shows:* `[mqtt] connecting to 192.168.43.10:1883` · `[mqtt] failed, error 5`
+7. [⚡ USB IN] It connects, then drops every 20 seconds or so? Something blocks the loop: don't add delay() in loop().
    - *spoken:* "It connects, then drops every twenty seconds or so? Something blocks the loop: don't add a delay in the loop."
    - *doctor's step:* look
-7. [⚡ USB IN] And if the Python brain says ConnectionRefusedError: start Mosquitto first.
+8. [⚡ USB IN] And if the Python brain says ConnectionRefusedError: start Mosquitto first.
    - *spoken:* "And if the Python brain says connection refused error: start Mosquitto first."
    - *doctor's step:* look
-8. [⚡ USB IN] Fix the one thing the message points to, in arduino_secrets.h or on the laptop, and upload again.
-   - *spoken:* "Fix the one thing the message points to, in arduino secrets dot h or on the laptop, and upload again."
+9. [⚡ USB IN] Fix the one thing the message points to: on the phone, on the laptop, or in arduino_secrets.h. Upload again only if you changed the code or the secrets; otherwise Robin tries again by itself every few seconds.
+   - *spoken:* "Fix the one thing the message points to: on the phone, on the laptop, or in arduino secrets dot h. Upload again only if you changed the code or the secrets; otherwise Robin tries again by itself every few seconds."
    - *doctor's step:* fix (no wiring: software or files)
-   - *Serial Monitor shows:* `` · `Robin firmware 1.0.0` · `[wifi] connected, IP 192.168.43.20` · `[mqtt] connecting to 192.168.43.10:1883` · `[mqtt] connected`
-9. [⚡ USB IN] Test: the face turns happy, and mosquitto_sub shows Robin's messages.
-   - *spoken:* "Test: the face turns happy, and mosquitto sub shows Robin's messages."
+   - *Serial Monitor shows:* `` · `Robin firmware 1.0.0` · `[queue] events waiting: 1` · `[wifi] connecting to my-hotspot` · `[wifi] connected, IP 192.168.43.20` · `[mqtt] connecting to 192.168.43.10:1883` · `[mqtt] connected`
+10. [⚡ USB IN] Test: the face turns happy, tx-failed becomes tx, and mosquitto_sub shows Robin's messages.
+   - *spoken:* "Test: the face turns happy, T X failed becomes T X, and mosquitto sub shows Robin's messages."
    - *doctor's step:* test
-10. [🔌 USB OUT] Unplug.
+   - *Serial Monitor shows:* `[tx] {"boot":48213,"seq":2,"ms":6020,…}`
+11. [🔌 USB OUT] Unplug.
 
 Figure card: Fig 12 · Case 11 · WiFi and MQTT
 
