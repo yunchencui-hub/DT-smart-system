@@ -105,7 +105,7 @@ npm run anatomy:render && npm run anatomy:finish       # out/robin_anatomy_build
 Not used from the skill: its `audit.mjs` geometry proof and line-end check need its own recorder and HTML pages, so this bench was checked with close-up stills instead (every scene, several zooms). Two deliberate deviations from its craft rules: colour (wire colours, red/blue rails, caps and the capacitor stripe are what the viewer must match) and the silkscreen text printed on the real boards.
 
 ## The anatomy + ELI5 debug guide (`RobinAnatomyDebug`)
-How to find and fix what goes wrong, on the same 3D bench, fully built. About 12 minutes, 15 chapters: the routine, the tools, then **11 cases** taken from the Troubleshooting table in docs/04 and C.4 in docs/05 (no Serial Monitor output, light_raw stuck, PIR jumps, PIR stays HIGH, button always pressed, no sound, wrong sentence, pops/restarts, "needs more power", warm capacitor, crossed eyes online).
+How to find and fix what goes wrong, on the same 3D bench, fully built. About 14 minutes, 15 chapters: the routine, the tools, then **11 cases** taken from the Troubleshooting table in docs/04 and C.4 in docs/05 (no Serial Monitor output, light_raw stuck, PIR jumps, PIR stays HIGH, button always pressed, no sound, wrong sentence, pops/restarts, "needs more power", warm capacitor, crossed eyes online).
 
 The ELI5 idea: **be Robin's doctor**. Every case follows the same five steps, ticked on a DOCTOR card in the side panel: 🩺 symptom → 🔌 unplug → 🔍 look and measure → 🔧 change one thing → ✅ test again. A software fix (baud rate, secrets, files on the module) shows "Unplug: not needed, no wiring".
 - **The fault is drawn in**: the wrong wire or leg glows red from the moment the narrator points at it, then swaps for the right one at the fix. The wrong parts live in `src/anatomy/faults.ts`, apart from `wiring.ts`, so `netcheck` still checks only the real build.
@@ -125,7 +125,9 @@ npm run debug:review                     # review/debug-script.md + rules R1-R3 
 npm run debug:stills -- --scenes d-button --scale 1
 npm run debug:render && npm run debug:finish   # out/robin_anatomy_debug_v1.mp4 (+ .srt, chapters, 720p copy)
 ```
-Extra review rules for the debug guide: **D0** every fault and hidden part exists; **D1** every wiring fix happens with the cable out (a software fix is marked `soft` and may not touch wiring); **D2** every case tests again after its fix; **D3** the faulty part is pointed at before it is swapped.
+Extra review rules for the debug guide: **D0** every fault and hidden part exists; **D1** every wiring fix happens with the cable out (a software fix is marked `soft` and may not touch wiring); **D2** every case tests again after its fix; **D3** the faulty part is pointed at before it is swapped. **R3** follows the Gravity plug from the narration here (the bench starts built).
+
+Before the final render, an independent review (safety, hardware, firmware, docs, ELI5; a skeptic per finding, then a completeness critic) confirmed 32 problems and refuted 11: [`review/debug-review.md`](review/debug-review.md). The Serial Monitor lines are copied from what `robin.ino` really prints (`[queue] events waiting: 1` at start, `[tx-failed]` every 2 s while offline, `raw` = a 2-second snapshot).
 
 ## Credits and licences
 - [Remotion](https://www.remotion.dev) (free for individuals; see its licence for companies).
