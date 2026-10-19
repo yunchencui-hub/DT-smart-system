@@ -4,6 +4,7 @@ import { UNO_BOT, UNO_LABEL, UNO_TOP } from '../data/geom';
 import { BOTTOM_HOLES, GRAVITY_PINS, TOP_HOLES } from '../data/modules';
 import { ITEMS, Item, WIRE_COLORS, WireItem } from '../data/wiring';
 import * as k from './kit/iso-kit';
+import { FAULT_ITEMS } from './faults';
 import { box, cyl, flatPoly, flatRect, line3, mix, P, prism, rod, topText, tube } from './draw';
 import {
   add3, anchorOf, BB, colX, GRAV_HOUSING, GRAV_PLUG, GRAV_SOCKET, gravHousingY, gravPinY, HEADER_H, HEADER_TOP, HEADERS, hole3,
@@ -303,7 +304,7 @@ export type Built = { back: string; front: string; items: Map<string, BuiltItem>
 export function buildBench(p: P): Built {
   const items = new Map<string, BuiltItem>();
   const depthAt = (q: V3) => k.depthOf([q[0], q[1], 0], p);
-  for (const it of ITEMS) {
+  for (const it of [...ITEMS, ...FAULT_ITEMS]) {
     if (it.kind === 'wire') {
       const pts = wirePath(it);
       items.set(it.id, {

@@ -1,7 +1,7 @@
 // Narration + timeline.
 //   npx tsx scripts/voice.ts --draft   estimated timings, no audio (quick; enough for the review and layout)
 //   npx tsx scripts/voice.ts           Piper TTS per sentence (cached), Robin's clips, one mixed narration.wav
-//   add --script anatomy               the same for the anatomy + ELI5 video (src/anatomy/script.ts)
+//   add --script anatomy | debug       the same for an anatomy + ELI5 video (scripts/videos.ts)
 // Writes src/gen/timeline.json (+ public/gen/narration.wav). Every scene and animation is timed from it,
 // so the picture always follows the voice. Timing rules are the same as the older video (video/build.mjs).
 //
@@ -12,6 +12,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isSay, Line, sayText, SceneDef, Usb } from '../src/script/types';
+import { videoArg, VIDEOS } from './videos';
 import { sentences, speakify, UNSPEAKABLE } from '../src/script/speak';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -19,11 +20,11 @@ const ROOT = path.resolve(HERE, '..');
 const REPO = path.resolve(ROOT, '..');
 const BUILD = path.join(ROOT, 'build');
 const DRAFT = process.argv.includes('--draft');
-// --script anatomy: the anatomy + ELI5 video (src/anatomy/script.ts) instead of the drawn build guide
-const SCRIPT = process.argv.includes('--script') ? process.argv[process.argv.indexOf('--script') + 1] : 'guide';
-const SCENES: SceneDef[] = SCRIPT === 'anatomy' ? (await import('../src/anatomy/script')).SCENES as SceneDef[] : (await import('../src/script/scenes')).SCENES;
-const OUT_TL = path.join(ROOT, SCRIPT === 'anatomy' ? 'src/gen/anatomy-timeline.json' : 'src/gen/timeline.json');
-const OUT_WAV = path.join(ROOT, SCRIPT === 'anatomy' ? 'public/gen/anatomy-narration.wav' : 'public/gen/narration.wav');
+// --script anatomy | debug: one of the anatomy + ELI5 videos instead of the drawn build guide (scripts/videos.ts)
+const VIDEO = VIDEOS[videoArg()];
+const SCENES: SceneDef[] = await VIDEO.scenes();
+const OUT_TL = path.join(ROOT, VIDEO.timeline);
+const OUT_WAV = path.join(ROOT, VIDEO.wav);
 const PY = process.env.PIPER_PYTHON || 'python3';
 const VOICE = process.env.PIPER_VOICE || path.join(REPO, 'audio/voices/en_US-norman-medium.onnx');
 const FFMPEG = process.env.FFMPEG || 'ffmpeg';

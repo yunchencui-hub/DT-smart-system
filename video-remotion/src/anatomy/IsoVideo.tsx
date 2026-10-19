@@ -1,7 +1,8 @@
-// The anatomy + ELI5 build video: an isometric figure of the bench (anatomy skill) that is built up exactly as the
-// narration says, in a card with Fig n / title / hint / live readout, next to a side panel with the renders of the
-// parts we received and a one-line "ELI5" picture. Scenes sit at their absolute place in the timeline.
-import React from 'react';
+// An anatomy + ELI5 video (the build, or the debugging guide): an isometric figure of the bench (anatomy skill) that
+// changes exactly as the narration says, in a card with Fig n / title / hint / live readout, next to a side panel with
+// the renders of the parts we received, a one-line "ELI5" picture and a checklist. Scenes sit at their absolute place
+// in the timeline. Which video it is comes from the Video (src/anatomy/video.ts) passed to <IsoVideo>.
+import React, { createContext, useContext } from 'react';
 import { AbsoluteFill, Html5Audio, Img, interpolate, Sequence, staticFile, useCurrentFrame } from 'remotion';
 import '../fonts';
 import { ease } from '../data/geom';
@@ -9,17 +10,23 @@ import { blinkFace, LedMatrix } from '../kit/hardware';
 import { C, EMOJI, FONT, MONO } from '../theme';
 import { Bench, FIG, FULL_VIEW, lerpView, viewOf, ViewBox } from './Bench';
 import { BreadboardXray, PirFront, RenderBadge, RenderCard } from './figures';
+import { ButtonXray, DOC_STEPS, DriveFig, LoopScreen, NetworkFig } from './debug/figures';
 import { ITEMS } from '../data/wiring';
-import { AScene, AView } from './script';
-import {
-  addingAt, captionAt, defOf, everything, FADE_S, FPS, FigState, litAt, progressAt, robinTalkingAt, serialAt, stateAt, TL, TOTAL_FRAMES, TScene, usbOutAt, usbStateAt,
-} from './timeline';
+import { FAULT_ITEMS } from './faults';
+import type { AScene, AView, Doc } from './types';
+import { FADE_S, FigState, TScene, Video } from './video';
 
-const FADE = Math.round(FADE_S * FPS);
+const VCtx = createContext<Video | null>(null);
+const useV = () => useContext(VCtx)!;
+const ITEM_IDS = new Set(ITEMS.map((i) => i.id));
+const finished = (id: string) => (ITEM_IDS.has(id) ? 1 : 0); // the finished bench (no fault parts)
+const FADE_FRAMES = (v: Video) => Math.round(FADE_S * v.FPS);
 const smooth = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
 
 export const VIEWS: Record<AView, ViewBox> = {
   full: FULL_VIEW,
+  rails: viewOf([[106, 34, 0], [146, 58, 0], [106, 58, 0], [146, 34, 26]], 18),
+  reset: viewOf([[-4, -2, 0], [34, 20, 8]], 18),
   desk: viewOf([[-14, -2, 0], [168, 56, 0], [168, -2, 0], [-14, 56, 14]], 10),
   power: viewOf([[22, 42, 0], [22, 56, 27], [98, 40, 0], [98, 56, 24]], 26),
   uno: viewOf([[-14, -2, 0], [72, 56, 14]]),
@@ -80,14 +87,15 @@ const thumbW = (n: number) => (n === 1 ? 150 : n <= 3 ? 106 : 78);
 const short = (desc: string) => desc.replace(/\s*\([^)]*\)/g, '').replace(/^(.)/, (c) => c.toUpperCase());
 // What this scene wires, from the same data as netcheck: waiting, going in now, or done.
 const Connect: React.FC<{ sc: TScene; t: number }> = ({ sc, t }) => {
+  const v = useV();
   const ids = sc.lines.flatMap((l) => l.adds);
   if (!ids.length) return null;
-  const pr = progressAt(t), lit = litAt(t);
+  const pr = v.progressAt(t), lit = v.litAt(t);
   return (
     <div style={{ background: '#fff', borderRadius: 10, boxShadow: '0 0 0 1px #e3ddd2', padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 5 }}>
       <div style={{ fontSize: 13, fontWeight: 900, letterSpacing: 1.5, color: C.muted }}>CONNECT</div>
       {ids.map((id) => {
-        const it = ITEMS.find((i) => i.id === id)!, p = pr(id), now = lit.includes(id) && p < 1;
+        const it = [...ITEMS, ...FAULT_ITEMS].find((i) => i.id === id)!, p = pr(id), now = lit.includes(id) && p < 1;
         const mark = p >= 1 ? '✓' : now || p > 0 ? '●' : '○';
         return (
           <div key={id} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', fontSize: 13.5, fontWeight: 700, lineHeight: 1.2, color: p > 0 ? C.ink : '#9aa3ab', background: now ? '#e7f6f6' : 'transparent', borderRadius: 6, padding: '2px 4px' }}>
@@ -119,13 +127,34 @@ const FaceCard: React.FC<{ face: string | null }> = ({ face }) => (
     <div style={{ fontFamily: MONO, fontSize: 13, color: C.muted, textAlign: 'center' }}>{face ? `face ${face.replace('blink', 'happy')}` : 'no power'}</div>
   </div>
 );
+// The doctor's five steps (debugging guide): the one this line is about is lit, the ones done are ticked.
+// soft = this case never unplugs (a software fix): its Unplug step reads "not needed" once the case is past it
+const DoctorCard: React.FC<{ doc?: Doc; seen: Set<Doc>; soft: boolean }> = ({ doc, seen, soft }) => {
+  const at = DOC_STEPS.findIndex((d) => d.id === doc);
+  return (
+    <div style={{ background: '#fff', borderRadius: 10, boxShadow: '0 0 0 1px #e3ddd2', padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <div style={{ fontSize: 13, fontWeight: 900, letterSpacing: 1.5, color: C.muted }}>THE DOCTOR'S STEPS</div>
+      {DOC_STEPS.map((d, i) => (
+        <div key={d.id} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 15, fontWeight: 800, borderRadius: 7, padding: '3px 6px', color: seen.has(d.id) ? C.ink : '#a7afb6', background: i === at ? '#e7f6f6' : 'transparent', boxShadow: i === at ? `inset 0 0 0 2px ${C.teal}` : 'none' }}>
+          <span style={{ fontFamily: EMOJI, fontSize: 17, width: 22 }}>{d.icon}</span>
+          <span style={{ flex: 1 }}>{d.id === 'unplug' && soft && !seen.has('unplug') && at > i ? 'Unplug: not needed, no wiring' : d.text}</span>
+          {seen.has(d.id) && i !== at && <span style={{ color: C.green, fontWeight: 900 }}>✓</span>}
+        </div>
+      ))}
+    </div>
+  );
+};
+// the doctor's steps this case has gone through so far (up to the line being spoken)
+const docsSeen = (def: AScene, sc: TScene, t: number) => new Set(def.lines.filter((l, i) => typeof l !== 'string' && l.doc && sc.lines[i] && sc.lines[i].start <= t + 0.02).map((l) => (l as { doc: Doc }).doc));
 const SidePanel: React.FC<{ def: AScene; sc: TScene; t: number }> = ({ def, sc, t }) => {
-  const serial = serialAt(sc, t);
-  const face = usbOutAt(t) < 0.05 ? faceAt(t, stateAt(sc, t).now.s) : null;
+  const v = useV();
+  const serial = v.serialAt(sc, t);
+  const st = v.stateAt(sc, t).now.s;
+  const face = v.usbOutAt(t) < 0.05 ? faceAt(v, t, st) : null;
   return (
     <div style={{ position: 'absolute', left: 900, top: 8, width: 364, height: 548, display: 'flex', flexDirection: 'column', gap: 10, fontFamily: FONT }}>
       {serial !== null ? (
-        <Serial lines={serial} h={def.faceCard ? 150 : 206} />
+        <Serial lines={serial} h={def.faceCard ? 150 : def.fault !== undefined || st.doc ? 180 : 206} />
       ) : def.need?.length ? (
         <div style={{ background: '#fff', borderRadius: 10, boxShadow: '0 0 0 1px #e3ddd2', padding: '10px 12px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
@@ -142,6 +171,7 @@ const SidePanel: React.FC<{ def: AScene; sc: TScene; t: number }> = ({ def, sc, 
         </div>
       )}
       {def.faceCard && <FaceCard face={face} />}
+      {def.fault !== undefined || st.doc ? <DoctorCard doc={st.doc} seen={docsSeen(def, sc, t)} soft={!def.lines.some((l) => typeof l !== 'string' && l.doc === 'unplug')} /> : null}
       <Notes def={def} sc={sc} t={t} />
       <Connect sc={sc} t={t} />
     </div>
@@ -149,43 +179,45 @@ const SidePanel: React.FC<{ def: AScene; sc: TScene; t: number }> = ({ def, sc, 
 };
 
 // ---------- one figure scene
-const glowsOf = (st: ReturnType<typeof stateAt>) => {
+type St = ReturnType<Video['stateAt']>;
+const glowsOf = (st: St) => {
   const fadeIn = ease(Math.min(1, st.since / 0.4)), fadeOut = 1 - fadeIn;
   const now = st.now.s.glow.map((spec) => ({ spec, o: fadeIn }));
   const old = (st.before?.s.glow ?? []).filter((g) => !st.now.s.glow.includes(g)).map((spec) => ({ spec, o: fadeOut }));
   return [...old, ...now].filter((g) => g.o > 0.01);
 };
-const viewNow = (st: ReturnType<typeof stateAt>) => {
+const viewNow = (st: St) => {
   const to = VIEWS[st.now.s.view], from = st.before ? VIEWS[st.before.s.view] : to;
   return lerpView(from, to, smooth(Math.min(1, st.since / 1.2)));
 };
-const sincePlugIn = (t: number) => {
-  let last = -99;
-  let prev: string = 'out';
-  for (const s of TL.scenes) for (const l of s.lines) { if (l.start > t) break; if (l.usb === 'in' && prev !== 'in') last = l.start; prev = l.usb; }
-  return t - last;
-};
-export const faceAt = (t: number, st: FigState) => {
-  if (sincePlugIn(t) < 1.6) return 'offline'; // the firmware's boot face, on every plug-in
+export const faceAt = (v: Video, t: number, st: FigState) => {
+  if (v.sincePlugIn(t) < 1.6) return 'offline'; // the firmware's boot face, on every plug-in
   return st.face === 'happy' ? blinkFace(t, 1) : st.face;
 };
 
 const FigureScene: React.FC<{ sc: TScene; def: AScene; t: number }> = ({ sc, def, t }) => {
-  const st = stateAt(sc, t);
+  const v = useV();
+  const st = v.stateAt(sc, t);
   const s = st.now.s, b = st.before?.s;
   const figFade = b && b.fig !== s.fig ? smooth(Math.min(1, st.since / 0.5)) : 1;
   const renderFade = b && s.fig === 'render' && b.render !== s.render ? smooth(Math.min(1, st.since / 0.5)) : 1;
-  const usb = usbStateAt(t);
-  const adding = addingAt(t);
-  const readout = adding ? adding.desc : def.fig?.readout ?? (usb === 'in' ? 'testing' : '');
+  const usb = v.usbStateAt(t);
+  const adding = v.addingAt(t);
+  const readout = adding ? adding.desc : s.readout ?? def.fig?.readout ?? (usb === 'in' ? 'testing' : '');
   const liftOf = (x: FigState) => x.lift;
   const lift = b ? liftOf(b) + (liftOf(s) - liftOf(b)) * smooth(Math.min(1, st.since / 1.3)) : liftOf(s);
   const figure = (f: FigState['fig'], render?: string) => {
     switch (f) {
-      case 'bench': return <Bench view={viewNow(st)} progress={progressAt(t)} lit={litAt(t)} glows={glowsOf(st)} usbOut={usbOutAt(t)} face={faceAt(t, s)} talking={robinTalkingAt(t) ? 0.6 + 0.4 * Math.sin(t * 14) : 0} />;
+      case 'bench': return <Bench view={viewNow(st)} progress={v.progressAt(t)} lit={v.litAt(t)} bad={v.badAt(t)} glows={glowsOf(st)} usbOut={v.usbOutAt(t)} face={faceAt(v, t, s)} talking={v.robinTalkingAt(t) ? 0.6 + 0.4 * Math.sin(t * 14) : 0} />;
       case 'xray': return <BreadboardXray lift={lift} glow={glowsOf(st)} />;
       case 'pirFront': return <PirFront lift={lift} t={t} />;
       case 'render': return <div style={{ position: 'relative', width: FIG.w, height: FIG.h }}><RenderCard name={render!} o={renderFade} /></div>;
+      case 'buttonXray': {
+        const press = b ? b.press + (s.press - b.press) * smooth(Math.min(1, st.since / 0.6)) : s.press;
+        return <ButtonXray press={press} gndLeg={v.progressAt(t)('f-wGG11') > 0.5 ? 'same' : 'diagonal'} lift={lift} t={t} />;
+      }
+      case 'network': return <NetworkFig net={s.net ?? 'ok'} t={t} face={faceAt(v, t, s)} />;
+      case 'drive': return <DriveFig drive={s.drive ?? 'old'} since={st.since} />;
     }
   };
   return (
@@ -216,7 +248,7 @@ const Legend: React.FC<{ icon: string; bg: string; title: string; text: string }
 );
 const MiniBench: React.FC<{ t: number; scale: number; left: number; top: number }> = ({ t, scale, left, top }) => (
   <div style={{ position: 'absolute', left, top, width: FIG.w, height: FIG.h, transform: `scale(${scale})`, transformOrigin: 'top left' }}>
-    <Bench view={FULL_VIEW} progress={everything} usbOut={0} face={blinkFace(t, 1)} />
+    <Bench view={FULL_VIEW} progress={finished} usbOut={0} face={blinkFace(t, 1)} />
   </div>
 );
 
@@ -232,6 +264,7 @@ const TitleScreen: React.FC<{ t: number; def: AScene }> = ({ t, def }) => (
         <Legend icon="🔌" bg={C.green} title="USB OUT" text="the only time you wire" />
         <Legend icon="⚡" bg={C.orange} title="USB IN" text="testing: hands off" />
         <Legend icon="🤔" bg={C.blue} title="PREDICT" text="guess first, then the test shows it" />
+        {def.ui?.doctor && <Legend icon="🩺" bg={C.red} title="DOCTOR" text={def.ui.doctor} />}
       </div>
     </Center>
   </>
@@ -247,7 +280,7 @@ const GROUPS: { id: string; label: string; parts: string[]; line: string }[] = [
   { id: 'skin', label: 'Skin', parts: ['kradex_z74_closed'], line: 'tank' },
 ];
 const KitScreen: React.FC<{ sc: TScene; t: number }> = ({ sc, t }) => {
-  const g = stateAt(sc, t).now.s.group ?? 'all';
+  const g = useV().stateAt(sc, t).now.s.group ?? 'all';
   const big = g === 'spares' ? 'inventory_full_quantities' : 'all_materials_overview';
   return (
     <>
@@ -283,7 +316,7 @@ const KitScreen: React.FC<{ sc: TScene; t: number }> = ({ sc, t }) => {
 const FilesScreen: React.FC<{ sc: TScene; def: AScene; t: number }> = ({ sc, def, t }) => {
   const copy = sc.lines[3], ui = def.ui ?? {};
   const n = copy ? Math.max(0, Math.min(13, Math.floor(((t - copy.start) / Math.max(1, copy.end - copy.start)) * 15))) : 0;
-  const micro = usbStateAt(t) === 'micro';
+  const micro = useV().usbStateAt(t) === 'micro';
   return (
     <>
       <div style={{ position: 'absolute', left: 16, top: 8, width: 520, height: 548, background: '#fbfbfa', boxShadow: '0 0 0 1px #c9c9c4', borderRadius: 4, overflow: 'hidden' }}>
@@ -315,26 +348,28 @@ const EndScreen: React.FC<{ t: number; def: AScene }> = ({ t, def }) => (
   <>
     <MiniBench t={t} scale={0.72} left={640} top={60} />
     <Center style={{ left: 50, top: 0, width: 600, height: 564 }}>
-      <div style={{ fontSize: 54, fontWeight: 900, color: C.ink }}>That's Robin.</div>
+      <div style={{ fontSize: 54, fontWeight: 900, color: C.ink }}>{def.ui?.head ?? "That's Robin."}</div>
       <div style={{ fontSize: 20, fontWeight: 800, color: C.muted, lineHeight: 1.4 }}>{def.ui?.recap}</div>
       <div style={{ alignSelf: 'flex-start', fontSize: 20, fontWeight: 900, color: '#fff', background: C.teal, borderRadius: 14, padding: '8px 16px' }}>{def.ui?.rule}</div>
-      <div style={{ marginTop: 8 }}><Legend icon="✏️" bg={C.purple} title="DRAWINGS" text="they explain; your own photos prove the build" /></div>
+      <div style={{ marginTop: 8 }}><Legend icon="✏️" bg={C.purple} title="DRAWINGS" text={def.ui?.drawings ?? 'they explain; your own photos prove the build'} /></div>
     </Center>
   </>
 );
 
 // ---------- scenes in the timeline, overlay, narration
 const SceneHost: React.FC<{ sc: TScene; len: number; first: boolean }> = ({ sc, len, first }) => {
+  const v = useV();
   const f = useCurrentFrame();
-  const t = sc.start + Math.min(f, len - 1) / FPS; // global seconds; hold the last frame while the next fades in
-  const o = first ? 1 : interpolate(f, [0, FADE], [0, 1], { extrapolateRight: 'clamp', easing: smooth });
-  const def = defOf(sc.id);
+  const t = sc.start + Math.min(f, len - 1) / v.FPS; // global seconds; hold the last frame while the next fades in
+  const o = first ? 1 : interpolate(f, [0, FADE_FRAMES(v)], [0, 1], { extrapolateRight: 'clamp', easing: smooth });
+  const def = v.defOf(sc.id);
   return (
     <div style={{ position: 'absolute', left: 0, top: 60, width: 1280, height: 564, background: C.bg, opacity: o, overflow: 'hidden', fontFamily: FONT, color: C.ink }}>
       {def.kind === 'title' ? <TitleScreen t={t} def={def} />
         : def.kind === 'kit' ? <KitScreen sc={sc} t={t} />
         : def.kind === 'files' ? <FilesScreen sc={sc} def={def} t={t} />
         : def.kind === 'end' ? <EndScreen t={t} def={def} />
+        : def.kind === 'loop' ? <LoopScreen sc={sc} def={def} t={t} />
         : <FigureScene sc={sc} def={def} t={t} />}
     </div>
   );
@@ -346,10 +381,11 @@ const USB_TEXT = {
   micro: { icon: '💽', title: 'Arduino USB OUT', sub: 'module alone on micro-USB', bg: '#7e57c2' },
 };
 const Overlay: React.FC = () => {
-  const t = useCurrentFrame() / FPS;
-  const sc = TL.scenes.reduce((a, s) => (s.start <= t ? s : a), TL.scenes[0]);
-  const cap = captionAt(t);
-  const usb = USB_TEXT[usbStateAt(t)];
+  const v = useV();
+  const t = useCurrentFrame() / v.FPS;
+  const sc = v.sceneAt(t);
+  const cap = v.captionAt(t);
+  const usb = USB_TEXT[v.usbStateAt(t)];
   const showBadge = sc.part !== 'Welcome';
   return (
     <>
@@ -358,7 +394,7 @@ const Overlay: React.FC = () => {
           <rect x={8} y={8} width={44} height={44} rx={10} fill={C.teal} />
           <LedMatrix x0={13.5} y0={16} pitch={3.0} r={1.1} face={blinkFace(t, 1)} />
         </svg>
-        <div style={{ position: 'absolute', left: 72, top: 8, fontSize: 13, fontWeight: 900, letterSpacing: 1.5, color: C.teal }}>ROBIN · BUILD GUIDE · ANATOMY + ELI5 · follows docs/04 · drawings, not footage</div>
+        <div style={{ position: 'absolute', left: 72, top: 8, fontSize: 13, fontWeight: 900, letterSpacing: 1.5, color: C.teal }}>{v.cfg.label}</div>
         <div style={{ position: 'absolute', left: 72, top: 25, fontSize: 22, fontWeight: 900, color: C.ink, whiteSpace: 'nowrap' }}>{sc.title}</div>
         <div style={{ position: 'absolute', right: showBadge ? 300 : 20, top: 14, fontSize: 16, fontWeight: 900, color: '#fff', background: sc.step ? C.orange : C.purple, borderRadius: 16, padding: '5px 14px' }}>{sc.step ?? sc.part}</div>
         {showBadge && (
@@ -370,7 +406,7 @@ const Overlay: React.FC = () => {
             </div>
           </div>
         )}
-        <div style={{ position: 'absolute', left: 0, top: 57, height: 3, width: (t / TL.total) * 1280, background: C.teal }} />
+        <div style={{ position: 'absolute', left: 0, top: 57, height: 3, width: (t / v.TL.total) * 1280, background: C.teal }} />
       </div>
       <div style={{ position: 'absolute', left: 0, top: 624, width: 1280, height: 96, background: C.bar, boxShadow: '0 -2px 8px rgba(0,0,0,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, padding: '0 60px', boxSizing: 'border-box', fontFamily: FONT, zIndex: 10 }}>
         {cap && cap.kind === 'robin' && <div style={{ background: C.teal, color: '#fff', fontWeight: 900, fontSize: 14, letterSpacing: 1.5, borderRadius: 14, padding: '5px 12px' }}>ROBIN</div>}
@@ -386,19 +422,21 @@ const Overlay: React.FC = () => {
   );
 };
 
-export const AnatomyBuild: React.FC = () => (
-  <AbsoluteFill style={{ background: C.bg, fontFamily: FONT }}>
-    {TL.scenes.map((sc, i) => {
-      const f0 = Math.round(sc.start * FPS);
-      const f1 = i + 1 < TL.scenes.length ? Math.round(TL.scenes[i + 1].start * FPS) : TOTAL_FRAMES;
-      const last = i === TL.scenes.length - 1;
-      return (
-        <Sequence key={sc.id} from={f0} durationInFrames={f1 - f0 + (last ? 0 : FADE)} name={sc.id} layout="none">
-          <SceneHost sc={sc} len={f1 - f0} first={i === 0} />
-        </Sequence>
-      );
-    })}
-    <Overlay />
-    {!TL.draft && <Html5Audio src={staticFile('gen/anatomy-narration.wav')} />}
-  </AbsoluteFill>
+export const IsoVideo: React.FC<{ v: Video }> = ({ v }) => (
+  <VCtx.Provider value={v}>
+    <AbsoluteFill style={{ background: C.bg, fontFamily: FONT }}>
+      {v.TL.scenes.map((sc, i) => {
+        const f0 = Math.round(sc.start * v.FPS);
+        const f1 = i + 1 < v.TL.scenes.length ? Math.round(v.TL.scenes[i + 1].start * v.FPS) : v.TOTAL_FRAMES;
+        const last = i === v.TL.scenes.length - 1;
+        return (
+          <Sequence key={sc.id} from={f0} durationInFrames={f1 - f0 + (last ? 0 : FADE_FRAMES(v))} name={sc.id} layout="none">
+            <SceneHost sc={sc} len={f1 - f0} first={i === 0} />
+          </Sequence>
+        );
+      })}
+      <Overlay />
+      {!v.TL.draft && <Html5Audio src={staticFile(v.cfg.audio)} />}
+    </AbsoluteFill>
+  </VCtx.Provider>
 );

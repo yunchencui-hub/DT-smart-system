@@ -7,31 +7,9 @@
 //   - one idea per picture: only the part being added lights up;
 //   - before a test, a "Predict" pause asks what will happen, and the test shows the answer;
 //   - say plainly when a step trips most people up.
-import type { PauseLine, RobinLine, SayLine, SceneDef } from '../script/types';
+import type { AScene } from './types';
 
-export type AView = 'full' | 'desk' | 'power' | 'ldr' | 'pir' | 'pirBack' | 'buttons' | 'voice' | 'voiceWires' | 'cap' | 'matrix' | 'uno';
-export type AFig = 'bench' | 'xray' | 'pirFront' | 'render';
-type Extra = {
-  view?: AView; // camera on the bench from this line on
-  glow?: string[]; // light on a rail, a column, a pin (see Bench.tsx glowSvg)
-  face?: string; // LED matrix face from this line on (when powered)
-  serial?: string[]; // Serial Monitor lines that appear during this line
-  fig?: AFig; // which figure from this line on
-  render?: string; // for fig 'render': one of the part renders in video-assets/parts/
-  lift?: number; // xray: how far the breadboard's plastic is lifted (0..1); pirFront: how far the dome is off
-  group?: string; // kit scene: which body part is highlighted
-};
-export type ALine = string | (SayLine & Extra) | (RobinLine & Extra) | (PauseLine & Extra);
-export type AScene = Omit<SceneDef, 'lines'> & {
-  lines: ALine[];
-  kind: 'title' | 'kit' | 'figure' | 'files' | 'end';
-  fig?: { n: number; title: string; hint?: string; readout?: string };
-  need?: string[]; // part renders shown in the side panel (video-assets/parts/<name>.png)
-  eli5?: string; // the one-line analogy in the side panel
-  notes?: { from: number; icon: string; text: string }[]; // side-panel cards that appear from line `from` (0-based) on
-  faceCard?: boolean; // side panel shows the LED face large (the front header hides its bottom rows in the 3D view)
-  start?: Extra; // the figure's state at the start of the scene
-};
+export type { AFig, ALine, AScene, AView } from './types';
 
 const GET = '1 · Get ready';
 const BUILD = '2 · Build';

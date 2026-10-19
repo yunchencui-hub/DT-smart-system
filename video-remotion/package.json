@@ -26,6 +26,13 @@
     "anatomy:studio": "remotion studio src/anatomy/index.ts",
     "anatomy:render": "remotion render src/anatomy/index.ts RobinAnatomyBuild out/robin_anatomy_build.mp4",
     "anatomy:finish": "tsx scripts/finish.ts --script anatomy",
+    "debug:voice": "tsx scripts/voice.ts --script debug",
+    "debug:voice:draft": "tsx scripts/voice.ts --script debug --draft",
+    "debug:review": "tsx scripts/review.ts --script debug",
+    "debug:stills": "tsx scripts/anatomy-stills.ts --script debug",
+    "debug:studio": "remotion studio src/anatomy/debug/index.ts",
+    "debug:render": "remotion render src/anatomy/debug/index.ts RobinAnatomyDebug out/robin_anatomy_debug.mp4",
+    "debug:finish": "tsx scripts/finish.ts --script debug",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

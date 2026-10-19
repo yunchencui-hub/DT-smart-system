@@ -7,7 +7,7 @@ import { Row } from '../data/geom';
 import { glowRect, tube } from './draw';
 import * as k from './kit/iso-kit';
 import { buildBench, Built, ledsSvg, usbSvg } from './parts';
-import { BB, colX, HEADER_TOP, PCB_TOP, PIR, rowY, SPEAKER, unoPinXY, V3, VOICE, VOICE_TOP, voiceHoleXY } from './world';
+import { BB, colX, HEADER_TOP, hole3, PCB_TOP, PIR, PIR_BACK, rowY, SPEAKER, unoPinXY, V3, VOICE, VOICE_TOP, voiceHoleXY } from './world';
 
 const FACES = facesJson as Record<string, number[][]>;
 export const FIG = { w: 848, h: 528 };
@@ -62,6 +62,13 @@ export function glowSvg(spec: string, o: number): string {
       return a.split(',').map((n) => { const [x, y] = voiceHoleXY(n); return glowRect(p, x - 1.2, y - 1.2, 2.4, 2.4, VOICE_TOP + 0.05, GLOW.orange, o); }).join('');
     }
     case 'matrix': return glowRect(p, 28.6, 29.8, 24.4, 16.8, PCB_TOP + 0.4, GLOW.teal, o);
+    case 'reset': return glowRect(p, 8.2, 0.6, 7.6, 7.2, PCB_TOP + 2.75, GLOW.orange, o);
+    case 'knobs': { // the PIR's two trimpots, on its back (a vertical face): a ring round each
+      return [PIR.x + 5.85, PIR.x + PIR.w - 5.85].map((x) => {
+        const c = k.iso([x, PIR_BACK + 3.7, PIR.z + 18.75], p), r = 5.2 * p.scale;
+        return `<circle cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="${r.toFixed(1)}" fill="${GLOW.orange}" fill-opacity="${(0.18 * o).toFixed(3)}" stroke="${GLOW.orange}" stroke-opacity="${(0.95 * o).toFixed(3)}" stroke-width="1.8"/>`;
+      }).join('');
+    }
     default: return '';
   }
 }
@@ -70,6 +77,7 @@ export type BenchProps = {
   view: ViewBox;
   progress: (id: string) => number; // 0 = not there yet, 0..1 = dropping in / growing, 1 = in place
   lit?: string[]; // items that glow (the ones being added right now)
+  bad?: string[]; // faulty items the narrator points at (debugging guide): they glow red
   glows?: { spec: string; o: number }[];
   usbOut: number; // 0 = USB-C cable plugged in, 1 = out
   face: string | null;
@@ -79,12 +87,23 @@ export type BenchProps = {
 const css = `${k.ISO_CSS}
 .anat{--anatomy-weight:.9px}
 .anat .iso-solid path{vector-effect:non-scaling-stroke}
-.anat .lit{filter:drop-shadow(0 0 2.2px #12b5bf) drop-shadow(0 0 1.2px #12b5bf)}`;
+.anat .lit{filter:drop-shadow(0 0 2.2px #12b5bf) drop-shadow(0 0 1.2px #12b5bf)}
+.anat .bad{filter:drop-shadow(0 0 2.6px #e53935) drop-shadow(0 0 1.4px #e53935)}`;
+
+// Heat above a capacitor that is in backwards (debugging guide): three wavy lines rising from its top.
+const heatSvg = () => {
+  const a = hole3(22, '-b'), b = hole3(24, '+b');
+  const cx = (a[0] + b[0]) / 2, cy = (a[1] + b[1]) / 2, top = BB.h + 22;
+  return [-2.6, 0, 2.6].map((dx) => {
+    const pts = Array.from({ length: 9 }, (_, i) => k.iso([cx + dx + Math.sin(i * 1.3 + dx) * 0.9, cy, top + 1.5 + i * 1.6], PROJ));
+    return `<path d="${k.pathOf(pts)}" fill="none" stroke="${GLOW.red}" stroke-width="2.2" stroke-linecap="round" stroke-opacity=".75"/>`;
+  }).join('');
+};
 
 const Raw: React.FC<{ svg: string; transform?: string; opacity?: number; className?: string }> = ({ svg, transform, opacity, className }) =>
   svg ? <g transform={transform} opacity={opacity} className={className} dangerouslySetInnerHTML={{ __html: svg }} /> : null;
 
-export const Bench: React.FC<BenchProps> = ({ view, progress, lit = [], glows = [], usbOut, face, talking = 0 }) => {
+export const Bench: React.FC<BenchProps> = ({ view, progress, lit = [], bad = [], glows = [], usbOut, face, talking = 0 }) => {
   const B = bench();
   const power = usbOut < 0.05;
   const onBoard = glows.filter((g) => !g.spec.startsWith('vhole'));
@@ -95,16 +114,16 @@ export const Bench: React.FC<BenchProps> = ({ view, progress, lit = [], glows = 
   for (const it of B.items.values()) {
     const pr = progress(it.id);
     if (pr <= 0) continue;
-    const on = lit.includes(it.id);
+    const on = lit.includes(it.id), wrong = bad.includes(it.id);
     if (it.wire) {
       const w = it.wire, a = Math.min(1, pr * 4), z = Math.max(0, (pr - 0.93) / 0.07);
       pieces.push({ key: it.id + ':a', depth: w.fromDepth, node: <Raw svg={w.from} opacity={a} transform={k.translateAlong(PROJ, [0, 0, (1 - a) * 6])} /> });
-      pieces.push({ key: it.id, depth: it.depth, node: <Raw svg={tube(PROJ, w.pts, w.color, w.d, { upto: Math.min(1, pr * 1.08), glow: on ? GLOW.teal : undefined })} /> });
+      pieces.push({ key: it.id, depth: it.depth, node: <Raw svg={tube(PROJ, w.pts, w.color, w.d, { upto: Math.min(1, pr * 1.08), glow: wrong ? GLOW.red : on ? GLOW.teal : undefined })} /> });
       if (z > 0) pieces.push({ key: it.id + ':b', depth: w.toDepth, node: <Raw svg={w.to} opacity={z} transform={k.translateAlong(PROJ, [0, 0, (1 - z) * 6])} /> });
       continue;
     }
     const drop = (1 - pr) * 26;
-    pieces.push({ key: it.id, depth: it.depth, node: <Raw svg={it.svg} className={on ? 'lit' : undefined} opacity={Math.min(1, pr * 2.5)} transform={drop > 0.01 ? k.translateAlong(PROJ, [0, 0, drop]) : undefined} /> });
+    pieces.push({ key: it.id, depth: it.depth, node: <Raw svg={it.svg} className={wrong ? 'bad' : on ? 'lit' : undefined} opacity={Math.min(1, pr * 2.5)} transform={drop > 0.01 ? k.translateAlong(PROJ, [0, 0, drop]) : undefined} /> });
   }
   const voice = B.items.get('voice');
   for (const g of glows) if (g.spec.startsWith('vhole') && voice && progress('voice') >= 1) pieces.push({ key: g.spec, depth: voice.depth + 0.01, node: <Raw svg={glowSvg(g.spec, g.o)} /> });
@@ -125,6 +144,7 @@ export const Bench: React.FC<BenchProps> = ({ view, progress, lit = [], glows = 
             return `<ellipse cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" rx="${r.toFixed(1)}" ry="${(r * 0.45).toFixed(1)}" fill="none" stroke="${GLOW.teal}" stroke-width="1.6" stroke-opacity="${(talking * (0.9 - i * 0.22)).toFixed(2)}"/>`;
           }).join('')} />
         )}
+        {progress('f-capRev') > 0.5 && usbOut < 0.05 && <Raw svg={heatSvg()} />}
         <Raw svg={usbSvg(PROJ, usbOut)} />
       </g>
     </svg>
