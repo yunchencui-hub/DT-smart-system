@@ -88,7 +88,9 @@ Watch the data: install **MQTT Explorer** (<https://mqtt-explorer.com>, easiest)
 | Serial Monitor says | Meaning | Fix |
 |---|---|---|
 | `[wifi] failed, will retry` | wrong SSID/password or 5 GHz | check spelling (case-sensitive!), 2.4 GHz |
-| `[mqtt] failed, error -1` (timeout) or `-2` (refused) | laptop/broker not reachable | wrong IP; firewall; broker not running; laptop on another network |
+| `[tx-failed] {...}` every 2 s | telemetry not sent: Robin isn't online (normal in offline test mode) | online: look for the `[wifi]` or `[mqtt]` line above it |
+| `[mqtt] failed, error -2` (refused) | laptop/broker not reachable | wrong IP; firewall; broker not running, or started without our config (then it only listens on the laptop itself, see C.2); laptop on another network |
+| `[mqtt] failed, error -1` (timeout) | reached port 1883, but no MQTT answer within 5 s | check that our Mosquitto is the one on port 1883; restart it with our config |
 | `[mqtt] failed, error 4` or `5` | bad username/password, not authorised | broker needs a password; set it in the secrets or use our config |
 | connects, then drops every ~20 s | keep-alive not answered | make sure `mqtt.poll()` isn't blocked (don't add `delay()` in `loop()`) |
 | backend: `ConnectionRefusedError` | broker not running on the laptop | start Mosquitto first |

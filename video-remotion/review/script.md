@@ -747,14 +747,14 @@ Total parts: €35.95
 |---|---|---|
 | Nothing in Serial Monitor | wrong baud / port | 115200 baud, correct COM port; press reset |
 | light_raw always ~0 or ~1023 | LDR/resistor not in the same column, or A0 wire in the wrong column | unplug; re-check the divider |
-| pir_raw random HIGH/LOW | warm-up, or it sees you | wait 60 s; point it away; lower sensitivity |
-| PIR stays HIGH ~minutes | time-delay knob not at minimum | turn Tx fully counter-clockwise |
+| pir_raw random HIGH/LOW | warm-up, or it sees you | wait 60 s; point it away; lower sensitivity (Sx counter-clockwise) |
+| PIR stays HIGH ~minutes | time-delay knob not at minimum, or it keeps seeing you (jumper H) | turn Tx fully counter-clockwise; wave once, then step out of its view |
 | Button always "pressed" | used two always-connected legs | unplug, then use diagonal legs |
-| No sound | T/R swapped or not crossed, speaker not on SP+/SP−, missing files, volume 0 | unplug; check T → D0, D1 → 1 kΩ → R, speaker on SP+/SP−, files in the root; then vol 20 |
+| No sound | T/R swapped or not crossed, speaker not on SP+/SP−, missing files, volume 0 | unplug; check T → D0, D1 → 1 kΩ → R, speaker on SP+/SP−; files in the root (Gravity plug out before the micro-USB, as in 5b); then plug in and listen for hello (volume 20 is set at every start) |
 | Plays the wrong sentence | old demo files still on the module | unplug the Arduino, pull the Gravity cable's plug out of the module (by its body, not the wires), then delete everything and copy again |
-| Pops, buzzing, or the board resets when it talks loudly | the speaker's current gulps make the 5 V dip | unplug; check the capacitor (stripe in the − rail, next to the module); then vol 15; use a better USB port/charger |
-| Laptop says "USB device needs more power" or the port switches off when you plug in | the capacitor charging, or a short | unplug; check for a short (+ rail touching − rail); try another port or a powered hub |
-| Capacitor warm or bulging | put in backwards | unplug now; leave it 10 minutes without touching it; fit the spare with the stripe in the − rail |
+| Pops, buzzing, or the board resets when it talks loudly | the speaker's current gulps make the 5 V dip | unplug; check the capacitor (stripe in the − rail, next to the module); still popping: vol 15 (lasts until a restart; to keep it, DEFAULT_VOLUME in robin.ino and volume in config.yaml); use a better USB port/charger |
+| Laptop says "USB device needs more power" or the port switches off when you plug in | the capacitor charging, or a short | unplug; check for a short (+ rail touching − rail, a board lying on metal or on the laptop, module pins touching the Arduino) and that the capacitor stripe and the module − are in the − rail; then try another port or a powered hub |
+| Capacitor warm or bulging | put in backwards | unplug now; leave it 10 minutes without touching it; recycle it; fit the spare with the stripe in the − rail |
 | ✗ eyes forever | WiFi/MQTT problem | see 05, part C troubleshooting |
 
 ### Every part and wire on the workbench drawing

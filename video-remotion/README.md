@@ -69,7 +69,68 @@ npm run real -- --final     # without the placeholder cards, for the version to 
 ```
 `npm run real -- --assets <dir>` scans another folder, for layout tests with dummy files. Clips are used up to 30 s.
 
+## The anatomy + ELI5 video (`RobinAnatomyBuild`)
+The same build, step by step (docs/04), as **isometric figures in the style of the "anatomy" skill**, explained in plain words (ELI5). About 17 minutes, 16 chapters. The bench is drawn in 3D from the real sizes (UNO R4 WiFi, 400-point breadboard, HC-SR501, DFR0534, 2 W speaker, 680 µF can), and every part drops in exactly where `src/data/wiring.ts` puts it, so `netcheck` and the cable rules check this video too. The side panel shows the **renders of the parts we received** (`video-assets/parts/`), always badged RENDER; the header says *drawings, not footage*.
+
+What the viewer sees:
+- **Fig n card** (anatomy convention): Fig number top left, title top right, the USB state bottom left, a live readout bottom right (the wire going in now, e.g. `Arduino 5V → + rail`).
+- **One idea per picture:** only the part being added glows; the rail, column or pin the narrator talks about lights up on the board (never a leader line).
+- **Explainer figures:** the breadboard with its plastic lifted off (the metal clips), the PIR from the front with its dome pulled off (the pin labels).
+- **Predict pauses** before the LDR, button, T/R and capacitor steps: guess first, then the test shows the answer.
+- **Tests:** the USB-C plug slides in (ON LED, boot face ✗, then the scene's face), a Serial Monitor with example values in the firmware's own format, Robin's real voice clips; then it slides out again.
+- **Faces:** a FACE card shows the face from above, because the 8.5 mm front header hides the matrix's bottom rows at this camera angle (as on the real board).
+
+```
+src/anatomy/kit/iso-kit.ts   the anatomy skill's core, unchanged (= the account upload's kit/iso-kit.ts; MIT, licence next to it)
+src/anatomy/world.ts         the bench in 3D (mm): holes, pins, sockets, wire routes, from src/data/wiring.ts
+src/anatomy/draw.ts          coloured kit solids, round rods (resistors), tubes (wires), surface glows
+src/anatomy/parts.ts         every part as solids, built once; the LED matrix and the USB cable per frame
+src/anatomy/Bench.tsx        the bench figure (painter's order by depth; a wire = 2 housings + 1 tube)
+src/anatomy/figures.tsx      breadboard x-ray, PIR front, part render card
+src/anatomy/types.ts         scene and line types, shared by both anatomy videos
+src/anatomy/script.ts        THE script: lines, cable state, adds, camera, glows, faces, Serial Monitor lines
+src/anatomy/video.ts         makeVideo(): figure state at any time (eased camera, glows, plug, part drop-in, faults)
+src/anatomy/IsoVideo.tsx     the player: plate, side panel (renders, ELI5, CONNECT checklist), overlay, narration
+scripts/anatomy-assets.ts    copies video-assets/parts/*.png to public/parts/
+scripts/anatomy-stills.ts    stills per line (--scenes, --lines, --at)
+```
+```bash
+npm run anatomy:prep            # part renders -> public/parts/, LED faces from face.h
+npm run netcheck                # electrical check of the wiring data
+npm run anatomy:voice           # Piper narration + timeline (anatomy:voice:draft = estimated timings, no audio)
+npm run anatomy:review          # review/anatomy-script.md + cable rules R1-R5 (must pass)
+npm run anatomy:stills -- --scenes a-step2 --scale 1   # check the pictures first
+npm run anatomy:render && npm run anatomy:finish       # out/robin_anatomy_build_v1.mp4 (+ .srt, chapters, 720p copy)
+```
+Not used from the skill: its `audit.mjs` geometry proof and line-end check need its own recorder and HTML pages, so this bench was checked with close-up stills instead (every scene, several zooms). Two deliberate deviations from its craft rules: colour (wire colours, red/blue rails, caps and the capacitor stripe are what the viewer must match) and the silkscreen text printed on the real boards.
+
+## The anatomy + ELI5 debug guide (`RobinAnatomyDebug`)
+How to find and fix what goes wrong, on the same 3D bench, fully built. About 14 minutes, 15 chapters: the routine, the tools, then **11 cases** taken from the Troubleshooting table in docs/04 and C.4 in docs/05 (no Serial Monitor output, light_raw stuck, PIR jumps, PIR stays HIGH, button always pressed, no sound, wrong sentence, pops/restarts, "needs more power", warm capacitor, crossed eyes online).
+
+The ELI5 idea: **be Robin's doctor**. Every case follows the same five steps, ticked on a DOCTOR card in the side panel: 🩺 symptom → 🔌 unplug → 🔍 look and measure → 🔧 change one thing → ✅ test again. A software fix (baud rate, secrets, files on the module) shows "Unplug: not needed, no wiring".
+- **The fault is drawn in**: the wrong wire or leg glows red from the moment the narrator points at it, then swaps for the right one at the fix. The wrong parts live in `src/anatomy/faults.ts`, apart from `wiring.ts`, so `netcheck` still checks only the real build.
+- **Explainer figures**: the button opened up (which legs are joined inside), the network as three stations (Robin, phone hotspot, laptop with Mosquitto), the MP3 module's drive as a file list.
+- Same player as the build video (`IsoVideo` with its own `makeVideo` config), so camera, plug, faces and the Serial Monitor work the same way.
+
+```
+src/anatomy/faults.ts         the wrong wiring per case (LDR leg one column off, button ground, T/R not crossed, short, capacitor backwards)
+src/anatomy/debug/script.ts   THE debug script: cases, fault per case, doctor step per line
+src/anatomy/debug/figures.tsx button x-ray, network stations, MP3 drive, the five-step loop screen
+src/anatomy/debug/Root.tsx    composition RobinAnatomyDebug (entry point debug/index.ts)
+scripts/videos.ts             one list of the narrated videos for voice, review, finish and stills (--script guide|anatomy|debug)
+```
+```bash
+npm run debug:voice                      # Piper narration + timeline (debug:voice:draft = estimated timings)
+npm run debug:review                     # review/debug-script.md + rules R1-R3 and D0-D3 (must pass)
+npm run debug:stills -- --scenes d-button --scale 1
+npm run debug:render && npm run debug:finish   # out/robin_anatomy_debug_v1.mp4 (+ .srt, chapters, 720p copy)
+```
+Extra review rules for the debug guide: **D0** every fault and hidden part exists; **D1** every wiring fix happens with the cable out (a software fix is marked `soft` and may not touch wiring); **D2** every case tests again after its fix; **D3** the faulty part is pointed at before it is swapped. **R3** follows the Gravity plug from the narration here (the bench starts built).
+
+Before the final render, an independent review (safety, hardware, firmware, docs, ELI5; a skeptic per finding, then a completeness critic) confirmed 32 problems and refuted 11: [`review/debug-review.md`](review/debug-review.md). The Serial Monitor lines are copied from what `robin.ino` really prints (`[queue] events waiting: 1` at start, `[tx-failed]` every 2 s while offline, `raw` = a 2-second snapshot).
+
 ## Credits and licences
 - [Remotion](https://www.remotion.dev) (free for individuals; see its licence for companies).
+- The isometric kit `src/anatomy/kit/iso-kit.ts`: from the "anatomy" skill, [github.com/wheresryan22/anatomy](https://github.com/wheresryan22/anatomy), MIT, © 2026 Ryan (`src/anatomy/kit/LICENSE-anatomy.txt`).
 - Fonts Nunito and JetBrains Mono (SIL OFL 1.1, `public/fonts/LICENSE-*.txt`); emoji from Noto Color Emoji.
 - Narrator: Piper `en_US-norman-medium`; Robin: its own clips from `audio/en/` (`en_GB-cori-high`). See the main README.

@@ -82,7 +82,7 @@ Connect Arduino 5V → + rail and GND → − rail.
 ```
 Wire it as in the pin map (LDR and resistor legs share one column; that column goes to A0). The LDR and the resistor have no + or −, so either way round is fine.
 **Which resistor is 10 kΩ?** Read the label on its bag. Colour bands: 4 bands = brown, black, orange, (gold); 5 bands = brown, black, black, red, (brown). Keep the 1 kΩ bag closed for now.
-**✅ Test:** plug in, open the Serial Monitor (115200 baud, line ending "Newline"), type `raw` + Enter. Cover the LDR with your finger: `light_raw` must drop a lot. Shine your phone torch on it: it must rise. **Unplug.** Not working? Fix it with the cable unplugged (see Troubleshooting).
+**✅ Test:** plug in, open the Serial Monitor (115200 baud, line ending "Newline"), type `raw` + Enter. Cover the LDR with your finger: `light_raw` must drop a lot. Shine your phone torch on it: it must rise. (`raw` prints 2 seconds of readings: type it again for a new look. A `[tx-failed] …` line every 2 s is normal in offline test mode: there is no network to send to.) **Unplug.** Not working? Fix it with the cable unplugged (see Troubleshooting).
 
 ## Step 3: PIR motion sensor
 1. Gently pull off the white dome to read the pin labels (**VCC, OUT, GND**), then put it back.
@@ -192,12 +192,12 @@ Tessa is made of felt and wood to feel warm. A strip of felt around the grey sid
 |---|---|---|
 | Nothing in Serial Monitor | wrong baud / port | 115200 baud, correct COM port; press reset |
 | `light_raw` always ~0 or ~1023 | LDR/resistor not in the same column, or A0 wire in the wrong column | unplug; re-check the divider |
-| `pir_raw` random HIGH/LOW | warm-up, or it sees you | wait 60 s; point it away; lower sensitivity |
-| PIR stays HIGH ~minutes | time-delay knob not at minimum | turn Tx fully counter-clockwise |
+| `pir_raw` random HIGH/LOW | warm-up, or it sees you | wait 60 s; point it away; lower sensitivity (Sx counter-clockwise) |
+| PIR stays HIGH ~minutes | time-delay knob not at minimum, or it keeps seeing you (jumper H) | turn Tx fully counter-clockwise; wave once, then step out of its view |
 | Button always "pressed" | used two *always-connected* legs | unplug, then use diagonal legs |
-| No sound | T/R swapped or not crossed, speaker not on SP+/SP−, missing files, volume 0 | unplug; check T → D0, D1 → 1 kΩ → R, speaker on SP+/SP−, files in the root; then `vol 20` |
+| No sound | T/R swapped or not crossed, speaker not on SP+/SP−, missing files, volume 0 | unplug; check T → D0, D1 → 1 kΩ → R, speaker on SP+/SP−; files in the root (Gravity plug out before the micro-USB, as in 5b); then plug in and listen for hello (volume 20 is set at every start) |
 | Plays the wrong sentence | old demo files still on the module | unplug the Arduino, pull the Gravity cable's plug out of the module (by its body, not the wires), then delete everything and copy again |
-| Pops, buzzing, or the board resets when it talks loudly | the speaker's current gulps make the 5 V dip | unplug; check the capacitor (stripe in the − rail, next to the module); then `vol 15`; use a better USB port/charger |
-| Laptop says "USB device needs more power" or the port switches off when you plug in | the capacitor charging, or a short | unplug; check for a short (+ rail touching − rail); try another port or a powered hub |
-| Capacitor warm or bulging | put in backwards | unplug now; leave it 10 minutes without touching it; fit the spare with the stripe in the − rail |
+| Pops, buzzing, or the board resets when it talks loudly | the speaker's current gulps make the 5 V dip | unplug; check the capacitor (stripe in the − rail, next to the module); still popping: `vol 15` (lasts until a restart; to keep it, `DEFAULT_VOLUME` in robin.ino and `volume` in config.yaml); use a better USB port/charger |
+| Laptop says "USB device needs more power" or the port switches off when you plug in | the capacitor charging, or a short | unplug; check for a short (+ rail touching − rail, a board lying on metal or on the laptop, module pins touching the Arduino) and that the capacitor stripe and the module − are in the − rail; then try another port or a powered hub |
+| Capacitor warm or bulging | put in backwards | unplug now; leave it 10 minutes without touching it; recycle it; fit the spare with the stripe in the − rail |
 | ✗ eyes forever | WiFi/MQTT problem | see 05, part C troubleshooting |
