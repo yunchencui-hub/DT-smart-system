@@ -30,7 +30,8 @@ Details: [docs/01_requirements_map.md](docs/01_requirements_map.md)
 cd backend
 python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt && cp config.example.yaml config.yaml
-python -m pytest -q                                     # 36 tests
+python -m pytest -q                                     # all tests pass
+python check_setup.py                                   # checks this computer against docs/05
 mosquitto -c ../broker/mosquitto.conf -v &              # the MQTT broker
 python -m robin --device sim-01 simulate --backfill-days 7
 python -m robin --device sim-01 train --allow-synthetic

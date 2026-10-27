@@ -37,11 +37,16 @@ python -m pytest -q          # expect: all tests passed
 
 > **ELI5, venv:** a private box of Python packages just for this project, so it can't break (or be broken by) other projects. Activate it in every new terminal (`.venv\Scripts\activate`).
 
+> **Windows: "running scripts is disabled on this system"** when you activate? PowerShell blocks scripts by default. Allow your own scripts once with `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, or use *Command Prompt* and `.venv\Scripts\activate.bat`.
+
+**✅ Check your setup:** in `backend/`, run `python check_setup.py` (any time, venv active or not). It compares your computer with this page, part A to D: Python, venv, packages, `config.yaml`, the tests, Arduino IDE + board package + library + `arduino_secrets.h` (and compiles the firmware), Mosquitto, broker reachable on the network, Windows network profile + firewall, ntfy. Each line is OK / WARN / FAIL / INFO with the section to read. It changes nothing and never prints your WiFi password or ntfy topic, so you can paste the output to Claude. `--quick` skips the tests and the compile.
+
 ### Your first complete run, no hardware (≈ 10 min)
-You need Mosquitto for this (see C.2 to install it). Then open **3 terminals** (each: `cd backend` and activate the venv):
+You need Mosquitto for this (see C.2 to install it). Then open **3 terminals**: terminal 1 in the repo root; terminals 2 and 3: `cd backend` and activate the venv.
 ```bash
 # Terminal 1: the post office for messages (run from the repo root)
 mosquitto -c broker/mosquitto.conf -v
+#   Windows: & "C:\Program Files\mosquitto\mosquitto.exe" -c broker\mosquitto.conf -v   (see C.2)
 
 # Terminal 2: create 7 days of FAKE history + train a DRY-RUN model on it
 python -m robin --device sim-01 simulate --backfill-days 7
@@ -112,3 +117,4 @@ Watch the data: install **MQTT Explorer** (<https://mqtt-explorer.com>, easiest)
 | train on my data | `python -m robin train` |
 | demo mode | `python -m robin run --fake-time 03:00 --window-min 2 --check-every 10 --cooldown-min 1` |
 | run the tests | `python -m pytest -q` |
+| check my whole setup against this page | `python check_setup.py` (add `--quick` to skip tests + compile) |

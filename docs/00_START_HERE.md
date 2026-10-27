@@ -26,7 +26,7 @@ Hi partner 👋 This folder is our project manual. Read the files in number orde
 - [ ] Ask Pulsed which common parts they have (breadboard, jumper wires, resistors, LDR, buttons), then choose budget scenario A or B in 03.
 - [ ] Send the purchase request (03).
 - [ ] **Register for the test in Progress** (the assignment reminds you!).
-- [ ] Install Python + Mosquitto and do the **simulator run** (05 part B). You'll see all 7 components working today.
+- [ ] Install Python + Mosquitto and do the **simulator run** (05 part B). You'll see all 7 components working today. Then `python check_setup.py` in `backend/` checks your whole setup.
 - [ ] Read 01 and 02; glossary "Hardware" + "Communication" in 09.
 
 ### Phase 1: hardware (when the parts arrive, ≈ week 2–3)
