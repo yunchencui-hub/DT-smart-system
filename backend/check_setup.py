@@ -60,7 +60,7 @@ for line in open("requirements.txt", encoding="utf-8"):
         except metadata.PackageNotFoundError:
             out["packages"][name] = None
 try:
-    from robin.config import load_config, resolve
+    from robin.config import load_config, model_file, resolve
     cfg = load_config("config.yaml")
     topic = cfg["caregiver"].get("ntfy_topic") or ""
     out["config"] = {"device_id": cfg["device_id"], "mqtt_host": cfg["mqtt"]["host"],
@@ -68,7 +68,7 @@ try:
                      "ntfy_server": cfg["caregiver"]["ntfy_server"],
                      "ntfy_len": len(topic), "ntfy_digit": any(c.isdigit() for c in topic),
                      "database": str(resolve(cfg, cfg["database"])),
-                     "model": str(resolve(cfg, cfg["anomaly"]["model_path"])),
+                     "model": str(model_file(cfg)),
                      "durations": resolve(cfg, cfg["audio"]["durations_file"]).exists(),
                      "location": [cfg["location"]["latitude"], cfg["location"]["longitude"]]}
 except Exception as e:

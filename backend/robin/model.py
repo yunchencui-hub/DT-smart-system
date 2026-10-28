@@ -16,6 +16,7 @@ Why unsupervised? We have lots of normal data but (luckily) almost no real emerg
 """
 from __future__ import annotations
 
+import os
 import time
 from pathlib import Path
 
@@ -127,8 +128,11 @@ class AnomalyModel:
         return self.baseline.explain(row)
 
     def save(self, path: str | Path) -> None:
-        Path(path).parent.mkdir(parents=True, exist_ok=True)
-        joblib.dump(self, path)
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = path.with_name(path.name + ".tmp")
+        joblib.dump(self, tmp)
+        os.replace(tmp, path)   # a running brain never sees a half-written model file
 
     @staticmethod
     def load(path: str | Path) -> "AnomalyModel":

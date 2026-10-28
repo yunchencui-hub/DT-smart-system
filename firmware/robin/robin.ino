@@ -188,12 +188,28 @@ void keepConnected(unsigned long now) {
     Serial.print(F("[wifi] connecting to "));
     Serial.println(SECRET_WIFI_SSID);
     WiFi.begin(SECRET_WIFI_SSID, SECRET_WIFI_PASS);  // blocks a few seconds
+
+    // Give the connection up to 20 s to come up. While this waits, loop() is paused
+    // (buttons, faces and telemetry), so it only happens while Robin is offline anyway.
+    unsigned long start = millis();
+    while (WiFi.status() != WL_CONNECTED && millis() - start < 20000) {
+      delay(500);
+    }
     if (WiFi.status() != WL_CONNECTED) {
       Serial.println(F("[wifi] failed, will retry"));
       return;
     }
+
+    // Connected is not enough: right after joining, the board can still report 0.0.0.0
+    // (no address from the router yet), and then MQTT can't connect. Try again later.
+    IPAddress ip = WiFi.localIP();
     Serial.print(F("[wifi] connected, IP "));
-    Serial.println(WiFi.localIP());
+    Serial.println(ip);
+    if (ip == IPAddress(0, 0, 0, 0)) {
+      Serial.println(F("[wifi] no valid IP, will retry"));
+      WiFi.disconnect();
+      return;
+    }
   }
   online = connectMqtt();
 }
@@ -336,7 +352,10 @@ void publishTelemetry() {
            "\"high_ms\":%lu,\"light\":%lu,\"rssi\":%ld}",
            bootId, seq, millis(), samples, lastPir ? 1 : 0, pirEdges,
            (unsigned long)pirHighSamples * SAMPLE_MS, (unsigned long)(lightSum / samples),
-           (long)WiFi.RSSI());
+           // Only ask the WiFi chip when connected. In offline test mode nothing ever starts the chip
+           // (modem.begin()), and WiFi.RSSI() does not start it itself, so it would wait its full 10 s
+           // timeout on every call, freezing loop() (buttons, faces, Serial).
+           online ? (long)WiFi.RSSI() : 0L);
   seq++;  // counts up even when sending fails, so the backend can measure message loss
   bool sent = publish(topicTelemetry, json, false, 0);
   Serial.print(sent ? F("[tx] ") : F("[tx-failed] "));

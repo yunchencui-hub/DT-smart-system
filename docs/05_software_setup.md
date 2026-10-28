@@ -12,11 +12,11 @@ Four parts. **Do B and the simulator run first, today.** You can see the whole s
 ---
 
 ## A. Arduino IDE and firmware
-1. Install **Arduino IDE 2** from <https://www.arduino.cc/en/software>.
+1. Install **Arduino IDE 2** from <https://www.arduino.cc/en/software>. (If it opens in another language: *File → Preferences → Language → English*, so the menu names below match.)
 2. *Tools → Board → Boards Manager*: install **"Arduino UNO R4 Boards"**.
 3. *Tools → Manage Libraries*: install **ArduinoMqttClient** (by Arduino). That's the only extra library: the voice driver (`voice.h`) and faces (`face.h`) are in our own sketch, and WiFiS3 + LED matrix come with the board package.
 4. In the folder `firmware/robin/`, copy `arduino_secrets.example.h` to **`arduino_secrets.h`**. For the first tests change `SECRET_WIFI_SSID` to `""` (two quotes with nothing between them: offline test mode; the example file has a placeholder name there).
-5. Open `firmware/robin/robin.ino`. Choose *Tools → Board → Arduino UNO R4 WiFi* and the right *Port*. Click **Upload** (→).
+5. Open `firmware/robin/robin.ino`. Choose *Tools → Board → Arduino UNO R4 WiFi* and the right *Port*: plug the board in and pick the port labelled **Arduino UNO R4 WiFi** (other COM ports, e.g. "Standard Serial over Bluetooth link", are not the board). Click **Upload** (→).
 6. *Tools → Serial Monitor*: **115200 baud**, line ending **"Newline"**. Type `help`.
 
 > If the Serial Monitor says the WiFi firmware is outdated: *Tools → Firmware Updater* in Arduino IDE 2 updates the board's WiFi chip.
@@ -26,41 +26,51 @@ Install **Python 3.11 or newer** from <https://www.python.org> (Windows: tick **
 
 **Windows (PowerShell):**
 ```powershell
-cd DT-smart-system\backend
+cd <your clone>\backend      # e.g. cd E:\DT-smart-system\backend
 python -m venv .venv
-.venv\Scripts\activate
+.venv\Scripts\activate       # the prompt now starts with (.venv)
 pip install -r requirements.txt
-copy config.example.yaml config.yaml
+if (-not (Test-Path config.yaml)) { copy config.example.yaml config.yaml }   # first time only: keeps your edits
 python -m pytest -q          # expect: all tests passed
 ```
-**macOS / Linux:** same, but `python3 -m venv .venv`, `source .venv/bin/activate`, `cp` instead of `copy`.
+> **`config.yaml` made before 27 Sep 2026?** Set `anomaly.model_path: models/anomaly-{device}.joblib` and `mqtt.host: 127.0.0.1` in it (compare with `config.example.yaml`). Until then, `train` stops rather than let the simulator overwrite your robot's model.
+**macOS / Linux:** same, but `python3 -m venv .venv`, `source .venv/bin/activate`, and `cp -n` instead of the `copy` line.
 
-> **ELI5, venv:** a private box of Python packages just for this project, so it can't break (or be broken by) other projects. Activate it in every new terminal (`.venv\Scripts\activate`).
+> **ELI5, venv:** a private box of Python packages just for this project, so it can't break (or be broken by) other projects. Activate it in every new terminal (`.venv\Scripts\activate`) and check that the prompt shows **(.venv)**. Without it, `python` is your global Python, with other package versions (or none).
+
+> **Windows says "running scripts is disabled on this system"?** Run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once (no admin needed), then activate again. Or skip activating and type `.venv\Scripts\python -m robin ...` instead of `python -m robin ...`.
 
 > **Windows: "running scripts is disabled on this system"** when you activate? PowerShell blocks scripts by default. Allow your own scripts once with `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, or use *Command Prompt* and `.venv\Scripts\activate.bat`.
 
 **✅ Check your setup:** in `backend/`, run `python check_setup.py` (any time, venv active or not). It compares your computer with this page, part A to D: Python, venv, packages, `config.yaml`, the tests, Arduino IDE + board package + library + `arduino_secrets.h` (and compiles the firmware), Mosquitto, broker reachable on the network, Windows network profile + firewall, ntfy. Each line is OK / WARN / FAIL / INFO with the section to read. It changes nothing and never prints your WiFi password or ntfy topic, so you can paste the output to Claude. `--quick` skips the tests and the compile.
 
 ### Your first complete run, no hardware (≈ 10 min)
-You need Mosquitto for this (see C.2 to install it). Then open **3 terminals**: terminal 1 in the repo root; terminals 2 and 3: `cd backend` and activate the venv.
+You need Mosquitto for this (see C.2 to install it). Then open **3 terminals**:
+- **Terminal 1** stays in the **repo root** (no venv needed): it only runs the broker.
+- **Terminals 2 and 3:** `cd backend` and activate the venv.
 ```bash
-# Terminal 1: the post office for messages (run from the repo root)
+# Terminal 1 (repo root): the post office for messages. Stop it later with Ctrl+C.
 mosquitto -c broker/mosquitto.conf -v
-#   Windows: & "C:\Program Files\mosquitto\mosquitto.exe" -c broker\mosquitto.conf -v   (see C.2)
+#   Windows: "mosquitto is not recognized"? The installer does not add itself to PATH. Use the full path:
+#   & "C:\Program Files\mosquitto\mosquitto.exe" -c broker\mosquitto.conf -v
+#   (or add C:\Program Files\mosquitto to your user PATH once, then open a NEW terminal; see C.2)
 
 # Terminal 2: create 7 days of FAKE history + train a DRY-RUN model on it
 python -m robin --device sim-01 simulate --backfill-days 7
 python -m robin --device sim-01 train --allow-synthetic
-#   -> prints a comparison table and writes reports/*.png
+#   -> prints a comparison table, writes models/anomaly-sim-01.joblib and reports/sim-01/*.png
+#      (simulator results never touch your robot's model or reports)
 python -m robin --device sim-01 simulate
-#   -> a virtual Robin. Type  d + Enter (dark),  q + Enter (quiet)
+#   -> a virtual Robin. Keys (+ Enter): m = movement for 30 s, d = dark on/off, q = quiet on/off, y/n = buttons
 
 # Terminal 3: the system itself, in DEMO mode (it believes it is 03:00)
 python -m robin --device sim-01 run --fake-time 03:00 --window-min 2 --check-every 10 --cooldown-min 1
 ```
-Now in terminal 2 type `d` (lights on again), `q` (people move again) and `m` (movement). Within ~30 s terminal 3 logs a negative score, and terminal 2 shows **`SPEAKS #8: "It's the middle of the night..."`**. Type `n`: Robin says it will tell the family, and terminal 3 prints `[caregiver alert]`. That's all 7 components working, on fake data.
+Now in terminal 2 type `m` (movement in the middle of the night) and repeat it every ~30 s. The first score appears after about a minute (the brain needs about a minute of data in its 2-minute window). Then terminal 3 logs a **negative** score, and terminal 2 shows **`SPEAKS #8: "It's the middle of the night..."`**. Type `n`: Robin says it will tell the family, and terminal 3 prints `[caregiver alert]`. That's all 7 components working, on fake data.
 
-⚠️ **Simulated data is for learning the software only.** Requirement 6 demands a model trained on data from *your own* sensor. `train` refuses `sim-*` devices without `--allow-synthetic`, and records `synthetic: true` in the model's metadata.
+> 📱 If your ntfy topic is already in `config.yaml` (part D), this demo sends **real pushes**: `n` (or no answer) an alert, `y` a low-priority info message. Subscribe first to see them, or set `ntfy_topic: ""` while rehearsing.
+
+⚠️ **Simulated data is for learning the software only.** Requirement 6 demands a model trained on data from *your own* sensor. `train` refuses `sim-*` devices without `--allow-synthetic`, and records `synthetic: true` in the model's metadata and in `metrics.json`. The brain only uses a model trained on its **own** device: your robot (`robin-01`) never uses the simulator's model.
 
 ## C. Network: connect the real robot
 ### C.1 WiFi: use your phone's hotspot (or home WiFi)
@@ -69,7 +79,7 @@ Now in terminal 2 type `d` (lights on again), `q` (people move again) and `m` (m
   - iPhone: *Settings → Personal Hotspot →* **Maximise Compatibility ON**.
   - Android: *Hotspot → AP band →* **2.4 GHz**.
 - Connect the **laptop to the same hotspot**.
-- Find the laptop's IP: Windows `ipconfig` (look for *Wireless LAN adapter Wi-Fi → IPv4 Address*), macOS `ipconfig getifaddr en0`.
+- Find the laptop's IP: Windows `ipconfig` (look for *Wireless LAN adapter Wi-Fi* (on some Windows versions *WLAN*) *→ IPv4 Address*), macOS `ipconfig getifaddr en0`.
 - Put SSID, password and that IP in `arduino_secrets.h` → upload.
 - The IP can change when the hotspot restarts, so **check it before every demo**.
 
@@ -78,7 +88,9 @@ Now in terminal 2 type `d` (lights on again), `q` (people move again) and `m` (m
   ```powershell
   & "C:\Program Files\mosquitto\mosquitto.exe" -c broker\mosquitto.conf -v
   ```
-  When Windows Firewall asks, **allow on Private networks**, and make sure the hotspot is set to *Private* (*Settings → Network → Wi-Fi → [hotspot] → Private*).
+  When Windows Firewall asks, tick **Private networks only** and **untick Public** (the popup pre-ticks the type of the network you are on right now; Public would let strangers on café/campus WiFi use our password-less broker). Then set the network the robot uses to *Private*: the phone hotspot, or your home WiFi (*Settings → Network & internet → Wi-Fi → [network] → Network profile type → Private*). Windows marks every new network Public, so do this the first time you join the hotspot.
+  Already clicked *Allow* with **Public** ticked? Undo it: *Windows Security → Firewall & network protection → Allow an app through firewall → Change settings →* untick **Public** for every *mosquitto* line.
+  Stop the broker with **Ctrl+C** in its window: that also saves the robot's retained online/offline status.
 - **macOS:** `brew install mosquitto`, then `mosquitto -c broker/mosquitto.conf -v`.
 
 **✅ Test:** start the broker. After uploading, the robot's face changes from ✗ eyes to 😊, and the broker log says `New client connected ... as robin-01`.
@@ -87,7 +99,8 @@ Now in terminal 2 type `d` (lights on again), `q` (people move again) and `m` (m
 ```bash
 python -m robin run          # ingest + brain, uses config.yaml (device_id: robin-01)
 ```
-Watch the data: install **MQTT Explorer** (<https://mqtt-explorer.com>, easiest), or `mosquitto_sub -h localhost -t "robin/#" -v`.
+Until you have trained a model on your own data (`python -m robin train`, see 06), the brain says *"No trained model at …\models\anomaly-robin-01.joblib yet"*: reminders work, anomaly check-ins are off. That is expected, and it never falls back to the simulator's model.
+Watch the data: install **MQTT Explorer** (<https://mqtt-explorer.com>, easiest), or `mosquitto_sub -h 127.0.0.1 -t "robin/#" -v`.
 
 ### C.4 Troubleshooting the connection
 | Serial Monitor says | Meaning | Fix |
@@ -96,6 +109,7 @@ Watch the data: install **MQTT Explorer** (<https://mqtt-explorer.com>, easiest)
 | `[tx-failed] {...}` every 2 s | telemetry not sent: Robin isn't online (normal in offline test mode) | online: look for the `[wifi]` or `[mqtt]` line above it |
 | `[mqtt] failed, error -2` (refused) | laptop/broker not reachable | wrong IP; firewall; broker not running, or started without our config (then it only listens on the laptop itself, see C.2); laptop on another network |
 | `[mqtt] failed, error -1` (timeout) | reached port 1883, but no MQTT answer within 5 s | check that our Mosquitto is the one on port 1883; restart it with our config |
+| `error -2` (or `-1`), and the laptop's WiFi is *Public* | the firewall only lets the robot in on *Private* networks | set that network to Private (C.2) |
 | `[mqtt] failed, error 4` or `5` | bad username/password, not authorised | broker needs a password; set it in the secrets or use our config |
 | connects, then drops every ~20 s | keep-alive not answered | make sure `mqtt.poll()` isn't blocked (don't add `delay()` in `loop()`) |
 | backend: `ConnectionRefusedError` | broker not running on the laptop | start Mosquitto first |
@@ -118,3 +132,4 @@ Watch the data: install **MQTT Explorer** (<https://mqtt-explorer.com>, easiest)
 | demo mode | `python -m robin run --fake-time 03:00 --window-min 2 --check-every 10 --cooldown-min 1` |
 | run the tests | `python -m pytest -q` |
 | check my whole setup against this page | `python check_setup.py` (add `--quick` to skip tests + compile) |
+| any of these against the **simulator** | put the device right after `robin`: `python -m robin --device sim-01 latency --count 20` |

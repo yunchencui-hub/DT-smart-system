@@ -19,7 +19,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 from . import db
-from .config import resolve
+from .config import model_file, resolve
 from .model import AnomalyModel
 from .processing import clean, features_for_window, load_telemetry
 
@@ -27,6 +27,22 @@ log = logging.getLogger(__name__)
 
 TRACK_THANKS, TRACK_CALLING_HELP, TRACK_REPEAT, TRACK_MAYBE_LATER = 9, 10, 11, 13
 TRACK_CHECKIN_DAY, TRACK_CHECKIN_NIGHT, TRACK_HOT_DAY = 7, 8, 5
+
+
+def load_model_for(cfg: dict, path: Path) -> AnomalyModel | None:
+    """The model at `path`, or None if it is missing or was trained on ANOTHER device.
+
+    A model learned from the simulator (or from another robot) knows someone else's routine: using it would
+    start check-ins and caregiver alerts about a life that is not this person's.
+    """
+    if not path.exists():
+        return None
+    model = AnomalyModel.load(path)
+    trained_on, device = model.meta.get("device"), cfg["device_id"]
+    if trained_on and trained_on != device:
+        log.warning("Ignoring the model at %s: it was trained on '%s' data, but this is '%s'.", path, trained_on, device)
+        return None
+    return model
 
 
 @dataclass
@@ -65,7 +81,7 @@ class Brain:
         self.offline_alerted = False
         self.night: bool | None = None
         self.face_after: float | None = None     # restore the resting face after the last sentence
-        self.model_path = resolve(cfg, cfg["anomaly"]["model_path"])
+        self.model_path = model_file(cfg)
         self.model_mtime = self.model_path.stat().st_mtime if self.model_path.exists() else None
         self.durations = self._load_durations()
 
@@ -197,10 +213,21 @@ class Brain:
         if not self.model_path.exists():
             return
         mtime = self.model_path.stat().st_mtime
-        if mtime != self.model_mtime:
-            self.model = AnomalyModel.load(self.model_path)
-            self.model_mtime = mtime
-            log.info("loaded model %s (%s)", self.model_path, self.model.meta)
+        if mtime == self.model_mtime:
+            return
+        try:
+            model = load_model_for(self.cfg, self.model_path)
+        except Exception as exc:                # unreadable (e.g. copied in half-way): try again at the next check
+            log.warning("could not load %s yet (%s); retrying at the next check", self.model_path, exc)
+            return
+        self.model_mtime = mtime                # also for a refused model: warn once, not every check
+        if model is not None:
+            self.model = model
+            log.info("loaded model %s (%s)", self.model_path, model.meta)
+        elif self.model is not None:
+            log.warning("Keeping the model that was already loaded.")
+        else:
+            log.warning("Anomaly check-ins stay off until you run `python -m robin train` for this device.")
 
     # ------------------------------------------------------------------ 3. conversations
     def _converse(self, now: float) -> None:
@@ -309,13 +336,20 @@ def run(cfg: dict, clock_offset_s: float = 0.0, stop: threading.Event | None = N
 
     stop = stop or threading.Event()
     conn = db.connect(resolve(cfg, cfg["database"]))
-    model_path = resolve(cfg, cfg["anomaly"]["model_path"])
-    model = AnomalyModel.load(model_path) if model_path.exists() else None
-    if model is None:
+    model_path = model_file(cfg)
+    try:
+        model = load_model_for(cfg, model_path)
+    except Exception as exc:
+        log.warning("could not load %s (%s)", model_path, exc)
+        model = None
+    if model is not None:
+        log.info("model loaded: %s", model.meta)
+    elif model_path.exists():
+        log.warning("Reminders work, but anomaly check-ins stay off until you run `python -m robin train` "
+                    "for '%s'.", cfg["device_id"])
+    else:
         log.warning("No trained model at %s yet: reminders work, anomaly check-ins are off. "
                     "Collect data, then run `python -m robin train`.", model_path)
-    else:
-        log.info("model loaded: %s", model.meta)
     robot = RobotLink(cfg)
     brain = Brain(cfg, conn, robot, Notifier(cfg, conn), model, clock_offset_s)
     time.sleep(1)  # let the MQTT connection settle

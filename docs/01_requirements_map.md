@@ -40,7 +40,7 @@
 
 **Robin:** **MQTT** over WiFi to a Mosquitto broker on the laptop. Telemetry is QoS 0 every 2 s, button events QoS 1, `online/offline` status is retained, and a **Last Will** makes the broker announce "offline" if Robin dies.
 
-**Proof:** `mosquitto_sub -h localhost -t "robin/#" -v` shows a message every 2 s, and `python -m robin latency` prints the round-trip time.
+**Proof:** `mosquitto_sub -h 127.0.0.1 -t "robin/#" -v` shows a message every 2 s, and `python -m robin latency` prints the round-trip time.
 
 **Pitfall:** mixing up MQTT QoS levels. QoS 1 means *at least once*, so duplicates are possible, which is why ingestion de-duplicates (a nice link to requirement 3).
 

@@ -1,4 +1,6 @@
 """The brain is tested with a fake robot and a fake phone: every decision path, no hardware needed."""
+import os
+import time
 from datetime import datetime
 
 import numpy as np
@@ -6,7 +8,10 @@ import pytest
 
 from conftest import telemetry
 from robin import db
-from robin.brain import Brain
+from robin.brain import Brain, load_model_for
+from robin.config import model_file
+from robin.model import AnomalyModel
+from test_model import normal_days
 
 T = datetime(2026, 10, 1, 8, 31).timestamp()   # 08:31 local, one minute after the medicine reminder
 
@@ -171,3 +176,47 @@ def test_brain_does_not_talk_to_an_offline_robot(brain, conn):
     brain.tick(T)
     assert not any(c.startswith("ask") for c in brain.robot.sent)
     assert conn.execute("SELECT COUNT(*) FROM scores").fetchone()[0] == 0
+
+
+def test_each_device_has_its_own_model_file(cfg):
+    assert model_file(cfg).name == "anomaly-robin-test.joblib"
+    cfg["device_id"] = "sim-01"
+    assert model_file(cfg).name == "anomaly-sim-01.joblib"
+
+
+def test_model_trained_on_another_device_is_refused(cfg, tmp_path):
+    path = tmp_path / "shared.joblib"     # e.g. an old config where robot and simulator share one path
+    AnomalyModel().fit(normal_days(days=2), device="sim-01", synthetic=True).save(path)
+    assert load_model_for(cfg, path) is None           # cfg is the robot "robin-test"
+    cfg["device_id"] = "sim-01"
+    assert load_model_for(cfg, path) is not None
+    assert load_model_for(cfg, tmp_path / "missing.joblib") is None
+
+
+def test_brain_reloads_a_retrained_model_only_for_its_own_device(cfg, conn):
+    b = Brain(cfg, conn, FakeRobot(), FakeNotifier())   # no model yet
+    path = model_file(cfg)
+    AnomalyModel().fit(normal_days(days=2), device="sim-01").save(path)
+    b._reload_model_if_retrained()
+    assert b.model is None
+    AnomalyModel().fit(normal_days(days=2), device="robin-test").save(path)
+    later = time.time() + 5
+    os.utime(path, (later, later))                      # a new mtime, even on coarse file-system clocks
+    b._reload_model_if_retrained()
+    assert b.model is not None and b.model.meta["device"] == "robin-test"
+
+
+def test_half_written_model_file_is_retried_not_fatal(cfg, conn):
+    b = Brain(cfg, conn, FakeRobot(), FakeNotifier())
+    path = model_file(cfg)
+    AnomalyModel().fit(normal_days(days=2), device="robin-test").save(path)
+    good = path.read_bytes()
+    path.write_bytes(good[: len(good) // 3])            # e.g. copied in while the brain is running
+    later = time.time() + 5
+    os.utime(path, (later, later))
+    b._reload_model_if_retrained()                      # must not crash the brain
+    assert b.model is None
+    path.write_bytes(good)
+    os.utime(path, (later, later))                      # same mtime as the broken attempt: still retried
+    b._reload_model_if_retrained()
+    assert b.model is not None
