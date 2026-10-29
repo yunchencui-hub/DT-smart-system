@@ -14,6 +14,9 @@ backend/models/
 backend/reports/
 mosquitto.db
 
+# Arduino's UNO R4 WiFi connectivity-firmware updater (12 MB of .exe/.bin, download it from Arduino)
+unor4wifi-update-windows/
+
 # TTS voice models (100+ MB, downloaded by audio/make_audio.py)
 audio/voices/
 
