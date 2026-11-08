@@ -18,7 +18,8 @@
 //     and keeps button presses in a small queue while offline so answers are not lost.
 //
 // Testing without a network: set SECRET_WIFI_SSID to "" and type the same commands in the
-// Serial Monitor (115200 baud, "Newline"). Extra serial-only commands: raw, help.
+// Serial Monitor (115200 baud, "Newline"). Extra commands for debugging: raw, help,
+// probe (asks the voice module: drives, number of files, playing?), playnum <n> (play by copy order).
 
 #include "arduino_secrets.h"
 #include <ArduinoMqttClient.h>
@@ -33,7 +34,7 @@
 #include "voice.h"
 #include "face.h"
 
-#define FIRMWARE_VERSION "1.0.0"
+#define FIRMWARE_VERSION "1.0.1"  // 1.0.1: voice.h asks for "/01*MP3" (the module ignores "/01*")
 
 // ---------- Pins ----------
 const uint8_t PIN_LIGHT   = A0;  // LDR voltage divider: brighter room -> higher value
@@ -293,8 +294,12 @@ void handleCommand(char *text) {
     publish(topicPong, arg1 ? arg1 : "", false, 0);
   } else if (strcmp(cmd, "raw") == 0) {
     printRawReadings();
+  } else if (strcmp(cmd, "probe") == 0) {
+    probeVoice();
+  } else if (strcmp(cmd, "playnum") == 0 && arg1) {
+    voice.playNumber(atoi(arg1));
   } else if (strcmp(cmd, "help") == 0) {
-    Serial.println(F("Commands: say <n> [ms] | ask <n> [ms] | face <mood> | vol <0-30> | stop | raw"));
+    Serial.println(F("Commands: say <n> [ms] | ask <n> [ms] | face <mood> | vol <0-30> | stop | raw | probe | playnum <n>"));
     Serial.println(F("Moods: happy blink talk ask concern sleep yes no offline"));
   }
 }
@@ -311,6 +316,27 @@ void readSerialCommand() {
     } else if (serialLen < sizeof(serialLine) - 1) {
       serialLine[serialLen++] = c;
     }
+  }
+}
+
+// Asks the voice module three questions and prints its raw answers in hex.
+// No answer at all = the module doesn't hear us or we don't hear it (power, T/R wiring, 1 kOhm).
+void probeVoice() {
+  const uint8_t questions[] = {0x09, 0x0C, 0x01};
+  const char *names[] = {"drives", "files", "state"};
+  for (uint8_t q = 0; q < 3; q++) {
+    uint8_t reply[8];
+    uint8_t n = voice.query(questions[q], reply, sizeof(reply));
+    Serial.print(F("[probe] "));
+    Serial.print(names[q]);
+    Serial.print(F(": "));
+    if (n == 0) Serial.print(F("no answer"));
+    for (uint8_t i = 0; i < n; i++) {
+      if (reply[i] < 0x10) Serial.print('0');
+      Serial.print(reply[i], HEX);
+      Serial.print(' ');
+    }
+    Serial.println();
   }
 }
 
