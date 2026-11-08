@@ -23,12 +23,15 @@ class Voice {
     send(0x13, data, sizeof(data));
   }
 
-  // Plays the first audio file whose name starts with the 2-digit track number,
-  // e.g. track 3 -> pattern "/03*" -> matches "/03.mp3" (or "/03.wav").
+  // Plays the audio file whose name starts with the 2-digit track number,
+  // e.g. track 3 -> pattern "/03*MP3" -> matches "/03.mp3".
+  // The module wants the path in its 8+3 form: uppercase, no dot, ending in the extension
+  // (MP3 or WAV); '*' stands for the rest of the name (rule from the codingABI/DFR0534 library).
+  // Verified on the real module (8 Nov 2026): "/01*MP3" plays, the probe reports state 1 = playing.
   // Playing by NAME (not by number) avoids the "file copy order" trap of this module.
   void playTrack(uint8_t track) {
-    char pattern[10];
-    snprintf(pattern, sizeof(pattern), "/%02u*", track);
+    char pattern[12];
+    snprintf(pattern, sizeof(pattern), "/%02u*MP3", track);
     const uint8_t len = strlen(pattern);
     uint8_t data[1 + sizeof(pattern)];
     data[0] = DRIVE_FLASH;
@@ -37,6 +40,29 @@ class Voice {
   }
 
   void stop() { send(0x04, nullptr, 0); }
+
+  // Plays by NUMBER (file copy order: the first file copied is 1). Only for debugging:
+  // if this plays but playTrack() doesn't, the files are there but their names don't match.
+  void playNumber(uint16_t number) {
+    const uint8_t data[] = {(uint8_t)(number >> 8), (uint8_t)(number & 0xFF)};
+    send(0x07, data, sizeof(data));
+  }
+
+  // Asks the module a question and copies its answer into `reply`. Returns the number of bytes
+  // received (0 = no answer within `timeoutMs`). Useful queries (send no data):
+  //   0x01 play state   -> AA 01 01 <0 stopped | 1 playing | 2 paused> <sum>
+  //   0x09 online drives -> AA 09 01 <bits: 1 USB, 2 SD, 4 flash> <sum>
+  //   0x0C number of files on the current drive -> AA 0C 02 <high> <low> <sum>
+  uint8_t query(uint8_t command, uint8_t *reply, uint8_t maxLen, unsigned long timeoutMs = 300) {
+    while (_port.available()) _port.read();  // forget old bytes
+    send(command, nullptr, 0);
+    uint8_t n = 0;
+    unsigned long start = millis();
+    while (millis() - start < timeoutMs && n < maxLen) {
+      if (_port.available()) reply[n++] = (uint8_t)_port.read();
+    }
+    return n;
+  }
 
  private:
   static const uint8_t DRIVE_FLASH = 0x02;  // 0x00 USB, 0x01 SD, 0x02 onboard flash

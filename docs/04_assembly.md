@@ -156,7 +156,14 @@ Put the **long (+) leg in the + rail** (red line) and the **striped (−) leg in
 1. Before you plug in, check: capacitor stripe in the − rail; module + in the + rail and − in the − rail; T → D0; R → 1 kΩ → D1; **the speaker's two wires are in SP+ and SP− and nothing else** (not VCC, GND, RX, TX, BUSY or DAC), and no solder joins SP+ to SP−; the spare speaker's wire ends are taped; no bare metal touches anything. Did the multimeter check in 5c beep steadily for + and −?
 2. Plug in (face away from the capacitor). After ~2 s you hear *"Hello, I'm Robin"* (track 1 plays on every boot).
 3. Type `say 3` and hear the medicine question. `vol 15` makes it quieter; stay at `vol 22` or lower so the small speaker doesn't distort.
-4. **Unplug.** No sound, pops or restarts? Fix it with the cable unplugged (see Troubleshooting).
+4. Silent? Type `probe` and compare with the "No sound" row in Troubleshooting. A healthy module answers:
+   ```
+   [probe] drives: AA 09 01 04 B8
+   [probe] files: AA 0C 02 00 0D C5
+   [probe] state: AA 01 01 00 AC
+   ```
+   `04` = the onboard flash works, `00 0D` = 13 files, the last line's `00` = stopped (`01` = playing).
+5. **Unplug.** No sound, pops or restarts? Fix it with the cable unplugged (see Troubleshooting).
 
 ## Step 6: Faces
 **✅ Test:** plug in, type `face ask`, `face concern`, `face sleep`, `face happy`. The happy face blinks every few seconds, like Tessa's eyes. **Unplug.**
@@ -195,7 +202,7 @@ Tessa is made of felt and wood to feel warm. A strip of felt around the grey sid
 | `pir_raw` random HIGH/LOW | warm-up, or it sees you | wait 60 s; point it away; lower sensitivity (Sx counter-clockwise) |
 | PIR stays HIGH ~minutes | time-delay knob not at minimum, or it keeps seeing you (jumper H) | turn Tx fully counter-clockwise; wave once, then step out of its view |
 | Button always "pressed" | used two *always-connected* legs | unplug, then use diagonal legs |
-| No sound | T/R swapped or not crossed, speaker not on SP+/SP−, missing files, volume 0 | unplug; check T → D0, D1 → 1 kΩ → R, speaker on SP+/SP−; files in the root (Gravity plug out before the micro-USB, as in 5b); then plug in and listen for hello (volume 20 is set at every start) |
+| No sound | T/R swapped or not crossed, speaker not on SP+/SP−, missing files, volume 0 | first type `probe` in the Serial Monitor, then `say 1` and `probe` again. **`no answer`** → power or T/R wiring: unplug; check + / − rails, T → D0, D1 → 1 kΩ → R. **files `00 00`** → no files: copy them to the root (Gravity plug out before the micro-USB, as in 5b). **state `01` (playing) but silent** → the speaker connection: unplug; speaker wires **soldered** into SP+/SP− (not just pushed in), firm joints, nothing in the SPK socket; try the spare speaker. Then plug in and listen for hello (volume 20 is set at every start) |
 | Plays the wrong sentence | old demo files still on the module | unplug the Arduino, pull the Gravity cable's plug out of the module (by its body, not the wires), then delete everything and copy again |
 | Pops, buzzing, or the board resets when it talks loudly | the speaker's current gulps make the 5 V dip | unplug; check the capacitor (stripe in the − rail, next to the module); still popping: `vol 15` (lasts until a restart; to keep it, `DEFAULT_VOLUME` in robin.ino and `volume` in config.yaml); use a better USB port/charger |
 | Laptop says "USB device needs more power" or the port switches off when you plug in | the capacitor charging, or a short | unplug; check for a short (+ rail touching − rail, a board lying on metal or on the laptop, module pins touching the Arduino) and that the capacitor stripe and the module − are in the − rail; then try another port or a powered hub |
